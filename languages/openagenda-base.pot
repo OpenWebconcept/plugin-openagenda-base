@@ -1,0 +1,1163 @@
+# Copyright (C) 2024 Acato
+# This file is distributed under the same license as the OpenAgenda Base plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenAgenda Base 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openagenda-base\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-02-29T09:27:00+01:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.9.0\n"
+"X-Domain: openagenda-base\n"
+
+#. Plugin Name of the plugin
+msgid "OpenAgenda Base"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://www.openwebconcept.nl"
+msgstr ""
+
+#. Description of the plugin
+msgid "The OpenAgenda Base plugin."
+msgstr ""
+
+#. Author of the plugin
+msgid "Acato"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://www.acato.nl"
+msgstr ""
+
+#: src/admin/class-admin.php:91
+msgid "The plugin OpenAgenda Base requires CMB2 plugin to be installed and activated. The plugin has been deactivated."
+msgstr ""
+
+#: src/admin/class-admin.php:105
+#: src/admin/class-admin.php:107
+msgid "Events"
+msgstr ""
+
+#: src/admin/class-admin.php:106
+#: src/admin/class-admin.php:108
+msgid "Event"
+msgstr ""
+
+#: src/admin/class-admin.php:109
+#: src/admin/class-admin.php:144
+msgid "Add New"
+msgstr ""
+
+#: src/admin/class-admin.php:110
+msgid "Add New Event"
+msgstr ""
+
+#: src/admin/class-admin.php:111
+msgid "New Event"
+msgstr ""
+
+#: src/admin/class-admin.php:112
+msgid "Edit Event"
+msgstr ""
+
+#: src/admin/class-admin.php:113
+msgid "View Event"
+msgstr ""
+
+#: src/admin/class-admin.php:114
+msgid "All Events"
+msgstr ""
+
+#: src/admin/class-admin.php:115
+msgid "Search Events"
+msgstr ""
+
+#: src/admin/class-admin.php:116
+msgid "Parent Events:"
+msgstr ""
+
+#: src/admin/class-admin.php:117
+msgid "No events found."
+msgstr ""
+
+#: src/admin/class-admin.php:118
+msgid "No events found in Trash."
+msgstr ""
+
+#: src/admin/class-admin.php:140
+#: src/admin/class-admin.php:142
+msgid "Locations"
+msgstr ""
+
+#: src/admin/class-admin.php:141
+#: src/admin/class-admin.php:143
+#: src/admin/class-cmb2.php:177
+msgid "Location"
+msgstr ""
+
+#: src/admin/class-admin.php:145
+msgid "Add New Location"
+msgstr ""
+
+#: src/admin/class-admin.php:146
+msgid "New Location"
+msgstr ""
+
+#: src/admin/class-admin.php:147
+msgid "Edit Location"
+msgstr ""
+
+#: src/admin/class-admin.php:148
+msgid "View Location"
+msgstr ""
+
+#: src/admin/class-admin.php:149
+msgid "All Locations"
+msgstr ""
+
+#: src/admin/class-admin.php:150
+msgid "Search Locations"
+msgstr ""
+
+#: src/admin/class-admin.php:151
+msgid "Parent Locations:"
+msgstr ""
+
+#: src/admin/class-admin.php:152
+msgid "No locations found."
+msgstr ""
+
+#: src/admin/class-admin.php:153
+msgid "No locations found in Trash."
+msgstr ""
+
+#: src/admin/class-admin.php:190
+#: src/admin/class-cmb2.php:445
+msgid "Highlighted event"
+msgstr ""
+
+#: src/admin/class-admin.php:215
+msgid "Yes"
+msgstr ""
+
+#: src/admin/class-admin.php:215
+msgid "No"
+msgstr ""
+
+#: src/admin/class-cmb2.php:57
+msgid "Event Details"
+msgstr ""
+
+#: src/admin/class-cmb2.php:69
+#: src/admin/class-cmb2.php:730
+msgid "Language"
+msgstr ""
+
+#: src/admin/class-cmb2.php:72
+#: src/admin/class-cmb2.php:733
+msgid "Select the language of the event"
+msgstr ""
+
+#: src/admin/class-cmb2.php:85
+msgid "Teaser"
+msgstr ""
+
+#: src/admin/class-cmb2.php:88
+msgid "Enter a teaser text for the event"
+msgstr ""
+
+#: src/admin/class-cmb2.php:98
+#: src/admin/class-cmb2.php:785
+msgid "Description"
+msgstr ""
+
+#: src/admin/class-cmb2.php:101
+msgid "Enter a description for the event"
+msgstr ""
+
+#: src/admin/class-cmb2.php:114
+msgid "Organizer"
+msgstr ""
+
+#: src/admin/class-cmb2.php:117
+msgid "Enter the name of the organizer"
+msgstr ""
+
+#: src/admin/class-cmb2.php:127
+msgid "Contact person name"
+msgstr ""
+
+#: src/admin/class-cmb2.php:130
+msgid "Enter the name of the contact person"
+msgstr ""
+
+#: src/admin/class-cmb2.php:137
+#: src/admin/class-cmb2.php:798
+msgid "Phone Number"
+msgstr ""
+
+#: src/admin/class-cmb2.php:140
+#: src/admin/class-cmb2.php:801
+msgid "Enter the phone number of the organizer or contact person"
+msgstr ""
+
+#: src/admin/class-cmb2.php:147
+#: src/admin/class-cmb2.php:808
+msgid "Phone number public"
+msgstr ""
+
+#: src/admin/class-cmb2.php:150
+#: src/admin/class-cmb2.php:812
+msgid "Should the phone number be public?"
+msgstr ""
+
+#: src/admin/class-cmb2.php:157
+#: src/admin/class-cmb2.php:819
+msgid "Email Address"
+msgstr ""
+
+#: src/admin/class-cmb2.php:160
+#: src/admin/class-cmb2.php:822
+msgid "Enter the email address of the organizer or contact person"
+msgstr ""
+
+#: src/admin/class-cmb2.php:167
+#: src/admin/class-cmb2.php:829
+msgid "Email address public"
+msgstr ""
+
+#: src/admin/class-cmb2.php:170
+#: src/admin/class-cmb2.php:833
+msgid "Should the email address be public?"
+msgstr ""
+
+#: src/admin/class-cmb2.php:180
+msgid "Choose the location of the event from the location post type or enter the location address, zipcode and city separately for this event below."
+msgstr ""
+
+#: src/admin/class-cmb2.php:183
+msgid "Select a location"
+msgstr ""
+
+#: src/admin/class-cmb2.php:190
+#: src/admin/class-cmb2.php:746
+msgid "Location Address"
+msgstr ""
+
+#: src/admin/class-cmb2.php:193
+msgid "Enter the address of the event location"
+msgstr ""
+
+#: src/admin/class-cmb2.php:204
+#: src/admin/class-cmb2.php:759
+msgid "Location Zipcode"
+msgstr ""
+
+#: src/admin/class-cmb2.php:207
+msgid "Enter the zipcode of the event location"
+msgstr ""
+
+#: src/admin/class-cmb2.php:218
+msgid "Location city"
+msgstr ""
+
+#: src/admin/class-cmb2.php:221
+msgid "Enter the city of the event location"
+msgstr ""
+
+#: src/admin/class-cmb2.php:232
+msgid "Location Description"
+msgstr ""
+
+#: src/admin/class-cmb2.php:235
+msgid "Enter a description of the event location"
+msgstr ""
+
+#: src/admin/class-cmb2.php:249
+msgid "Itinerary"
+msgstr ""
+
+#: src/admin/class-cmb2.php:252
+msgid "Enter the event itinerary"
+msgstr ""
+
+#: src/admin/class-cmb2.php:259
+msgid "Publicity"
+msgstr ""
+
+#: src/admin/class-cmb2.php:263
+msgid "Public"
+msgstr ""
+
+#: src/admin/class-cmb2.php:264
+msgid "Partly public"
+msgstr ""
+
+#: src/admin/class-cmb2.php:265
+msgid "Closed"
+msgstr ""
+
+#: src/admin/class-cmb2.php:273
+msgid "Registration"
+msgstr ""
+
+#: src/admin/class-cmb2.php:277
+msgid "Not Required"
+msgstr ""
+
+#: src/admin/class-cmb2.php:278
+msgid "Mandatory"
+msgstr ""
+
+#: src/admin/class-cmb2.php:279
+msgid "Optional"
+msgstr ""
+
+#: src/admin/class-cmb2.php:287
+msgid "Registration URL"
+msgstr ""
+
+#: src/admin/class-cmb2.php:300
+msgid "Accessibility"
+msgstr ""
+
+#: src/admin/class-cmb2.php:303
+msgid "Enter information about event accessibility"
+msgstr ""
+
+#: src/admin/class-cmb2.php:310
+msgid "Price type"
+msgstr ""
+
+#: src/admin/class-cmb2.php:314
+msgid "Fixed (or free)"
+msgstr ""
+
+#: src/admin/class-cmb2.php:315
+msgid "Starting from (minimum only)"
+msgstr ""
+
+#: src/admin/class-cmb2.php:316
+msgid "Range (minimum and maximum)"
+msgstr ""
+
+#: src/admin/class-cmb2.php:324
+msgid "Fixed price"
+msgstr ""
+
+#: src/admin/class-cmb2.php:327
+msgid "Enter the fixed price of the event or 0 if the event is free"
+msgstr ""
+
+#: src/admin/class-cmb2.php:342
+msgid "Minimum price"
+msgstr ""
+
+#: src/admin/class-cmb2.php:359
+msgid "Maximum price"
+msgstr ""
+
+#: src/admin/class-cmb2.php:376
+msgid "Event Website URL"
+msgstr ""
+
+#: src/admin/class-cmb2.php:385
+msgid "Ticket Website URL"
+msgstr ""
+
+#: src/admin/class-cmb2.php:394
+msgid "Organizer Website URL"
+msgstr ""
+
+#: src/admin/class-cmb2.php:403
+msgid "Images"
+msgstr ""
+
+#: src/admin/class-cmb2.php:409
+msgid "Add Image"
+msgstr ""
+
+#: src/admin/class-cmb2.php:410
+#: src/admin/class-cmb2.php:413
+msgid "Remove Image"
+msgstr ""
+
+#: src/admin/class-cmb2.php:411
+msgid "Image:"
+msgstr ""
+
+#: src/admin/class-cmb2.php:412
+msgid "Download Image"
+msgstr ""
+
+#: src/admin/class-cmb2.php:420
+msgid "Media files"
+msgstr ""
+
+#: src/admin/class-cmb2.php:425
+msgid "Add File"
+msgstr ""
+
+#: src/admin/class-cmb2.php:426
+#: src/admin/class-cmb2.php:429
+msgid "Remove File"
+msgstr ""
+
+#: src/admin/class-cmb2.php:427
+msgid "File:"
+msgstr ""
+
+#: src/admin/class-cmb2.php:428
+msgid "Download File"
+msgstr ""
+
+#: src/admin/class-cmb2.php:436
+msgid "Video URL"
+msgstr ""
+
+#: src/admin/class-cmb2.php:448
+msgid "Check this box if the event is highlighted"
+msgstr ""
+
+#: src/admin/class-cmb2.php:460
+msgid "Event Dates"
+msgstr ""
+
+#: src/admin/class-cmb2.php:472
+msgid "Type"
+msgstr ""
+
+#: src/admin/class-cmb2.php:475
+msgid "Select the type of date. Based on the selection, open one of the sections below to enter the date information."
+msgstr ""
+
+#: src/admin/class-cmb2.php:477
+msgid "A specific date or date-range"
+msgstr ""
+
+#: src/admin/class-cmb2.php:478
+msgid "A configurable repeating pattern"
+msgstr ""
+
+#: src/admin/class-cmb2.php:487
+msgid "Repeats every year"
+msgstr ""
+
+#: src/admin/class-cmb2.php:490
+msgid "Check this box if the event repeats every year"
+msgstr ""
+
+#: src/admin/class-cmb2.php:505
+msgid "Date {#}"
+msgstr ""
+
+#: src/admin/class-cmb2.php:506
+msgid "Add Another Date or Date Range"
+msgstr ""
+
+#: src/admin/class-cmb2.php:507
+msgid "Remove Date"
+msgstr ""
+
+#: src/admin/class-cmb2.php:512
+msgid "Specific date or date-range"
+msgstr ""
+
+#: src/admin/class-cmb2.php:513
+msgid "Click on the title bar with Date # to open the date input"
+msgstr ""
+
+#: src/admin/class-cmb2.php:520
+msgid "Start date"
+msgstr ""
+
+#: src/admin/class-cmb2.php:524
+#: src/admin/class-cmb2.php:589
+msgid "Enter the start date of a singular event or the date from which the event should start repeating for a repeating event"
+msgstr ""
+
+#: src/admin/class-cmb2.php:532
+msgid "End date (optional)"
+msgstr ""
+
+#: src/admin/class-cmb2.php:536
+#: src/admin/class-cmb2.php:601
+msgid "Enter the end date of a singular event or the date from which the event should stop repeating for a repeating event"
+msgstr ""
+
+#: src/admin/class-cmb2.php:544
+msgid "Start Time (optional)"
+msgstr ""
+
+#: src/admin/class-cmb2.php:547
+#: src/admin/class-cmb2.php:612
+msgid "Select the start time of the event"
+msgstr ""
+
+#: src/admin/class-cmb2.php:556
+msgid "End Time (optional)"
+msgstr ""
+
+#: src/admin/class-cmb2.php:559
+#: src/admin/class-cmb2.php:624
+msgid "Select the end time of the event"
+msgstr ""
+
+#: src/admin/class-cmb2.php:570
+msgid "Pattern {#}"
+msgstr ""
+
+#: src/admin/class-cmb2.php:571
+msgid "Add Another Pattern"
+msgstr ""
+
+#: src/admin/class-cmb2.php:572
+msgid "Remove Pattern"
+msgstr ""
+
+#: src/admin/class-cmb2.php:577
+msgid "Configurable repeating pattern"
+msgstr ""
+
+#: src/admin/class-cmb2.php:578
+msgid "Click on the title bar with Pattern # to open the pattern input"
+msgstr ""
+
+#: src/admin/class-cmb2.php:585
+msgid "Pattern start date"
+msgstr ""
+
+#: src/admin/class-cmb2.php:597
+msgid "Pattern end date"
+msgstr ""
+
+#: src/admin/class-cmb2.php:609
+msgid "Pattern Start Time (optional)"
+msgstr ""
+
+#: src/admin/class-cmb2.php:621
+msgid "Pattern End Time (optional)"
+msgstr ""
+
+#: src/admin/class-cmb2.php:633
+msgid "Repeat pattern"
+msgstr ""
+
+#: src/admin/class-cmb2.php:637
+msgid "Every"
+msgstr ""
+
+#: src/admin/class-cmb2.php:638
+msgid "Every first"
+msgstr ""
+
+#: src/admin/class-cmb2.php:639
+msgid "Every second"
+msgstr ""
+
+#: src/admin/class-cmb2.php:640
+msgid "Every third"
+msgstr ""
+
+#: src/admin/class-cmb2.php:641
+msgid "Every fourth"
+msgstr ""
+
+#: src/admin/class-cmb2.php:642
+msgid "Every last"
+msgstr ""
+
+#: src/admin/class-cmb2.php:651
+msgid "Day(s) of the week"
+msgstr ""
+
+#: src/admin/class-cmb2.php:654
+msgid "None means daily"
+msgstr ""
+
+#: src/admin/class-cmb2.php:656
+msgid "Monday"
+msgstr ""
+
+#: src/admin/class-cmb2.php:657
+msgid "Tuesday"
+msgstr ""
+
+#: src/admin/class-cmb2.php:658
+msgid "Wednesday"
+msgstr ""
+
+#: src/admin/class-cmb2.php:659
+msgid "Thursday"
+msgstr ""
+
+#: src/admin/class-cmb2.php:660
+msgid "Friday"
+msgstr ""
+
+#: src/admin/class-cmb2.php:661
+msgid "Saturday"
+msgstr ""
+
+#: src/admin/class-cmb2.php:662
+msgid "Sunday"
+msgstr ""
+
+#: src/admin/class-cmb2.php:671
+msgid "Month(s) of the year"
+msgstr ""
+
+#: src/admin/class-cmb2.php:674
+msgid "None means monthly"
+msgstr ""
+
+#: src/admin/class-cmb2.php:676
+msgid "January"
+msgstr ""
+
+#: src/admin/class-cmb2.php:677
+msgid "February"
+msgstr ""
+
+#: src/admin/class-cmb2.php:678
+msgid "March"
+msgstr ""
+
+#: src/admin/class-cmb2.php:679
+msgid "April"
+msgstr ""
+
+#: src/admin/class-cmb2.php:680
+msgid "May"
+msgstr ""
+
+#: src/admin/class-cmb2.php:681
+msgid "June"
+msgstr ""
+
+#: src/admin/class-cmb2.php:682
+msgid "July"
+msgstr ""
+
+#: src/admin/class-cmb2.php:683
+msgid "August"
+msgstr ""
+
+#: src/admin/class-cmb2.php:684
+msgid "September"
+msgstr ""
+
+#: src/admin/class-cmb2.php:685
+msgid "October"
+msgstr ""
+
+#: src/admin/class-cmb2.php:686
+msgid "November"
+msgstr ""
+
+#: src/admin/class-cmb2.php:687
+msgid "December"
+msgstr ""
+
+#: src/admin/class-cmb2.php:695
+msgid "Exclude dates from repeating pattern"
+msgstr ""
+
+#: src/admin/class-cmb2.php:699
+msgid "Enter the dates to exclude from the repeating pattern"
+msgstr ""
+
+#: src/admin/class-cmb2.php:702
+msgid "Enter dates to exclude from the repeating pattern, f.e. holidays"
+msgstr ""
+
+#: src/admin/class-cmb2.php:718
+msgid "Location Details"
+msgstr ""
+
+#: src/admin/class-cmb2.php:749
+msgid "Enter the street and street number of the location"
+msgstr ""
+
+#: src/admin/class-cmb2.php:762
+msgid "Enter the zipcode of the location"
+msgstr ""
+
+#: src/admin/class-cmb2.php:772
+msgid "Location City"
+msgstr ""
+
+#: src/admin/class-cmb2.php:775
+msgid "Enter the city of the location"
+msgstr ""
+
+#: src/admin/class-cmb2.php:788
+msgid "Description of the location"
+msgstr ""
+
+#: src/admin/class-cmb2.php:840
+msgid "Website URL"
+msgstr ""
+
+#: src/admin/class-cmb2.php:843
+msgid "Enter the website URL of the location"
+msgstr ""
+
+#: src/admin/class-cmb2.php:852
+msgid "Social media"
+msgstr ""
+
+#: src/admin/class-cmb2.php:867
+msgid "Social media channel {#}"
+msgstr ""
+
+#: src/admin/class-cmb2.php:868
+msgid "Add Another channel"
+msgstr ""
+
+#: src/admin/class-cmb2.php:869
+msgid "Remove channel"
+msgstr ""
+
+#: src/admin/class-cmb2.php:879
+msgid "Channel"
+msgstr ""
+
+#: src/admin/class-cmb2.php:882
+msgid "Select the social media channel"
+msgstr ""
+
+#: src/admin/class-cmb2.php:884
+msgid "Facebook"
+msgstr ""
+
+#: src/admin/class-cmb2.php:885
+msgid "Twitter"
+msgstr ""
+
+#: src/admin/class-cmb2.php:886
+msgid "Instagram"
+msgstr ""
+
+#: src/admin/class-cmb2.php:887
+msgid "LinkedIn"
+msgstr ""
+
+#: src/admin/class-cmb2.php:888
+msgid "YouTube"
+msgstr ""
+
+#: src/admin/class-cmb2.php:889
+msgid "Pinterest"
+msgstr ""
+
+#: src/admin/class-cmb2.php:890
+msgid "TikTok"
+msgstr ""
+
+#: src/admin/class-cmb2.php:891
+msgid "Snapchat"
+msgstr ""
+
+#: src/admin/class-cmb2.php:892
+msgid "WhatsApp"
+msgstr ""
+
+#: src/admin/class-cmb2.php:893
+msgid "Telegram"
+msgstr ""
+
+#: src/admin/class-cmb2.php:894
+msgid "Signal"
+msgstr ""
+
+#: src/admin/class-cmb2.php:895
+msgid "Discord"
+msgstr ""
+
+#: src/admin/class-cmb2.php:896
+msgid "Twitch"
+msgstr ""
+
+#: src/admin/class-cmb2.php:897
+msgid "Other"
+msgstr ""
+
+#: src/admin/class-cmb2.php:907
+msgid "Channel URL"
+msgstr ""
+
+#: src/admin/class-cmb2.php:910
+msgid "Enter the social media channel URL"
+msgstr ""
+
+#: src/admin/class-cmb2.php:919
+msgid "Opening hours"
+msgstr ""
+
+#: src/admin/class-cmb2.php:943
+msgid "Opening time"
+msgstr ""
+
+#: src/admin/class-cmb2.php:946
+msgid "Select the opening time. Set to 00:00 to remove after input."
+msgstr ""
+
+#: src/admin/class-cmb2.php:955
+msgid "Closing time"
+msgstr ""
+
+#: src/admin/class-cmb2.php:958
+msgid "Select the closing time. Set to 00:00 to remove after input."
+msgstr ""
+
+#: src/admin/class-cmb2.php:968
+msgid "Extra information opening hours"
+msgstr ""
+
+#: src/admin/class-cmb2.php:971
+msgid "Enter extra information about the opening hours"
+msgstr ""
+
+#: src/admin/class-cmb2.php:972
+msgid "Extra information"
+msgstr ""
+
+#: src/admin/class-cmb2.php:990
+msgid "English (United States)"
+msgstr ""
+
+#: src/admin/class-cmb2.php:991
+msgid "Dutch (Netherlands)"
+msgstr ""
+
+#: src/admin/class-cmb2.php:992
+msgid "French (France)"
+msgstr ""
+
+#: src/admin/class-cmb2.php:993
+msgid "German (Germany)"
+msgstr ""
+
+#: src/admin/class-cmb2.php:994
+msgid "Italian (Italy)"
+msgstr ""
+
+#: src/admin/class-cmb2.php:999
+msgid "Select a language"
+msgstr ""
+
+#: src/admin/class-event-dates.php:63
+msgid "Event Date"
+msgstr ""
+
+#: src/admin/class-event-dates.php:64
+msgid "Excluded Dates"
+msgstr ""
+
+#: src/admin/class-event-dates.php:407
+msgctxt "Readable date without year"
+msgid "F jS"
+msgstr ""
+
+#: src/admin/class-event-dates.php:409
+msgctxt "Readable date with year"
+msgid "F jS, Y"
+msgstr ""
+
+#: src/admin/class-event-dates.php:478
+msgctxt "first as in every first monday of the month"
+msgid "first"
+msgstr ""
+
+#: src/admin/class-event-dates.php:479
+msgctxt "second as in every second monday of the month"
+msgid "second"
+msgstr ""
+
+#: src/admin/class-event-dates.php:480
+msgctxt "third as in every third monday of the month"
+msgid "third"
+msgstr ""
+
+#: src/admin/class-event-dates.php:481
+msgctxt "fourth as in every fourth monday of the month"
+msgid "fourth"
+msgstr ""
+
+#: src/admin/class-event-dates.php:482
+msgctxt "last as in every last monday of the month"
+msgid "last"
+msgstr ""
+
+#. translators: %1$s and %2$s are the start and end of a run of consecutive items, for example monday and friday to become "monday through friday".
+#: src/admin/class-event-dates.php:501
+#: src/admin/class-event-dates.php:828
+msgctxt "As monday through friday"
+msgid "%1$s through %2$s"
+msgstr ""
+
+#: src/admin/class-event-dates.php:527
+msgctxt "ITEMx are special tokens, keep those as-is, translate the rest."
+msgid "ITEM1, ITEM2 and ITEM3"
+msgstr ""
+
+#: src/admin/class-event-dates.php:788
+msgctxt "of the month as in Every last friday of the month"
+msgid "of the month"
+msgstr ""
+
+#: src/admin/class-event-dates.php:791
+#: src/admin/class-event-dates.php:797
+msgctxt "of as in Every last friday of January"
+msgid "of"
+msgstr ""
+
+#: src/admin/class-event-dates.php:804
+#: src/admin/class-event-dates.php:807
+msgctxt "Every as in Every tuesday."
+msgid "Every"
+msgstr ""
+
+#: src/admin/class-event-dates.php:808
+msgctxt "The expression for Every day of the week"
+msgid "Daily"
+msgstr ""
+
+#: src/admin/class-event-dates.php:819
+msgctxt "Every year on as in Every year on 1st of January"
+msgid "Every year on"
+msgstr ""
+
+#. translators: %s is a time.
+#: src/admin/class-event-dates.php:854
+msgctxt "Example: Starts at 17:00"
+msgid "Starts at %s"
+msgstr ""
+
+#. translators: %s is a time.
+#: src/admin/class-event-dates.php:857
+msgctxt "Example: Ends at 23:00"
+msgid "Ends at %s"
+msgstr ""
+
+#. translators: %s are a time.
+#: src/admin/class-event-dates.php:860
+msgctxt "Example: From 17:00 til 23:00"
+msgid "From %1$s til %2$s"
+msgstr ""
+
+#. translators: %s is a time.
+#: src/admin/class-event-dates.php:865
+msgctxt "Example: Til 23:00"
+msgid "Til %s"
+msgstr ""
+
+#. translators: %s are a time.
+#: src/admin/class-event-dates.php:868
+msgctxt "Example: 17:00 - 23:00"
+msgid "%1$s - %2$s"
+msgstr ""
+
+#: src/admin/class-post-expiration.php:60
+msgid "Every 15 Minutes"
+msgstr ""
+
+#: src/admin/class-post-expiration.php:127
+#: src/admin/class-post-expiration.php:139
+msgid "Event unpublish date"
+msgstr ""
+
+#: src/admin/class-post-expiration.php:142
+msgid "d-m-Y"
+msgstr ""
+
+#: src/admin/class-post-expiration.php:143
+msgid "Select the date on which the event will be unpublished and won't be included in the REST API results anymore"
+msgstr ""
+
+#: src/admin/class-post-expiration.php:157
+msgid "Unpublish date"
+msgstr ""
+
+#: src/admin/class-settings.php:33
+#: src/admin/class-settings.php:34
+#: src/admin/class-settings.php:60
+msgid "OpenAgenda Settings"
+msgstr ""
+
+#: src/admin/class-settings.php:66
+msgid "API submit user"
+msgstr ""
+
+#: src/admin/class-settings.php:69
+msgid "Select a user"
+msgstr ""
+
+#. translators: %s: taxonomy
+#: src/admin/class-taxonomies.php:45
+msgid "All %s"
+msgstr ""
+
+#. translators: %s: taxonomy
+#: src/admin/class-taxonomies.php:47
+msgid "Edit %s"
+msgstr ""
+
+#. translators: %s: taxonomy
+#: src/admin/class-taxonomies.php:49
+msgid "View %s"
+msgstr ""
+
+#. translators: %s: taxonomy
+#: src/admin/class-taxonomies.php:51
+msgid "Update %s"
+msgstr ""
+
+#. translators: %s: taxonomy
+#: src/admin/class-taxonomies.php:53
+msgid "Add New %s"
+msgstr ""
+
+#. translators: %s: taxonomy
+#: src/admin/class-taxonomies.php:55
+msgid "New %s"
+msgstr ""
+
+#. translators: %s: taxonomy
+#: src/admin/class-taxonomies.php:57
+msgid "Search %s"
+msgstr ""
+
+#. translators: %s: taxonomy
+#: src/admin/class-taxonomies.php:59
+msgid "Popular %s"
+msgstr ""
+
+#. translators: %s: taxonomy
+#: src/admin/class-taxonomies.php:61
+msgid "Separate %s with commas"
+msgstr ""
+
+#. translators: %s: taxonomy
+#: src/admin/class-taxonomies.php:63
+msgid "Add or remove %s"
+msgstr ""
+
+#. translators: %s: taxonomy
+#: src/admin/class-taxonomies.php:65
+msgid "Choose from the most used %s"
+msgstr ""
+
+#. translators: %s: taxonomy
+#: src/admin/class-taxonomies.php:67
+msgid "No %s found"
+msgstr ""
+
+#. translators: %s: taxonomy
+#: src/admin/class-taxonomies.php:69
+msgid "Parent %s"
+msgstr ""
+
+#. translators: %s: taxonomy
+#: src/admin/class-taxonomies.php:71
+msgid "Parent %s:"
+msgstr ""
+
+#. translators: %s: taxonomy
+#: src/admin/class-taxonomies.php:73
+msgid "&larr;  Back to %s"
+msgstr ""
+
+#: src/admin/class-taxonomies.php:94
+#: src/admin/class-taxonomies.php:95
+msgid "Create Taxonomies"
+msgstr ""
+
+#. translators: %s: taxonomy name
+#: src/admin/class-taxonomies.php:123
+msgid "%s taxonomy already exists"
+msgstr ""
+
+#. translators: %s: taxonomy name
+#: src/admin/class-taxonomies.php:131
+msgid "%s taxonomy created"
+msgstr ""
+
+#. translators: %s: taxonomy name
+#: src/admin/class-taxonomies.php:147
+msgid "%s taxonomy deleted"
+msgstr ""
+
+#: src/admin/class-taxonomies.php:155
+msgid "New Taxonomy"
+msgstr ""
+
+#: src/admin/class-taxonomies.php:156
+msgid "It's best to use singular words"
+msgstr ""
+
+#: src/admin/class-taxonomies.php:162
+msgid "A taxonomy can only be deleted if it has no terms yet."
+msgstr ""
+
+#: src/admin/class-taxonomies.php:179
+msgid "Delete"
+msgstr ""
+
+#: src/admin/class-taxonomies.php:183
+msgid "This taxonomy has terms attached to it"
+msgstr ""
+
+#: src/admin/class-taxonomies.php:189
+msgid "Delete selected taxonomies"
+msgstr ""
+
+#: src/rest_api/class-openagenda-controller.php:573
+#: src/rest_api/class-openagenda-controller.php:592
+msgid "Invalid post ID."
+msgstr ""
+
+#: src/rest_api/class-openagenda-controller.php:620
+#: src/rest_api/class-openagenda-controller.php:630
+msgid "CMB2 custom fields are missing."
+msgstr ""
+
+#: src/rest_api/class-openagenda-controller.php:718
+msgid "Invalid content type."
+msgstr ""
+
+#: src/rest_api/class-openagenda-controller.php:725
+#: src/rest_api/class-openagenda-controller.php:759
+msgid "Can't submit event, because CMB2 custom fields are missing."
+msgstr ""
+
+#: src/rest_api/class-openagenda-controller.php:740
+msgid "Cannot create item."
+msgstr ""
+
+#: src/rest_api/class-openagenda-controller.php:949
+msgid "Limit response to posts within (a) specific post type(s)."
+msgstr ""
+
+#: src/rest_api/class-openagenda-controller.php:958
+msgid "Limit response to posts within (a) specific year(s)."
+msgstr ""
+
+#: src/rest_api/class-openagenda-controller.php:967
+msgid "Limit response to posts for (a) specific date."
+msgstr ""
+
+#: src/rest_api/class-openagenda-controller.php:972
+msgid "Limit response to posts within (a) specific time period."
+msgstr ""
+
+#. translators: %s: cmb2 field name
+#: src/rest_api/class-openagenda-controller.php:1125
+msgid "Limit result set to posts on specific %s."
+msgstr ""
