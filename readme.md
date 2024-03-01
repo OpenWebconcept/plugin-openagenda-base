@@ -37,10 +37,11 @@ If you chose for option 2 (new WordPress installation), you will probably need t
 
 ### Composer installation
 
-1. `composer source git@github.com:OpenWebconcept/plugin-openagenda-plugin.git`
-2. `cd /wp-content/plugins/openagenda-base`
-3. `composer install`
-4. Activate the OpenAgenda Base Plugin through the 'Plugins' menu in WordPress.
+1. `composer source git@github.com:OpenWebconcept/plugin-openagenda-base.git`
+2. `composer require acato/openagenda-base`
+3. `cd /wp-content/plugins/plugin-openagenda-base`
+4. `composer install`
+5. Activate the OpenAgenda Base Plugin through the 'Plugins' menu in WordPress.
 
 ## Development
 
@@ -48,7 +49,7 @@ If you chose for option 2 (new WordPress installation), you will probably need t
 
 Please remember, we use the WordPress PHP Coding Standards for this plugin! (https://make.wordpress.org/core/handbook/best-practices/coding-standards/php/) To check if your changes are compatible with these standards:
 
-*  `cd /wp-content/plugins/openagenda-base`
+*  `cd /wp-content/plugins/plugin-openagenda-base`
 *  `composer install` (this step is only needed once after installing the plugin)
 *  `./vendor/bin/phpcs --standard=phpcs.xml.dist .`
 *  See the output if you have made any errors.
