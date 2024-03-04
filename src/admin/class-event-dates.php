@@ -162,7 +162,7 @@ class Event_Dates {
 
 		foreach ( $candidates as $meta ) {
 			$type                = $dates_type;
-			$meta['repeat_days'] = $meta[ $prefix . 'complex_weekdays' ] ? $meta[ $prefix . 'complex_weekdays' ] : array();
+			$meta['repeat_days'] = isset( $meta[ $prefix . 'complex_weekdays' ] ) ? $meta[ $prefix . 'complex_weekdays' ] : array();
 			if ( empty( $meta['repeat_days'] ) ) {
 				$meta['repeat_days'] = self::all_days();
 			}
@@ -173,7 +173,7 @@ class Event_Dates {
 
 				// Holds all months this event is on.
 				$triggered_months = self::all_months();
-				if ( ( $meta[ $prefix . 'complex_months' ] ) && count( $meta[ $prefix . 'complex_months' ] ) > 0 ) {
+				if ( isset ( $meta[ $prefix . 'complex_months' ] ) && count( $meta[ $prefix . 'complex_months' ] ) > 0 ) {
 					$triggered_months = array_intersect( $triggered_months, $meta[ $prefix . 'complex_months' ] );
 				}
 
@@ -248,8 +248,8 @@ class Event_Dates {
 						$dates[]       = (int) $a_timestamp;
 						$dates_times[] = array(
 							'date'       => gmdate( 'Y-m-d', $a_timestamp ),
-							'start_time' => $meta[ $prefix . 'complex_start_time' ],
-							'end_time'   => $meta[ $prefix . 'complex_end_time' ],
+							'start_time' => isset( $meta[ $prefix . 'complex_start_time' ] ) ? $meta[ $prefix . 'complex_start_time' ] : null,
+							'end_time'   => isset( $meta[ $prefix . 'complex_end_time' ] ) ? $meta[ $prefix . 'complex_end_time' ] : null,
 						);
 					}
 				}

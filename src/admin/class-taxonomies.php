@@ -143,9 +143,19 @@ class Taxonomies {
 
 			update_option( 'event_taxonomies', $event_taxonomies_json );
 
+            $delete_taxonomy_text = implode( ', ', $delete_taxonomy);
+
 			/* translators: %s: taxonomy name */
-			echo '<div class="updated"><p><strong>' . sprintf( esc_html__( '%s taxonomy deleted', 'openagenda-base' ), esc_html( $delete_taxonomy ) ) . '</strong></p></div>';
+            if( 1 === count( $delete_taxonomy ) ) {
+                echo '<div class="updated"><p><strong>' . sprintf( esc_html__( '%s taxonomy deleted', 'openagenda-base' ), esc_html( $delete_taxonomy[0] ) ) . '</strong></p></div>';
+            } else {
+                echo '<div class="updated"><p><strong>' . sprintf( esc_html__( '%s taxonomies deleted', 'openagenda-base' ), esc_html( $delete_taxonomy_text ) ) . '</strong></p></div>';
+            }
 		}
+
+        // Create new taxonomies array after succesfull creation or deletion of taxonomies.
+        $event_taxonomies_json  = get_option( 'event_taxonomies' );
+        $event_taxonomies_array = json_decode( $event_taxonomies_json, true );
 		?>
 		<div class="wrap">
 			<h2>Create Taxonomies</h2>
@@ -166,8 +176,13 @@ class Taxonomies {
 					<?php if ( ! empty( $event_taxonomies_array ) ) : ?>
 						<?php
 						foreach ( $event_taxonomies_array as $taxonomy ) :
-							// get number of terms attached to taxonomy.
-							$term_count = (int) wp_count_terms( strtolower( $taxonomy ) );
+							// Try to get the term count for the current taxonomy and if it fails, set it to 0.
+                            $terms = get_terms( strtolower( $taxonomy ) );
+                            if ( is_wp_error( $terms ) ) {
+                                $term_count = 0;
+                            } else {
+                                $term_count = count( $terms );
+                            }
 							?>
 							<tr valign="top">
 								<th scope="row"><?php echo esc_html( $taxonomy ); ?></th>

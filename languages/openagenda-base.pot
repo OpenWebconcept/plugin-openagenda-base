@@ -1090,8 +1090,13 @@ msgid "%s taxonomy created"
 msgstr ""
 
 #. translators: %s: taxonomy name
-#: src/admin/class-taxonomies.php:147
+#: src/admin/class-taxonomies.php:150
 msgid "%s taxonomy deleted"
+msgstr ""
+
+#. translators: %s: taxonomies name
+#: src/admin/class-taxonomies.php:152
+msgid "%s taxonomies deleted"
 msgstr ""
 
 #: src/admin/class-taxonomies.php:155

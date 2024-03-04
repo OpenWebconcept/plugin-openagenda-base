@@ -1091,9 +1091,14 @@ msgid "%s taxonomy created"
 msgstr "%s taxonomie aangemaakt"
 
 #. translators: %s: taxonomy name
-#: src/admin/class-taxonomies.php:147
+#: src/admin/class-taxonomies.php:150
 msgid "%s taxonomy deleted"
 msgstr "%s taxonomie verwijderd"
+
+#. translators: %s: taxonomy name
+#: src/admin/class-taxonomies.php:152
+msgid "%s taxonomies deleted"
+msgstr "%s taxonomieën verwijderd"
 
 #: src/admin/class-taxonomies.php:155
 msgid "New Taxonomy"
