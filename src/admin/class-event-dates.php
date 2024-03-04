@@ -173,7 +173,7 @@ class Event_Dates {
 
 				// Holds all months this event is on.
 				$triggered_months = self::all_months();
-				if ( isset ( $meta[ $prefix . 'complex_months' ] ) && count( $meta[ $prefix . 'complex_months' ] ) > 0 ) {
+				if ( isset( $meta[ $prefix . 'complex_months' ] ) && count( $meta[ $prefix . 'complex_months' ] ) > 0 ) {
 					$triggered_months = array_intersect( $triggered_months, $meta[ $prefix . 'complex_months' ] );
 				}
 
@@ -185,16 +185,16 @@ class Event_Dates {
 				}
 
 				// Start and End of the list, absolute boundaries to prevent over-taxing.
-				$absolute_first_date      = gmdate( 'Y' ) - 1 . '-01-01';
-				$absolute_last_date       = gmdate( 'Y' ) + 1 . '-12-31';
+				$absolute_first_date      = (int) gmdate( 'Y' ) - 1 . '-01-01';
+				$absolute_last_date       = (int) gmdate( 'Y' ) + 1 . '-12-31';
 				$absolute_first_timestamp = strtotime( $absolute_first_date );
 				$absolute_last_timestamp  = strtotime( $absolute_last_date );
 
 				// Boundaries.
-				$first_date_to_process      = $meta[ $prefix . 'complex_start_date' ] ? $meta[ $prefix . 'complex_start_date' ] : false;
+				$first_date_to_process      = isset( $meta[ $prefix . 'complex_start_date' ] ) ? $meta[ $prefix . 'complex_start_date' ] : false;
 				$first_date_to_process      = $first_date_to_process ? $first_date_to_process : $absolute_first_date;
 				$first_timestamp_to_process = strtotime( $first_date_to_process );
-				$last_date_to_process       = $meta[ $prefix . 'complex_end_date' ] ? $meta[ $prefix . 'complex_end_date' ] : false;
+				$last_date_to_process       = isset( $meta[ $prefix . 'complex_end_date' ] ) ? $meta[ $prefix . 'complex_end_date' ] : false;
 				$last_date_to_process       = $last_date_to_process ? $last_date_to_process : $absolute_last_date;
 				$last_timestamp_to_process  = strtotime( $last_date_to_process );
 
@@ -485,6 +485,7 @@ class Event_Dates {
 			'third'  => _x( 'third', 'third as in every third monday of the month', 'openagenda-base' ),
 			'fourth' => _x( 'fourth', 'fourth as in every fourth monday of the month', 'openagenda-base' ),
 			'last'   => _x( 'last', 'last as in every last monday of the month', 'openagenda-base' ),
+			'every'  => _x( 'every', 'every as in every monday of the month', 'openagenda-base' ),
 		);
 
 		return $occurrence_strings[ $occurrence_string ] ? $occurrence_strings[ $occurrence_string ] : '';
@@ -779,7 +780,7 @@ class Event_Dates {
 			++$string_index;
 
 			$type                = $dates_type;
-			$meta['repeat_days'] = $meta[ $prefix . 'complex_weekdays' ] ? $meta[ $prefix . 'complex_weekdays' ] : array();
+			$meta['repeat_days'] = isset( $meta[ $prefix . 'complex_weekdays' ] ) ? $meta[ $prefix . 'complex_weekdays' ] : array();
 			if ( empty( $meta['repeat_days'] ) ) {
 				$meta['repeat_days'] = self::all_days();
 			}

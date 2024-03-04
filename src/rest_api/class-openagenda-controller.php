@@ -548,7 +548,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 				'limit' => (int) $posts_query->query_vars['posts_per_page'],
 				'pages' => array(
 					'total'   => ceil( $posts_query->found_posts / (int) $posts_query->query_vars['posts_per_page'] ),
-					'current' => (int) $query_args['paged'],
+					'current' => isset( $query_args['paged'] ) ? (int) $query_args['paged'] : 1,
 				),
 			),
 			'_links'     => array(),
@@ -1561,15 +1561,18 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 				$a_date = $a['next_date'];
 				$b_date = $b['next_date'];
 
-				if ( $a_date['date'] === $b_date['date'] ) {
-					$a_start_time = $a_date['start_time'];
-					$b_start_time = $b_date['start_time'];
-					if ( $a_start_time === $b_start_time ) {
-						return strcmp( $a['title'], $b['title'] );
+				if ( isset( $a_date['date'] ) && isset( $b_date['date'] ) ) {
+					if ( $a_date['date'] === $b_date['date'] ) {
+						$a_start_time = $a_date['start_time'];
+						$b_start_time = $b_date['start_time'];
+						if ( $a_start_time === $b_start_time ) {
+							return strcmp( $a['title'], $b['title'] );
+						}
+						return strcmp( $a_start_time, $b_start_time );
 					}
-					return strcmp( $a_start_time, $b_start_time );
+					return strcmp( $a_date['date'], $b_date['date'] );
 				}
-				return strcmp( $a_date['date'], $b_date['date'] );
+				return 0;
 			}
 		);
 

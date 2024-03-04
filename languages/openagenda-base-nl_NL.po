@@ -897,6 +897,11 @@ msgctxt "last as in every last monday of the month"
 msgid "last"
 msgstr "laatste"
 
+#: src/admin/class-event-dates.php:488
+msgctxt "every as in every monday of the month"
+msgid "every"
+msgstr "elke"
+
 #. translators: %1$s and %2$s are the start and end of a run of consecutive items, for example monday and friday to become "monday through friday".
 #: src/admin/class-event-dates.php:501 src/admin/class-event-dates.php:828
 msgctxt "As monday through friday"
