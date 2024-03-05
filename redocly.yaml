@@ -1,3 +1,6 @@
 apis:
   main@v1:
     root: ./openapi.yaml
+extends:
+  - recommended
+  - openapi
