@@ -4,3 +4,11 @@ apis:
     extends:
       - minimal
 rules:
+  no-unused-components: error
+theme:
+  openapi:
+    htmlTemplate: ./docs/index.html
+    theme:
+      colors:
+        primary:
+          main: "#32329f"
