@@ -2,10 +2,3 @@ apis:
   main:
     root: ./openapi.yaml
 extends: [recommended]
-info:
-  title: OpenAgenda API
-  version: 1.0.0
-  description: OpenAgenda API
-  contact:
-    name: Eyal Beker
-    email: eyal@acato.nl
