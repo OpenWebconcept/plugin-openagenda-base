@@ -1,8 +1,8 @@
 apis:
   main@v1:
     root: ./openapi.yaml
-    extends:
-      - minimal
+extends:
+  - minimal
 rules:
   no-unused-components: error
 theme:
