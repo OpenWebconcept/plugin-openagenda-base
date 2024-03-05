@@ -37,10 +37,9 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 	 * @var string[] $cmb2_fields_filter
 	 */
 	private $cmb2_fields_filter = array(
-		'accessibility',
 		'highlighted',
 		'language',
-		'location_address',
+		'location_city',
 		'organizer',
 		'publicity',
 		'registration',
@@ -109,7 +108,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 	 * @link https://url/wp-json/owc/openagenda/v1/items?{taxonomy}=term_id1,term_id2
 	 *
 	 * Endpoint to filter openagenda-items on cmb2 custom fields.
-	 * @link https://url/wp-json/owc/openagenda/v1/items?{cmb2_field}=value1,value2
+	 * @link https://url/wp-json/owc/openagenda/v1/items?{cmb2_field}=value1
 	 *
 	 * Endpoint of the openagenda-item detail page by id.
 	 * @link https://url/wp-json/owc/openagenda/v1/items/id/{id}
@@ -1264,6 +1263,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 			'location_address',
 			'location_description',
 			'location_zipcode',
+			'location_city',
 			'organizer',
 			'organizer_website_url',
 			'phone_number',
