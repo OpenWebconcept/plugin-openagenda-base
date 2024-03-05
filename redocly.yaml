@@ -1,6 +1,3 @@
 apis:
   main@v1:
     root: ./openapi.yaml
-lint:
-  rules:
-    example-rule-name: error
