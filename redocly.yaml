@@ -3,4 +3,5 @@ apis:
     root: ./openapi.yaml
 extends:
   - recommended
-  - openapi
+rules:
+  no-empty-servers: error
