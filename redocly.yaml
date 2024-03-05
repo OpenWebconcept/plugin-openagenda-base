@@ -1,8 +1,7 @@
 apis:
   main@v1:
     root: ./openapi.yaml
-styleguide:
-  extends:
-    - recommended
-  rules:
-    no-empty-servers: error
+extends:
+  - recommended
+rules:
+  no-empty-servers: error
