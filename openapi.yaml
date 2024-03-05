@@ -1,0 +1,1082 @@
+openapi: 3.1.0
+info:
+  title: OpenAgenda Plugin API
+  description: The OpenAgenda plugin adds Events and Locations to WordPress which can be retrieved via the OpenAgenda REST API.
+  version: 1.0.0
+  contact:
+    email: eyal@acato.nl
+    url: https://www.acato.nl
+  license:
+    name: EUPL-1.2
+    url: https://opensource.org/licenses/EUPL-1.2
+servers:
+  - url: https://openagenda.ridderkerk.staging.acato.nl/wp-json/owc/openagenda/v1
+    description: Staging server
+paths:
+  /items:
+    get:
+      summary: Get event items
+      description: Get event items with optional filters
+      security: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: The page number to retrieve.
+          schema:
+            type: integer
+            default: 1
+            example: 2
+        - name: perpage
+          in: query
+          required: false
+          description: The number of items per page.
+          schema:
+            type: integer
+            default: 10
+            maximum: 100
+            example: 15
+        - name: date
+          in: query
+          required: false
+          description: The date of the event.
+          schema:
+            type: string
+            format: YYYY-MM-DD
+            example: "2024-01-01"
+        - name: time_period
+          in: query
+          required: false
+          description: The time period of the event.
+          schema:
+            type: string
+            enum: [ "today", "tomorrow", "thisweek", "thisweekend", "nextweek", "thismonth", "nextmonth" ]
+            example: "today"
+        - name: search
+          in: query
+          required: false
+          description: The search query for the event.
+          schema:
+            type: string
+            example: "Museum Night"
+        - name: slug
+          in: query
+          required: false
+          description: The slug of the event.
+          schema:
+            type: string
+            example: "museum-night"
+        - name: highlighted
+          in: query
+          required: false
+          description: Whether the event is highlighted.
+          schema:
+            type: boolean
+            example: true
+        - name: language
+          in: query
+          required: false
+          description: The language of the event.
+          schema:
+            type: string
+            example: "nl_NL"
+            $ref: '#/components/schemas/Location'
+        - name: location_city
+          in: query
+          required: false
+          description: The city of the event location.
+          schema:
+            type: string
+            example: "New York"
+        - name: organizer
+          in: query
+          required: false
+          description: The organizer of the event.
+          schema:
+            type: string
+            example: "Museum of Modern Art"
+        - name: publicity
+          in: query
+          required: false
+          description: The publicity of the event.
+          schema:
+            ref: '#/components/schemas/Publicity'
+        - name: registration
+          in: query
+          required: false
+          description: The registration for the event.
+          schema:
+            ref: '#/components/schemas/Registration'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+    post:
+      summary: Create event item
+      description: Creates an event item. This is a private endpoint.
+      security:
+        - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: The name of the event.
+                language:
+                  description: The language of the event.
+                  $ref: '#/components/schemas/Language'
+                teaser:
+                  type: string
+                  description: A teaser for the event.
+                description:
+                  type: string
+                  description: A description of the event.
+                organizer:
+                  type: string
+                  description: The organizer of the event.
+                contact_person:
+                  type: string
+                  description: The contact person for the event.
+                phone_number:
+                  type: string
+                  description: The phone number for the event.
+                email_address:
+                  type: string
+                  description: The email address for the event.
+                location:
+                  type: int
+                  description: The post ID of the location. If the location is not set, the location fields are required. You can retrieve the locations via the /locations endpoint.
+                location_description:
+                  type: string
+                  condition: location == null
+                  description: The description of the location. This is only used when the location is not set.
+                location_address:
+                  type: string
+                  condition: location == null
+                  description: The address of the location. This is only used when the location is not set.
+                location_zipcode:
+                  type: string
+                  condition: location == null
+                  description: The zipcode of the location. This is only used when the location is not set.
+                location_city:
+                  type: string
+                  condition: location == null
+                  description: The city of the location. This is only used when the location is not set.
+                itinerary:
+                  type: string
+                  description: The itinerary for the event.
+                publicity:
+                  description: The publicity of the event.
+                  ref: '#/components/schemas/Publicity'
+                registration:
+                  description: The registration for the event.
+                  ref: '#/components/schemas/Registration'
+                accessibility:
+                  type: string
+                  description: The accessibility of the event.
+                price_type:
+                  type: string
+                  enum: [ "fixed", "min", "min_max" ]
+                  description: The type of price for the event.
+                price:
+                  type: number
+                  format: float
+                  condition: price_type == "fixed"
+                  description: The price of the event. This is only used when the price_type is fixed.
+                min_price:
+                  type: number
+                  format: float
+                  condition: price_type == "min" || price_type == "min_max"
+                  description: The minimum price of the event. This is only used when the price_type is min or min_max.
+                max_price:
+                  type: number
+                  format: float
+                  condition: price_type == "min_max"
+                  description: The maximum price of the event. This is only used when the price_type is min_max.
+                event_website_url:
+                  type: string
+                  description: The website URL for the event.
+                ticket_website_url:
+                  type: string
+                  description: The website URL for tickets to the event.
+                organizer_website_url:
+                  type: string
+                  description: The website URL for the organizer.
+                highlighted:
+                  type: boolean
+                  description: Whether the event is highlighted.
+                video_url:
+                  type: string
+                  description: The video URL for the event.
+                dates_type:
+                  type: string
+                  enum: [ "specific", "complex" ]
+                  description: The type of dates for the event. When the dates_type is specific, different fields are required than when the dates_type is complex.
+                dates:
+                  oneOf:
+                    - type: array
+                      condition: dates_type == "specific"
+                      description: The dates of the event when the dates_type is specific.
+                      items:
+                        type: object
+                        description: The dates of the event when the dates_type is specific.
+                        properties:
+                          start_date:
+                            type: string
+                            format: date
+                            description: The start date of the event.
+                          end_date:
+                            type: string
+                            format: date
+                            description: The end date of the event.
+                          start_time:
+                            type: string
+                            format: time
+                            description: The start time of the event.
+                          end_time:
+                            type: string
+                            format: H:i
+                            description: The end time of the event.
+                    - type: array
+                      condition: dates_type == "complex"
+                      description: The dates of the event when the dates_type is complex.
+                      items:
+                        type: object
+                        description: The dates of the event when the dates_type is complex.
+                        properties:
+                          start_date:
+                            type: string
+                            format: date
+                            description: The start date of the event.
+                          end_date:
+                            type: string
+                            format: date
+                            description: The end date of the event.
+                          start_time:
+                            type: string
+                            format: time
+                            description: The start time of the event.
+                          end_time:
+                            type: string
+                            format: time
+                            description: The end time of the event.
+                          weekday_occurrence:
+                            ref: '#/components/schemas/Weekday_Occurence'
+                          weekdays:
+                            type: array
+                            description: The weekdays of the event.
+                            items:
+                              ref: '#/components/schemas/Weekday'
+                          months:
+                            type: array
+                            description: The months of the event.
+                            items:
+                              ref: '#/components/schemas/Month'
+                every_year:
+                  type: boolean
+                  description: Whether the event is every year. This is only used when the dates_type is specific.
+                  condition: dates_type == "specific"
+                repeating_exclude_date:
+                  type: array
+                  description: The repeating exclude dates of the event.
+                  items:
+                      type: string
+                      format: date
+                      description: The repeating exclude date of the event.
+                media_files:
+                  type: array
+                  description: The media files for the event.
+                  items:
+                    type: string
+                    description: A base64 encoded file.
+                    format: base64
+                    extension: [ "pdf", "doc", "docx", "xls", "xlsx", "key", "odt", "ppt", "pptx", "pps", "ppsx" ]
+                images:
+                  type: array
+                  description: The images for the event.
+                  items:
+                    type: string
+                    description: A base64 encoded image.
+                    format: base64
+                    extension: [ "jpg", "jpeg", "png", "gif", "webp", "heic", "heif", "jfif" ]
+                thumbnail:
+                  type: string
+                  description: A base64 encoded image for the thumbnail.
+                  format: base64
+                  extension: [ "jpg", "jpeg", "png", "gif", "webp", "heic", "heif", "jfif" ]
+              required:
+                - title
+                - language
+                - teaser
+                - description
+                - organizer
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+  /items/id/{id}:
+    get:
+      summary: Get event by id
+      description: Get details about a specific event.
+      security: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the event to retrieve.
+          schema:
+            type: integer
+            format: int
+            minimum: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+  /locations:
+    get:
+      summary: Get event locations
+      description: Get event locations
+      security: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: The page number to retrieve.
+          schema:
+            type: integer
+            default: 1
+            example: 2
+        - name: perpage
+          in: query
+          required: false
+          description: The number of items per page.
+          schema:
+            type: integer
+            default: 10
+            maximum: 100
+            example: 15
+        - name: slug
+          in: query
+          required: false
+          description: The slug of the event location.
+          schema:
+            type: string
+            example: "museum-of-modern-art"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Location'
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+  /locations/id/{id}:
+    get:
+      summary: Get event location by id
+      description: Get details about a specific event location.
+      security: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the event location to retrieve.
+          schema:
+            type: integer
+            format: int
+            minimum: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+components:
+  schemas:
+    Event:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int
+          description: The unique identifier for the event.
+          example: 1
+        title:
+          type: string
+          description: The name of the event.
+          example: "Museum Night"
+        slug:
+          type: string
+          description: The slug of the event.
+          example: "museum-night"
+        excerpt:
+          type: string
+          description: A short description of the event.
+          example: "A night of art and music at the museum."
+          limit: 55 words
+        post_status:
+          type: string
+          description: The status of the event.
+          example: "publish"
+          enum: [ "publish", "draft", "pending", "private" ]
+        post_thumbnail:
+          type: array
+          description: The thumbnail image of the event.
+          items:
+            id: integer
+            url: string
+            width: integer
+            height: integer
+            filesize: integer
+            alt: string
+            caption: string
+            description: string
+            focal_point: string
+        accessibility:
+          type: string
+          description: The accessibility of the event.
+          example: "Wheelchair accessible"
+        contact_person:
+          type: string
+          description: The contact person for the event.
+          example: "John Doe"
+        description:
+          type: string
+          description: A description of the event.
+          example: "A night of art and music at the museum."
+        event_website_url:
+          type: string
+          description: The website URL for the event.
+          example: "https://www.moma.org"
+        itinerary:
+          type: string
+          description: The itinerary for the event.
+          example: "6:00 PM - 9:00 PM: Art and music"
+        highlighted:
+          type: boolean
+          description: Whether the event is highlighted.
+          example: true
+        language:
+          type: string
+          description: The language of the event.
+          example: "nl_NL"
+          $ref: '#/components/schemas/Location'
+        organizer:
+          type: string
+          description: The organizer of the event.
+          example: "Museum of Modern Art"
+        organizer_website_url:
+          type: string
+          description: The website URL for the organizer.
+          example: "https://www.moma.org"
+        phone_number:
+          type: string
+          description: The phone number for the event.
+          example: "212-708-9400"
+        publicity:
+          ref: '#/components/schemas/Publicity'
+        registration:
+          ref: '#/components/schemas/Registration'
+        registration_url:
+          type: string
+          description: The registration URL for the event.
+          example: "https://www.moma.org"
+        teaser:
+          type: string
+          description: A teaser for the event.
+          example: "A night of art and music at the museum."
+        ticket_website_url:
+          type: string
+          description: The website URL for tickets to the event.
+          example: "https://www.moma.org"
+        video_url:
+          type: string
+          description: The video URL for the event.
+          example: "https://www.youtube.com/watch?v=12345"
+        price_type:
+          type: string
+          description: The type of price for the event.
+          options: [ "fixed", "min", "min_max" ]
+          example: "fixed"
+        price:
+          type: number
+          format: float
+          description: The price of the event.
+          example: 25.00
+        dates:
+          type: array
+          description: The dates of the event.
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+                format: date
+                description: The date of the event.
+                example: "2022-10-01"
+              start_time:
+                type: string
+                format: time
+                description: The start time of the event.
+                example: "18:00"
+              end_time:
+                type: string
+                format: time
+                description: The end time of the event.
+                example: "21:00"
+        next_date:
+          type: object
+          description: The next date of the event.
+          properties:
+            date:
+              type: string
+              format: date
+              description: The date of the next event.
+              example: "2022-10-01"
+            start_time:
+              type: string
+              format: time
+              description: The start time of the next event.
+              example: "18:00"
+            end_time:
+              type: string
+              format: time
+              description: The end time of the next event.
+              example: "21:00"
+        images:
+          type: array
+          description: The images for the event.
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int
+                description: The unique identifier for the image.
+                example: 1
+              url:
+                type: string
+                description: The URL of the image.
+                example: "https://www.moma.org/image.jpg"
+              width:
+                type: integer
+                format: int
+                description: The width of the image.
+                example: 800
+              height:
+                type: integer
+                format: int
+                description: The height of the image.
+                example: 600
+              filesize:
+                type: integer
+                format: int
+                description: The filesize of the image.
+                example: 100000
+              alt:
+                type: string
+                description: The alt text of the image.
+                example: "Museum of Modern Art"
+              caption:
+                type: string
+                description: The caption of the image.
+                example: "Museum of Modern Art"
+              description:
+                type: string
+                description: The description of the image.
+                example: "Museum of Modern Art"
+              focal_point:
+                type: string
+                description: The focal point of the image.
+                example: "center"
+        taxonomies:
+          type: array
+          description: The taxonomies for the event.
+          items:
+            type: object
+            properties:
+              term_id:
+                type: integer
+                format: int
+                description: The unique identifier for the taxonomy.
+                example: 1
+              name:
+                type: string
+                description: The name of the taxonomy.
+                example: "Art"
+              slug:
+                type: string
+                description: The slug of the taxonomy.
+                example: "art"
+              description:
+                type: string
+                description: The description of the taxonomy.
+                example: "Art"
+              taxonomy:
+                type: string
+                description: The taxonomy of the event.
+                example: "category"
+              parent:
+                type: integer
+                format: int
+                description: The parent of the taxonomy.
+                example: 0
+              count:
+                type: integer
+                format: int
+                description: The count of the taxonomy.
+                example: 1
+              term_group:
+                type: integer
+                format: int
+                description: The term group of the taxonomy.
+                example: 0
+              term_taxonomy_id:
+                type: integer
+                format: int
+                description: The term taxonomy ID of the taxonomy.
+                example: 1
+        location:
+          $ref: '#/components/schemas/Location'
+    Location:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int
+          description: The unique identifier for the location.
+          example: 1
+        title:
+          type: string
+          description: The name of the location.
+          example: "Museum of Modern Art"
+        slug:
+          type: string
+          description: The slug of the location.
+          example: "museum-of-modern-art"
+        excerpt:
+          type: string
+          description: A short description of the location.
+          example: "A museum of modern art."
+          limit: 55 words
+        post_status:
+          type: string
+          description: The status of the location.
+          example: "publish"
+        post_thumbnail:
+          type: array
+          description: The thumbnail image of the location.
+          items:
+            id: integer
+            url: string
+            width: integer
+            height: integer
+            filesize: integer
+            alt: string
+            caption: string
+            description: string
+            focal_point: string
+        language:
+          type: string
+          description: The language iso code of the location.
+          example: "nl_NL"
+          $ref: '#/components/schemas/Location'
+        address:
+          type: string
+          description: The address of the location.
+          example: "11 W 53rd St, New York, NY 10019, United States"
+        zipcode:
+          type: string
+          description: The zipcode of the location.
+          example: "10019"
+        city:
+          type: string
+          description: The city of the location.
+          example: "New York"
+        description:
+          type: string
+          description: A description of the location.
+          example: "A museum of modern art."
+        phone_number:
+          type: string
+          description: The phone number of the location.
+          example: "212-708-9400"
+        email_address:
+          type: string
+          description: The email address of the location.
+          example: test@test.com
+        website_url:
+          type: string
+          description: The website URL of the location.
+          example: "https://www.moma.org"
+        opening_hours:
+          type: object
+          description: The opening hours of the location.
+          properties:
+            monday:
+              type: object
+              description: The opening hours for Monday.
+              properties:
+              open:
+                type: string
+                format: time
+                description: The opening time for Monday.
+                example: "8:30"
+              close:
+                type: string
+                format: time
+                description: The closing time for Monday.
+                example: "17:30"
+            tuesday:
+              type: object
+              description: The opening hours for Tuesday.
+              properties:
+              open:
+                type: string
+                format: time
+                description: The opening time for Tuesday.
+                example: "8:30"
+              close:
+                type: string
+                format: time
+                description: The closing time for Tuesday.
+                example: "17:30"
+            wednesday:
+              type: object
+              description: The opening hours for Wednesday.
+              properties:
+                open:
+                  type: string
+                  format: time
+                  description: The opening time for Wednesday.
+                  example: "8:30"
+                close:
+                  type: string
+                  format: time
+                  description: The closing time for Wednesday.
+                  example: "17:30"
+            thursday:
+              type: object
+              description: The opening hours for Thursday.
+              properties:
+                open:
+                  type: string
+                  format: time
+                  description: The opening time for Thursday.
+                  example: "8:30"
+                close:
+                  type: string
+                  format: time
+                  description: The closing time for Thursday.
+                  example: "17:30"
+            friday:
+              type: object
+              description: The opening hours for Friday.
+              properties:
+                open:
+                  type: string
+                  format: time
+                  description: The opening time for Friday.
+                  example: "8:30"
+                close:
+                  type: string
+                  format: time
+                  description: The closing time for Friday.
+                  example: "17:30"
+            saturday:
+              type: object
+              description: The opening hours for Saturday.
+              properties:
+                open:
+                  type: string
+                  format: time
+                  description: The opening time for Saturday.
+                  example: "8:30"
+                close:
+                  type: string
+                  format: time
+                  description: The closing time for Saturday.
+                  example: "17:30"
+            sunday:
+              type: object
+              description: The opening hours for Sunday.
+              properties:
+                open:
+                  type: string
+                  format: time
+                  description: The opening time for Sunday.
+                  example: "8:30"
+                close:
+                  type: string
+                  format: time
+                  description: The closing time for Sunday.
+                  example: "17:30"
+            extra:
+              type: string
+              description: Extra information about the opening hours.
+              example: "Closed on public holidays."
+        social_media:
+          type: object
+          description: The social media of the location.
+          properties:
+            facebook:
+              type: string
+              description: The Facebook URL of the location.
+              example: "https://www.facebook.com/moma"
+            twitter:
+              type: string
+              description: The Twitter URL of the location.
+              example: "https://www.twitter.com/moma"
+            instagram:
+              type: string
+              description: The Instagram URL of the location.
+              example: "https://www.instagram.com/moma"
+            linkedin:
+                type: string
+                description: The LinkedIn URL of the location.
+                example: "https://www.linkedin.com/moma"
+            youtube:
+              type: string
+              description: The YouTube URL of the location.
+              example: "https://www.youtube.com/moma"
+            pinterest:
+              type: string
+              description: The Pinterest URL of the location.
+              example: "https://www.pinterest.com/moma"
+            tiktok:
+              type: string
+              description: The TikTok URL of the location.
+              example: "https://www.tiktok.com/moma"
+            snapchat:
+              type: string
+              description: The Snapchat URL of the location.
+              example: "https://www.snapchat.com/moma"
+            whatsapp:
+              type: string
+              description: The WhatsApp URL of the location.
+              example: "https://www.whatsapp.com/moma"
+            telegram:
+              type: string
+              description: The Telegram URL of the location.
+              example: "https://www.telegram.com/moma"
+            signal:
+              type: string
+              description: The Signal URL of the location.
+              example: "https://www.signal.com/moma"
+            discord:
+              type: string
+              description: The Discord URL of the location.
+              example: "https://www.discord.com/moma"
+            twitch:
+              type: string
+              description: The Twitch URL of the location.
+              example: "https://www.twitch.com/moma"
+            other:
+              type: string
+              description: The other social media URL of the location.
+              example: "https://www.other.com/moma"
+        events:
+          type: array
+          description: The events at the location.
+          items:
+            $ref: '#/components/schemas/Event'
+    Language:
+      type: string
+      description: The language iso code.
+      example: "nl_NL"
+      enum: [
+        "af",
+        "am",
+        "arg",
+        "ar",
+        "ary",
+        "as",
+        "azb",
+        "az",
+        "bel",
+        "bg_BG",
+        "bn_BD",
+        "bo",
+        "bs_BA",
+        "ca",
+        "ceb",
+        "cs_CZ",
+        "cy",
+        "da_DK",
+        "de_AT",
+        "de_CH_informal",
+        "de_CH",
+        "de_DE",
+        "de_DE_formal",
+        "dsb",
+        "dzo",
+        "el",
+        "en_NZ",
+        "en_GB",
+        "en_CA",
+        "en_ZA",
+        "en_AU",
+        "eo",
+        "es_VE",
+        "es_MX",
+        "es_CO",
+        "es_AR",
+        "es_CR",
+        "es_EC",
+        "es_DO",
+        "es_PE",
+        "es_UY",
+        "es_CL",
+        "es_PR",
+        "es_ES",
+        "es_GT",
+        "et",
+        "eu",
+        "fa_IR",
+        "fa_AF",
+        "fi",
+        "fr_BE",
+        "fr_CA",
+        "fr_FR",
+        "fur",
+        "fy",
+        "gd",
+        "gl_ES",
+        "gu",
+        "haz",
+        "he_IL",
+        "hi_IN",
+        "hr",
+        "hsb",
+        "hu_HU",
+        "hy",
+        "id_ID",
+        "is_IS",
+        "it_IT",
+        "ja",
+        "jv_ID",
+        "ka_GE",
+        "kab",
+        "kk",
+        "km",
+        "kn",
+        "ko_KR",
+        "ckb",
+        "kir",
+        "lo",
+        "lt_LT",
+        "lv",
+        "mk_MK",
+        "ml_IN",
+        "mn",
+        "mr",
+        "ms_MY",
+        "my_MM",
+        "nb_NO",
+        "ne_NP",
+        "nl_NL_formal",
+        "nl_BE",
+        "nl_NL",
+        "nn_NO",
+        "oci",
+        "pa_IN",
+        "pl_PL",
+        "ps",
+        "pt_AO",
+        "pt_PT_ao90",
+        "pt_PT",
+        "pt_BR",
+        "rhg",
+        "ro_RO",
+        "ru_RU",
+        "sah",
+        "snd",
+        "si_LK",
+        "sk_SK",
+        "skr",
+        "sl_SI",
+        "sq",
+        "sr_RS",
+        "sv_SE",
+        "sw",
+        "szl",
+        "ta_IN",
+        "ta_LK",
+        "te",
+        "th",
+        "tl",
+        "tr_TR",
+        "tt_RU",
+        "tah",
+        "ug_CN",
+        "uk",
+        "ur",
+        "uz_UZ",
+        "vi",
+        "zh_CN",
+        "zh_HK",
+        "zh_TW"
+      ]
+    Weekday_Occurence:
+      type: string
+      description: The weekday occurrence.
+      example: "first"
+      enum: [ "every", "first", "second", "third", "fourth", "last" ]
+    Weekday:
+      type: string
+      description: The weekday.
+      example: "monday"
+      enum: [ "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+    Month:
+      type: string
+      description: The month.
+      example: "january"
+      enum: [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
+    Publicity:
+      type: string
+      description: The publicity of the event.
+      example: "public"
+      enum: [ "public", "partly_public", "closed" ]
+    Registration:
+      type: string
+      description: The registration for the event.
+      example: "not_required"
+      enum: [ "not_required", "mandatory", "optional" ]
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+security:
+  - BasicAuth: []
