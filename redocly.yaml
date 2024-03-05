@@ -1,5 +1,6 @@
-lint:
-  extends:
-    - recommended
 apis:
-  main: ./openapi.yaml
+  main@v1:
+    root: ./openapi.yaml
+lint:
+  rules:
+    example-rule-name: error
