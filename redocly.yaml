@@ -3,3 +3,4 @@ apis:
     root: ./openapi.yaml
     extends:
       - minimal
+rules:
