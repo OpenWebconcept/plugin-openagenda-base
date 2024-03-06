@@ -17,12 +17,10 @@
         }
     ],
     "require" : {
-        "composer/installers" : "~1.0",
-        "phpoffice/phpspreadsheet": "^2.0"
+        "composer/installers" : "~1.0"
     },
     "require-dev" : {
         "acato/wp-pre-commit-hook": "*",
-        "bjornjohansen/wp-pre-commit-hook" : "*",
         "phpcompatibility/phpcompatibility-wp": "*"
     },
     "config" : {
