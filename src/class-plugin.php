@@ -13,13 +13,13 @@
 
 namespace Openagenda_Base_Plugin;
 
-use Openagenda_Base_Plugin\admin\Admin;
-use Openagenda_Base_Plugin\admin\Cmb2;
+use Openagenda_Base_Plugin\Admin\Admin;
+use Openagenda_Base_Plugin\Admin\Cmb2;
 use Openagenda_Base_Plugin\Admin\Event_Dates;
 use Openagenda_Base_Plugin\Admin\Post_Expiration;
 use Openagenda_Base_Plugin\Admin\Settings;
 use Openagenda_Base_Plugin\Admin\Taxonomies;
-use Openagenda_Base_Plugin\frontend\Frontend;
+use Openagenda_Base_Plugin\Frontend\Frontend;
 
 /**
  * The core plugin class.
