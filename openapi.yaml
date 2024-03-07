@@ -749,30 +749,30 @@ components:
               type: object
               description: The opening hours for Monday.
               properties:
-              open:
-                type: string
-                format: time
-                description: The opening time for Monday.
-                example: "8:30"
-              close:
-                type: string
-                format: time
-                description: The closing time for Monday.
-                example: "17:30"
+                open:
+                  type: string
+                  format: time
+                  description: The opening time for Monday.
+                  example: "8:30"
+                close:
+                  type: string
+                  format: time
+                  description: The closing time for Monday.
+                  example: "17:30"
             tuesday:
               type: object
               description: The opening hours for Tuesday.
               properties:
-              open:
-                type: string
-                format: time
-                description: The opening time for Tuesday.
-                example: "8:30"
-              close:
-                type: string
-                format: time
-                description: The closing time for Tuesday.
-                example: "17:30"
+                open:
+                  type: string
+                  format: time
+                  description: The opening time for Tuesday.
+                  example: "8:30"
+                close:
+                  type: string
+                  format: time
+                  description: The closing time for Tuesday.
+                  example: "17:30"
             wednesday:
               type: object
               description: The opening hours for Wednesday.
