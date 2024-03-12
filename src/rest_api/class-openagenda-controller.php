@@ -251,7 +251,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 	 * @return \WP_Error|bool Whether the request has permission to submit items.
 	 */
 	public function submit_item_permissions_check( $request ) {
-		if ( 'development' === WP_ENV ) {
+		if ( defined( 'WP_ENV' ) && 'development' === WP_ENV ) {
 			return true;
 		}
 		return current_user_can( 'edit_posts' );
@@ -894,21 +894,18 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		// Upload dir.
 		$upload_dir  = wp_upload_dir();
 		$upload_path = str_replace( '/', DIRECTORY_SEPARATOR, $upload_dir['path'] ) . DIRECTORY_SEPARATOR;
-		$mime_type   = explode( '/', mime_content_type( $base64_file ) )[1];
 
 		$file_array = explode( ',', $base64_file );
 		$file       = $file_array[1];
+		$file       = str_replace( ' ', '+', $file );
 
-		if ( 'image' === $type ) {
-			$file_type = 'image/' . $mime_type;
-		} else {
-			$file_type = 'application/' . $mime_type;
-		}
-
-		$file = str_replace( ' ', '+', $file );
         // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
-		$decoded         = base64_decode( $file );
-		$filename        = $title . '.' . $mime_type;
+		$decoded   = base64_decode( $file );
+		$finfo     = finfo_open();
+		$mime_type = finfo_buffer( $finfo, $decoded, FILEINFO_MIME_TYPE );
+		$extension = explode( '/', finfo_buffer( $finfo, $decoded, FILEINFO_EXTENSION ) )[0];
+
+		$filename        = $title . '.' . $extension;
 		$hashed_filename = md5( $filename . microtime() ) . '_' . $filename;
 
 		// Save the image in the uploads directory.
@@ -918,7 +915,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$upload_file = $wp_filesystem->put_contents( $upload_path . $hashed_filename, $decoded );
 
 		$attachment = array(
-			'post_mime_type' => $file_type,
+			'post_mime_type' => $mime_type,
 			'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $hashed_filename ) ),
 			'post_content'   => '',
 			'post_status'    => 'inherit',
