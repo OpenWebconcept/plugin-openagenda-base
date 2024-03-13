@@ -1329,7 +1329,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$item_data['next_date'] = $event_dates_class->get_next_date( $item->ID );
 
 		// add media files to the item data with some extra information from the attachment.
-		$media_files = get_post_meta( $item->ID, '_event_media_files', true );
+		$media_files = get_post_meta( $item->ID, 'event_media_files', true );
 		if ( ! empty( $media_files ) ) {
 			foreach ( $media_files as $id => $media_file ) {
 				$media_files[ $id ] = array(
@@ -1341,7 +1341,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		}
 
 		// add images to the item data with some extra information from the attachment.
-		$images = get_post_meta( $item->ID, '_event_images', true );
+		$images = get_post_meta( $item->ID, 'event_images', true );
 		if ( ! empty( $images ) ) {
 			foreach ( $images as $id => $image ) {
 				$images[ $id ] = $this->create_image_output( $id, $image );
@@ -1361,7 +1361,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		}
 
 		// Check if this event has a location linked and add it to the item data.
-		$location_id = get_post_meta( $item->ID, '_event_location', true );
+		$location_id = get_post_meta( $item->ID, 'event_location', true );
 		if ( $location_id ) {
 			$location              = get_post( $location_id );
 			$item_data['location'] = $this->prepare_location_for_response( $location, $request, false );
