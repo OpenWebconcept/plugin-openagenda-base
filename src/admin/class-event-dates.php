@@ -760,7 +760,7 @@ class Event_Dates {
 			}
 			$test = array( 'repeat_yearly' => $repeat_yearly ? $repeat_yearly : false );
             // @phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison -- Intentional loose array matching.
-			if ( $test === $pattern ) {
+			if ( $test === $pattern && isset( $meta['event_date_start'] ) ) {
 				$dates[]      = $meta['event_date_start'];
 				$timestamps[] = strtotime( $meta['event_date_start'] );
 			}
