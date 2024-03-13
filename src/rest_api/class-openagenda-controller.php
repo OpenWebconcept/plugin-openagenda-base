@@ -895,9 +895,13 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$upload_dir  = wp_upload_dir();
 		$upload_path = str_replace( '/', DIRECTORY_SEPARATOR, $upload_dir['path'] ) . DIRECTORY_SEPARATOR;
 
-		$file_array = explode( ',', $base64_file );
-		$file       = $file_array[1];
-		$file       = str_replace( ' ', '+', $file );
+		if ( 'data:' === substr( $base64_file, 0, 5 ) ) {
+			$file_array = explode( ',', $base64_file );
+			$file       = $file_array[1];
+		} else {
+			$file = $base64_file;
+		}
+		$file = str_replace( ' ', '+', $file );
 
         // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 		$decoded   = base64_decode( $file );
