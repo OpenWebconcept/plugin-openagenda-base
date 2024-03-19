@@ -849,20 +849,20 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 
 						if ( 'specific' === $dates_type ) {
 							$post_dates[] = array(
-								$prefix . 'specific_start_date' => $date['start_date'] ? $date['start_date'] : '',
-								$prefix . 'specific_end_date' => $date['end_date'] ? $date['end_date'] : '',
-								$prefix . 'specific_start_time' => $date['start_time'] ? $date['start_time'] : '',
-								$prefix . 'specific_end_time' => $date['end_time'] ? $date['end_time'] : '',
+								$prefix . 'specific_start_date' => ! empty ( $date['start_date'] ) ? $date['start_date'] : '',
+								$prefix . 'specific_end_date' => ! empty ( $date['end_date'] ) ? $date['end_date'] : '',
+								$prefix . 'specific_start_time' => ! empty ( $date['start_time'] ) ? $date['start_time'] : '',
+								$prefix . 'specific_end_time' => ! empty ( $date['end_time'] ) ? $date['end_time'] : '',
 							);
 						} elseif ( 'complex' === $dates_type ) {
 							$post_dates[] = array(
-								$prefix . 'complex_start_date' => $date['start_date'] ? $date['start_date'] : '',
-								$prefix . 'complex_end_date' => $date['end_date'] ? $date['end_date'] : '',
-								$prefix . 'complex_start_time' => $date['start_time'] ? $date['start_time'] : '',
-								$prefix . 'complex_end_time' => $date['end_time'] ? $date['end_time'] : '',
-								$prefix . 'complex_weekday_occurrence' => $date['weekday_occurrence'] ? $date['weekday_occurrence'] : '',
-								$prefix . 'complex_weekdays' => $date['weekdays'] ? $date['weekdays'] : '',
-								$prefix . 'complex_months' => $date['months'] ? $date['months'] : '',
+								$prefix . 'complex_start_date' => ! empty ( $date['start_date'] ) ? $date['start_date'] : '',
+								$prefix . 'complex_end_date' => ! empty ( $date['end_date'] ) ? $date['end_date'] : '',
+								$prefix . 'complex_start_time' => ! empty ( $date['start_time'] ) ? $date['start_time'] : '',
+								$prefix . 'complex_end_time' => ! empty ( $date['end_time'] ) ? $date['end_time'] : '',
+								$prefix . 'complex_weekday_occurrence' => ! empty ( $date['weekday_occurrence'] ) ? $date['weekday_occurrence'] : '',
+								$prefix . 'complex_weekdays' => ! empty ( $date['weekdays'] ) ? $date['weekdays'] : '',
+								$prefix . 'complex_months' => ! empty ( $date['months'] ) ? $date['months'] : '',
 							);
 						}
 					}

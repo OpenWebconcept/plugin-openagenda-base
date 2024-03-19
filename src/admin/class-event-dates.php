@@ -173,7 +173,7 @@ class Event_Dates {
 
 				// Holds all months this event is on.
 				$triggered_months = self::all_months();
-				if ( isset( $meta[ $prefix . 'complex_months' ] ) && count( $meta[ $prefix . 'complex_months' ] ) > 0 ) {
+				if ( ! empty( $meta[ $prefix . 'complex_months' ] ) && count( $meta[ $prefix . 'complex_months' ] ) > 0 ) {
 					$triggered_months = array_intersect( $triggered_months, $meta[ $prefix . 'complex_months' ] );
 				}
 
