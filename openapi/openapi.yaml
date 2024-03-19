@@ -4,14 +4,11 @@ info:
   description: The OpenAgenda plugin adds Events and Locations to WordPress which can be retrieved via the OpenAgenda REST API.
   version: 1.0.0
   contact:
-    email: eyal@acato.nl
+    email: service@acato.nl
     url: https://www.acato.nl
   license:
     name: EUPL-1.2
     url: https://opensource.org/licenses/EUPL-1.2
-servers:
-  - url: https://openagenda.ridderkerk.staging.acato.nl/wp-json/owc/openagenda/v1
-    description: Staging server
 paths:
   /items:
     get:
