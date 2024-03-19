@@ -89,19 +89,19 @@ class Post_Expiration {
 		$query = new \WP_Query( $args );
 		if ( $query->get_posts() ) {
 			while ( $query->get_posts() ) {
-                if ( $post ) {
-                    $field_date = get_post_meta($post->ID, '_expire_date', true);
-                    if (!empty($field_date)) {
-                        $cal_date_time_fn_val = $this->openagenda_calc_datetime($post->ID);
-                        if (1 === $cal_date_time_fn_val) {
-                            $update_post = array(
-                                'ID' => $post->ID,
-                                'post_status' => 'draft',
-                            );
-                            wp_update_post($update_post);
-                        }
-                    }
-                }
+				if ( $post ) {
+					$field_date = get_post_meta( $post->ID, '_expire_date', true );
+					if ( ! empty( $field_date ) ) {
+						$cal_date_time_fn_val = $this->openagenda_calc_datetime( $post->ID );
+						if ( 1 === $cal_date_time_fn_val ) {
+							$update_post = array(
+								'ID'          => $post->ID,
+								'post_status' => 'draft',
+							);
+							wp_update_post( $update_post );
+						}
+					}
+				}
 			}
 		}
 	}
