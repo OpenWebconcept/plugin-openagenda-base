@@ -745,7 +745,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		}
 
 		// set featured image.
-		if ( isset( $data['thumbnail'] ) ) {
+		if ( ! empty( $data['thumbnail'] ) ) {
 			// upload base64 encoded file to WordPress media library and retrieve url.
 			$media_attachment = $this->save_file( 'image', $data['thumbnail'], $data['title'] );
 			set_post_thumbnail( $new_event_id, $media_attachment['id'] );
@@ -771,21 +771,29 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 
 					// format base64 media files.
 					if ( 'media_files' === $cmb2_key_data ) {
-						foreach ( $data[ $cmb2_key_data ] as $key => $base64_media_file ) {
-							// upload base64 encoded file to WordPress media library and retrieve url.
-							$media_attachment                                  = $this->save_file( 'file', $base64_media_file, $data['title'] );
-							$data[ $cmb2_key_data ][ $media_attachment['id'] ] = $media_attachment['url'];
-							unset( $data[ $cmb2_key_data ][ $key ] );
+						if ( ! empty( $data[ $cmb2_key_data ] ) ) {
+							foreach ( $data[ $cmb2_key_data ] as $key => $base64_media_file ) {
+								if ( ! empty( $base64_media_file ) ) {
+									// upload base64 encoded file to WordPress media library and retrieve url.
+									$media_attachment                                  = $this->save_file( 'file', $base64_media_file, $data['title'] );
+									$data[ $cmb2_key_data ][ $media_attachment['id'] ] = $media_attachment['url'];
+									unset( $data[ $cmb2_key_data ][ $key ] );
+								}
+							}
 						}
 					}
 
 					// format base64 images.
 					if ( 'images' === $cmb2_key_data ) {
-						foreach ( $data[ $cmb2_key_data ] as $key => $base64_media_file ) {
-							// upload base64 encoded image to WordPress media library and retrieve url.
-							$media_attachment                                  = $this->save_file( 'image', $base64_media_file, $data['title'] );
-							$data[ $cmb2_key_data ][ $media_attachment['id'] ] = $media_attachment['url'];
-							unset( $data[ $cmb2_key_data ][ $key ] );
+						if ( ! empty( $data[ $cmb2_key_data ] ) ) {
+							foreach ( $data[ $cmb2_key_data ] as $key => $base64_media_file ) {
+								if ( ! empty( $base64_media_file ) ) {
+									// upload base64 encoded image to WordPress media library and retrieve url.
+									$media_attachment                                  = $this->save_file( 'image', $base64_media_file, $data['title'] );
+									$data[ $cmb2_key_data ][ $media_attachment['id'] ] = $media_attachment['url'];
+									unset( $data[ $cmb2_key_data ][ $key ] );
+								}
+							}
 						}
 					}
 
