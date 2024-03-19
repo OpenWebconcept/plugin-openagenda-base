@@ -173,7 +173,7 @@ class Event_Dates {
 
 				// Holds all months this event is on.
 				$triggered_months = self::all_months();
-				if ( isset( $meta[ $prefix . 'complex_months' ] ) && count( $meta[ $prefix . 'complex_months' ] ) > 0 ) {
+				if ( ! empty( $meta[ $prefix . 'complex_months' ] ) && count( $meta[ $prefix . 'complex_months' ] ) > 0 ) {
 					$triggered_months = array_intersect( $triggered_months, $meta[ $prefix . 'complex_months' ] );
 				}
 
@@ -479,6 +479,10 @@ class Event_Dates {
 	 * @return string
 	 */
 	private function translate_occurrence( $occurrence_string ) {
+		if ( empty( $occurrence_string ) ) {
+			return '';
+		}
+
 		$occurrence_strings = array(
 			'first'  => _x( 'first', 'first as in every first monday of the month', 'openagenda-base' ),
 			'second' => _x( 'second', 'second as in every second monday of the month', 'openagenda-base' ),
@@ -750,6 +754,10 @@ class Event_Dates {
 		$date_meta_field = 'complex' === $dates_type ? $prefix . 'group_complex' : $prefix . 'group_specific';
 		$event_dates     = get_post_meta( $post_id, $date_meta_field, true );
 
+		if ( empty( $event_dates ) || ! is_array( $event_dates ) ) {
+			return '';
+		}
+
 		$dates      = array();
 		$timestamps = array();
 		foreach ( $event_dates as $meta ) {
@@ -896,6 +904,11 @@ class Event_Dates {
 		);
 
 		$event_dates = $this->get_date_list( $post_id );
+
+		if ( empty( $event_dates ) || ! is_array( $event_dates ) ) {
+			return $times;
+		}
+
 		// Bail early if the date is not in the list.
 		if ( $specific_date ) {
 			if ( is_int( $specific_date ) ) {

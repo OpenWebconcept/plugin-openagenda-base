@@ -745,7 +745,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		}
 
 		// set featured image.
-		if ( isset( $data['thumbnail'] ) ) {
+		if ( ! empty( $data['thumbnail'] ) ) {
 			// upload base64 encoded file to WordPress media library and retrieve url.
 			$media_attachment = $this->save_file( 'image', $data['thumbnail'], $data['title'] );
 			set_post_thumbnail( $new_event_id, $media_attachment['id'] );
@@ -771,21 +771,29 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 
 					// format base64 media files.
 					if ( 'media_files' === $cmb2_key_data ) {
-						foreach ( $data[ $cmb2_key_data ] as $key => $base64_media_file ) {
-							// upload base64 encoded file to WordPress media library and retrieve url.
-							$media_attachment                                  = $this->save_file( 'file', $base64_media_file, $data['title'] );
-							$data[ $cmb2_key_data ][ $media_attachment['id'] ] = $media_attachment['url'];
-							unset( $data[ $cmb2_key_data ][ $key ] );
+						if ( ! empty( $data[ $cmb2_key_data ] ) ) {
+							foreach ( $data[ $cmb2_key_data ] as $key => $base64_media_file ) {
+								if ( ! empty( $base64_media_file ) ) {
+									// upload base64 encoded file to WordPress media library and retrieve url.
+									$media_attachment                                  = $this->save_file( 'file', $base64_media_file, $data['title'] );
+									$data[ $cmb2_key_data ][ $media_attachment['id'] ] = $media_attachment['url'];
+									unset( $data[ $cmb2_key_data ][ $key ] );
+								}
+							}
 						}
 					}
 
 					// format base64 images.
 					if ( 'images' === $cmb2_key_data ) {
-						foreach ( $data[ $cmb2_key_data ] as $key => $base64_media_file ) {
-							// upload base64 encoded image to WordPress media library and retrieve url.
-							$media_attachment                                  = $this->save_file( 'image', $base64_media_file, $data['title'] );
-							$data[ $cmb2_key_data ][ $media_attachment['id'] ] = $media_attachment['url'];
-							unset( $data[ $cmb2_key_data ][ $key ] );
+						if ( ! empty( $data[ $cmb2_key_data ] ) ) {
+							foreach ( $data[ $cmb2_key_data ] as $key => $base64_media_file ) {
+								if ( ! empty( $base64_media_file ) ) {
+									// upload base64 encoded image to WordPress media library and retrieve url.
+									$media_attachment                                  = $this->save_file( 'image', $base64_media_file, $data['title'] );
+									$data[ $cmb2_key_data ][ $media_attachment['id'] ] = $media_attachment['url'];
+									unset( $data[ $cmb2_key_data ][ $key ] );
+								}
+							}
 						}
 					}
 
@@ -849,20 +857,20 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 
 						if ( 'specific' === $dates_type ) {
 							$post_dates[] = array(
-								$prefix . 'specific_start_date' => $date['start_date'] ? $date['start_date'] : '',
-								$prefix . 'specific_end_date' => $date['end_date'] ? $date['end_date'] : '',
-								$prefix . 'specific_start_time' => $date['start_time'] ? $date['start_time'] : '',
-								$prefix . 'specific_end_time' => $date['end_time'] ? $date['end_time'] : '',
+								$prefix . 'specific_start_date' => ! empty( $date['start_date'] ) ? $date['start_date'] : '',
+								$prefix . 'specific_end_date' => ! empty( $date['end_date'] ) ? $date['end_date'] : '',
+								$prefix . 'specific_start_time' => ! empty( $date['start_time'] ) ? $date['start_time'] : '',
+								$prefix . 'specific_end_time' => ! empty( $date['end_time'] ) ? $date['end_time'] : '',
 							);
 						} elseif ( 'complex' === $dates_type ) {
 							$post_dates[] = array(
-								$prefix . 'complex_start_date' => $date['start_date'] ? $date['start_date'] : '',
-								$prefix . 'complex_end_date' => $date['end_date'] ? $date['end_date'] : '',
-								$prefix . 'complex_start_time' => $date['start_time'] ? $date['start_time'] : '',
-								$prefix . 'complex_end_time' => $date['end_time'] ? $date['end_time'] : '',
-								$prefix . 'complex_weekday_occurrence' => $date['weekday_occurrence'] ? $date['weekday_occurrence'] : '',
-								$prefix . 'complex_weekdays' => $date['weekdays'] ? $date['weekdays'] : '',
-								$prefix . 'complex_months' => $date['months'] ? $date['months'] : '',
+								$prefix . 'complex_start_date' => ! empty( $date['start_date'] ) ? $date['start_date'] : '',
+								$prefix . 'complex_end_date' => ! empty( $date['end_date'] ) ? $date['end_date'] : '',
+								$prefix . 'complex_start_time' => ! empty( $date['start_time'] ) ? $date['start_time'] : '',
+								$prefix . 'complex_end_time' => ! empty( $date['end_time'] ) ? $date['end_time'] : '',
+								$prefix . 'complex_weekday_occurrence' => ! empty( $date['weekday_occurrence'] ) ? $date['weekday_occurrence'] : '',
+								$prefix . 'complex_weekdays' => ! empty( $date['weekdays'] ) ? $date['weekdays'] : '',
+								$prefix . 'complex_months' => ! empty( $date['months'] ) ? $date['months'] : '',
 							);
 						}
 					}
@@ -887,7 +895,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 	 * @param string $base64_file The base64 file.
 	 * @param string $title The title of the image.
 	 *
-	 * @return array The attachment ID and URL.
+	 * @return array|bool The attachment ID and URL.
 	 */
 	public function save_file( $type, $base64_file, $title ) {
 
@@ -913,8 +921,9 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$hashed_filename = md5( $filename . microtime() ) . '_' . $filename;
 
 		// Save the image in the uploads directory.
-		global $wp_filesystem;
 		include_once ABSPATH . 'wp-admin/includes/file.php';
+
+		global $wp_filesystem;
 		WP_Filesystem();
 		$upload_file = $wp_filesystem->put_contents( $upload_path . $hashed_filename, $decoded );
 
