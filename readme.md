@@ -87,6 +87,8 @@ The POST-endpoint is used to create new items in the OpenAgenda. The endpoint is
 
 In the plugin settings located at `Settings > OpenAgenda Settings` you can set the user that is allocated to items created with this POST-endpoint.
 
+Further documentation about using the REST API can be found in the [OpenAgenda API documentation](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/OpenWebconcept/plugin-openagenda-base/main/openapi/openapi.yaml&nocors).
+
 ### Event dates
 In the event post type you can set the date(s) for an event with the following date types:
 - Specific date or date range
