@@ -1328,6 +1328,9 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 				$item_data['price_max'] = get_post_meta( $item->ID, $prefix . 'max_price', true );
 		}
 
+		// Add date type to the item data.
+		$item_data['dates_type'] = get_post_meta( $item->ID, 'event_dates_type', true );
+
 		// Sort event dates by date ASC.
 		$event_dates_class = new Event_Dates();
 		$event_dates       = $event_dates_class->get_date_list( $item->ID );
