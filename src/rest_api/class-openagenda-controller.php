@@ -725,11 +725,92 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		// Get custom fields via CMB2 REST API.
 		$cmb2_boxes = \CMB2_Boxes::get_all();
 
-		if ( ! $cmb2_boxes ) {
-			return new \WP_Error( 'rest_missing_fields', __( 'Can\'t submit event, because CMB2 custom fields are missing.', 'openagenda-base' ), array( 'status' => 400 ) );
+		// Check which cmb2 fields are required and are not submitted in the request or are empty.
+		$event_prefix    = 'event_';
+		$required_fields = array();
+		foreach ( $cmb2_boxes as $cmb2_box ) {
+			$cmb2_box = $cmb2_box->__get( 'meta_box' );
+			if ( in_array( 'event', $cmb2_box['object_types'], true ) ) {
+				$cmb2_box_fields = $cmb2_box['fields'];
+				if ( ! $cmb2_box_fields ) {
+					return new \WP_Error( 'rest_missing_fields', __( 'Can\'t submit event, because CMB2 custom fields are missing.', 'openagenda-base' ), array( 'status' => 400 ) );
+				}
+				foreach ( $cmb2_box_fields as $cmb2_key => $cmb2_field ) {
+					if ( isset( $cmb2_field['attributes']['required'] ) && 'required' === $cmb2_field['attributes']['required'] ) {
+						$cmb2_field_id     = str_replace( $event_prefix, '', $cmb2_field['id'] );
+						$required_fields[] = $cmb2_field_id;
+					}
+				}
+			}
 		}
 
-		$data         = json_decode( $body, true );
+		// Add extra required fields to cmb2 box required fields.
+		$missing_required_fields = [];
+		$required_fields         = array_merge(
+			$required_fields,
+			array(
+				'title',
+				'dates_type',
+				'dates',
+			)
+		);
+
+		$data = json_decode( $body, true );
+
+		// Add required fields for price_type.
+		switch ( $data['price_type'] ) {
+			case 'fixed':
+				$required_fields[] = 'fixed_price';
+				break;
+			case 'min':
+				$required_fields[] = 'min_price';
+				break;
+			case 'min_max':
+				$required_fields[] = 'min_price';
+				$required_fields[] = 'max_price';
+				break;
+		}
+
+		// Add required fields for dates_type.
+		switch ( $data['dates_type'] ) {
+			case 'specific':
+				$required_fields['dates'][] = 'start_date';
+				break;
+			case 'complex':
+				$required_fields['dates'][] = 'start_date';
+				$required_fields['dates'][] = 'end_date';
+				break;
+		}
+
+		// Check if required fields are submitted.
+		foreach ( $required_fields as $key => $required_field ) {
+			// Check whether required field is an array and the key is dates.
+			if ( is_array( $required_field ) && 'dates' === $key ) {
+				// Check whether every submitted dates array item has all required dates fields.
+				foreach ( $data['dates'] as $dates_item ) {
+					foreach ( $required_field as $dates_sub_field ) {
+						if ( ! isset( $dates_item[ $dates_sub_field ] ) || empty( $dates_item[ $dates_sub_field ] ) ) {
+							$missing_required_fields[] = $dates_sub_field;
+						}
+					}
+				}
+			} elseif ( ! isset( $data[ $required_field ] ) || empty( $data[ $required_field ] ) ) {
+				$missing_required_fields[] = $required_field;
+			}
+		}
+
+		// Remove duplicates in missing required fields.
+		$missing_required_fields = array_unique( $missing_required_fields );
+
+		if ( ! empty( $missing_required_fields ) ) {
+			return new \WP_Error(
+				'rest_missing_fields',
+				/* translators: %s: comma-seperated list of required fields that are missing in the submit data */
+				sprintf( __( 'Can\'t submit event, because required fields are missing: %s', 'openagenda-base' ), implode( ', ', $missing_required_fields ) ),
+				array( 'status' => 400 )
+			);
+		}
+
 		$default_args = array(
 			'post_title'   => $data['title'],
 			'post_excerpt' => $data['description'],
