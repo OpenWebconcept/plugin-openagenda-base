@@ -748,6 +748,9 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		if ( ! empty( $data['thumbnail'] ) ) {
 			// upload base64 encoded file to WordPress media library and retrieve url.
 			$media_attachment = $this->save_file( 'image', $data['thumbnail'], $data['title'] );
+			if ( is_wp_error( $media_attachment ) ) {
+				return $media_attachment;
+			}
 			set_post_thumbnail( $new_event_id, $media_attachment['id'] );
 			unset( $data['thumbnail'] );
 		}
@@ -775,7 +778,10 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 							foreach ( $data[ $cmb2_key_data ] as $key => $base64_media_file ) {
 								if ( ! empty( $base64_media_file ) ) {
 									// upload base64 encoded file to WordPress media library and retrieve url.
-									$media_attachment                                  = $this->save_file( 'file', $base64_media_file, $data['title'] );
+									$media_attachment = $this->save_file( 'file', $base64_media_file, $data['title'] );
+									if ( is_wp_error( $media_attachment ) ) {
+										return $media_attachment;
+									}
 									$data[ $cmb2_key_data ][ $media_attachment['id'] ] = $media_attachment['url'];
 									unset( $data[ $cmb2_key_data ][ $key ] );
 								}
@@ -789,7 +795,10 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 							foreach ( $data[ $cmb2_key_data ] as $key => $base64_media_file ) {
 								if ( ! empty( $base64_media_file ) ) {
 									// upload base64 encoded image to WordPress media library and retrieve url.
-									$media_attachment                                  = $this->save_file( 'image', $base64_media_file, $data['title'] );
+									$media_attachment = $this->save_file( 'image', $base64_media_file, $data['title'] );
+									if ( is_wp_error( $media_attachment ) ) {
+										return $media_attachment;
+									}
 									$data[ $cmb2_key_data ][ $media_attachment['id'] ] = $media_attachment['url'];
 									unset( $data[ $cmb2_key_data ][ $key ] );
 								}
@@ -895,7 +904,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 	 * @param string $base64_file The base64 file.
 	 * @param string $title The title of the image.
 	 *
-	 * @return array|bool The attachment ID and URL.
+	 * @return array|\WP_Error The attachment ID and URL.
 	 */
 	public function save_file( $type, $base64_file, $title ) {
 
@@ -903,7 +912,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$upload_dir  = wp_upload_dir();
 		$upload_path = str_replace( '/', DIRECTORY_SEPARATOR, $upload_dir['path'] ) . DIRECTORY_SEPARATOR;
 
-		if ( 'data:' === substr( $base64_file, 0, 5 ) ) {
+		if ( str_starts_with( $base64_file, 'data:' ) ) {
 			$file_array = explode( ',', $base64_file );
 			$file       = $file_array[1];
 		} else {
@@ -925,7 +934,15 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 
 		global $wp_filesystem;
 		WP_Filesystem();
-		$upload_file = $wp_filesystem->put_contents( $upload_path . $hashed_filename, $decoded );
+
+		if ( false === $wp_filesystem->put_contents( $upload_path . $hashed_filename, $decoded ) ) {
+			return new \WP_Error(
+				'rest_cant_create_file',
+				/* translators: %s: comma-seperated list of required fields that are missing in the submit data */
+				sprintf( __( 'Can\'t create file on filesystem: %s', 'openagenda-base' ), $upload_path . $hashed_filename ),
+				array( 'status' => 400 )
+			);
+		}
 
 		$attachment = array(
 			'post_mime_type' => $mime_type,
