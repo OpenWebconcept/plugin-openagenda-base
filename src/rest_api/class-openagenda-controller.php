@@ -639,7 +639,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 				foreach ( $cmb2_box_fields as $cmb2_key => $cmb2_field ) {
 					$cmb2_key_data = str_replace( $prefix, '', $cmb2_key );
 
-					if ( str_starts_with( $cmb2_key_data, 'group_specific' ) || str_starts_with( $cmb2_key_data, 'group_complex' ) ) {
+					if ( 'group_specific' === substr( $cmb2_key_data, 0, 14 ) || 'group_complex' === substr( $cmb2_key_data, 0, 13 ) ) {
 
 						// Get the fields of the group.
 						$group_fields = array();
@@ -816,7 +816,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 
 		// check if there are also fields in the data that are taxonomy fields starting with tax_ and add the taxonomy terms to the database.
 		foreach ( $data as $cmb2_key_data => $value ) {
-			if ( str_starts_with( $cmb2_key_data, 'tax_' ) ) {
+			if ( 'tax_' === substr( $cmb2_key_data, 0, 4 ) ) {
 				$taxonomy  = str_replace( 'tax_', '', $cmb2_key_data );
 				$terms     = $value;
 				$terms_ids = array();
@@ -912,7 +912,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$upload_dir  = wp_upload_dir();
 		$upload_path = str_replace( '/', DIRECTORY_SEPARATOR, $upload_dir['path'] ) . DIRECTORY_SEPARATOR;
 
-		if ( str_starts_with( $base64_file, 'data:' ) ) {
+		if ( 'data:' === substr( $base64_file, 0, 5 ) ) {
 			$file_array = explode( ',', $base64_file );
 			$file       = $file_array[1];
 		} else {
