@@ -627,12 +627,12 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		foreach ( $cmb2_boxes as $cmb2_box ) {
 			$cmb2_box = $cmb2_box->__get( 'meta_box' );
 
-			if ( in_array( 'event', $cmb2_box['object_types'], true ) ) {
-				$cmb2_box_fields = $cmb2_box['fields'];
-
-				if ( ! $cmb2_box_fields ) {
+			if ( ! empty( $cmb2_box['object_types'] ) && in_array( 'event', $cmb2_box['object_types'], true ) ) {
+				if ( empty( $cmb2_box['fields'] ) ) {
 					return new \WP_Error( 'rest_missing_fields', __( 'CMB2 custom fields are missing.', 'openagenda-base' ), array( 'status' => 400 ) );
 				}
+
+				$cmb2_box_fields = $cmb2_box['fields'];
 
 				$prefix = str_replace( 'metabox', '', $cmb2_box['id'] );
 
@@ -730,11 +730,13 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$required_fields = array();
 		foreach ( $cmb2_boxes as $cmb2_box ) {
 			$cmb2_box = $cmb2_box->__get( 'meta_box' );
-			if ( in_array( 'event', $cmb2_box['object_types'], true ) ) {
-				$cmb2_box_fields = $cmb2_box['fields'];
-				if ( ! $cmb2_box_fields ) {
+			if ( ! empty( $cmb2_box['object_types'] ) && in_array( 'event', $cmb2_box['object_types'], true ) ) {
+				if ( empty( $cmb2_box['fields'] ) ) {
 					return new \WP_Error( 'rest_missing_fields', __( 'Can\'t submit event, because CMB2 custom fields are missing.', 'openagenda-base' ), array( 'status' => 400 ) );
 				}
+
+				$cmb2_box_fields = $cmb2_box['fields'];
+
 				foreach ( $cmb2_box_fields as $cmb2_key => $cmb2_field ) {
 					if ( isset( $cmb2_field['attributes']['required'] ) && 'required' === $cmb2_field['attributes']['required'] ) {
 						$cmb2_field_id     = str_replace( $event_prefix, '', $cmb2_field['id'] );
@@ -758,28 +760,32 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$data = json_decode( $body, true );
 
 		// Add required fields for price_type.
-		switch ( $data['price_type'] ) {
-			case 'fixed':
-				$required_fields[] = 'fixed_price';
-				break;
-			case 'min':
-				$required_fields[] = 'min_price';
-				break;
-			case 'min_max':
-				$required_fields[] = 'min_price';
-				$required_fields[] = 'max_price';
-				break;
+		if ( ! empty( $data['price_type'] ) ) {
+			switch ( $data['price_type'] ) {
+				case 'fixed':
+					$required_fields[] = 'fixed_price';
+					break;
+				case 'min':
+					$required_fields[] = 'min_price';
+					break;
+				case 'min_max':
+					$required_fields[] = 'min_price';
+					$required_fields[] = 'max_price';
+					break;
+			}
 		}
 
 		// Add required fields for dates_type.
-		switch ( $data['dates_type'] ) {
-			case 'specific':
-				$required_fields['dates'][] = 'start_date';
-				break;
-			case 'complex':
-				$required_fields['dates'][] = 'start_date';
-				$required_fields['dates'][] = 'end_date';
-				break;
+		if ( ! empty( $data['dates_type'] ) ) {
+			switch ( $data['dates_type'] ) {
+				case 'specific':
+					$required_fields['dates'][] = 'start_date';
+					break;
+				case 'complex':
+					$required_fields['dates'][] = 'start_date';
+					$required_fields['dates'][] = 'end_date';
+					break;
+			}
 		}
 
 		// Check if required fields are submitted.
@@ -835,14 +841,15 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 
 		foreach ( $cmb2_boxes as $cmb2_box ) {
 			$cmb2_box = $cmb2_box->__get( 'meta_box' );
-			if ( in_array( 'event', $cmb2_box['object_types'], true ) ) {
-				$cmb2_box_fields = $cmb2_box['fields'];
+			if ( ! empty( $cmb2_box['object_types'] ) && in_array( 'event', $cmb2_box['object_types'], true ) ) {
 
-				if ( ! $cmb2_box_fields ) {
+				if ( empty( $cmb2_box['fields'] ) ) {
 					// Delete event again, because there is an error.
 					wp_delete_post( $new_event_id, true );
 					return new \WP_Error( 'rest_missing_fields', __( 'Can\'t submit event, because CMB2 custom fields are missing.', 'openagenda-base' ), array( 'status' => 400 ) );
 				}
+
+				$cmb2_box_fields = $cmb2_box['fields'];
 
 				$prefix = str_replace( 'metabox', '', $cmb2_box['id'] );
 
