@@ -639,7 +639,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 				foreach ( $cmb2_box_fields as $cmb2_key => $cmb2_field ) {
 					$cmb2_key_data = str_replace( $prefix, '', $cmb2_key );
 
-					if ( str_starts_with( $cmb2_key_data, 'group_specific' ) || str_starts_with( $cmb2_key_data, 'group_complex' ) ) {
+					if ( 'group_specific' === substr( $cmb2_key_data, 0, 14 ) || 'group_complex' === substr( $cmb2_key_data, 0, 13 ) ) {
 
 						// Get the fields of the group.
 						$group_fields = array();
@@ -835,6 +835,9 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		if ( ! empty( $data['thumbnail'] ) ) {
 			// upload base64 encoded file to WordPress media library and retrieve url.
 			$media_attachment = $this->save_file( 'image', $data['thumbnail'], $data['title'] );
+			if ( is_wp_error( $media_attachment ) ) {
+				return $media_attachment;
+			}
 			set_post_thumbnail( $new_event_id, $media_attachment['id'] );
 			unset( $data['thumbnail'] );
 		}
@@ -863,7 +866,10 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 							foreach ( $data[ $cmb2_key_data ] as $key => $base64_media_file ) {
 								if ( ! empty( $base64_media_file ) ) {
 									// upload base64 encoded file to WordPress media library and retrieve url.
-									$media_attachment                                  = $this->save_file( 'file', $base64_media_file, $data['title'] );
+									$media_attachment = $this->save_file( 'file', $base64_media_file, $data['title'] );
+									if ( is_wp_error( $media_attachment ) ) {
+										return $media_attachment;
+									}
 									$data[ $cmb2_key_data ][ $media_attachment['id'] ] = $media_attachment['url'];
 									unset( $data[ $cmb2_key_data ][ $key ] );
 								}
@@ -877,7 +883,10 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 							foreach ( $data[ $cmb2_key_data ] as $key => $base64_media_file ) {
 								if ( ! empty( $base64_media_file ) ) {
 									// upload base64 encoded image to WordPress media library and retrieve url.
-									$media_attachment                                  = $this->save_file( 'image', $base64_media_file, $data['title'] );
+									$media_attachment = $this->save_file( 'image', $base64_media_file, $data['title'] );
+									if ( is_wp_error( $media_attachment ) ) {
+										return $media_attachment;
+									}
 									$data[ $cmb2_key_data ][ $media_attachment['id'] ] = $media_attachment['url'];
 									unset( $data[ $cmb2_key_data ][ $key ] );
 								}
@@ -895,7 +904,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 
 		// check if there are also fields in the data that are taxonomy fields starting with tax_ and add the taxonomy terms to the database.
 		foreach ( $data as $cmb2_key_data => $value ) {
-			if ( str_starts_with( $cmb2_key_data, 'tax_' ) ) {
+			if ( 'tax_' === substr( $cmb2_key_data, 0, 4 ) ) {
 				$taxonomy  = str_replace( 'tax_', '', $cmb2_key_data );
 				$terms     = $value;
 				$terms_ids = array();
@@ -983,7 +992,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 	 * @param string $base64_file The base64 file.
 	 * @param string $title The title of the image.
 	 *
-	 * @return array|bool The attachment ID and URL.
+	 * @return array|\WP_Error The attachment ID and URL.
 	 */
 	public function save_file( $type, $base64_file, $title ) {
 
@@ -1013,7 +1022,15 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 
 		global $wp_filesystem;
 		WP_Filesystem();
-		$upload_file = $wp_filesystem->put_contents( $upload_path . $hashed_filename, $decoded );
+
+		if ( false === $wp_filesystem->put_contents( $upload_path . $hashed_filename, $decoded ) ) {
+			return new \WP_Error(
+				'rest_cant_create_file',
+				/* translators: %s: comma-seperated list of required fields that are missing in the submit data */
+				sprintf( __( 'Can\'t create file on filesystem: %s', 'openagenda-base' ), $upload_path . $hashed_filename ),
+				array( 'status' => 400 )
+			);
+		}
 
 		$attachment = array(
 			'post_mime_type' => $mime_type,
