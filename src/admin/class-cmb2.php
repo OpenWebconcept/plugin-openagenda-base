@@ -308,13 +308,16 @@ class Cmb2 {
 
 		$cmb->add_field(
 			array(
-				'name'         => __( 'Price type', 'openagenda-base' ),
+				'name'         => __( 'Price type', 'openagenda-base' ) . self::required(),
 				'id'           => $prefix . 'price_type',
 				'type'         => 'select',
 				'options'      => array(
 					'fixed'   => __( 'Fixed (or free)', 'openagenda-base' ),
 					'min'     => __( 'Starting from (minimum only)', 'openagenda-base' ),
 					'min_max' => __( 'Range (minimum and maximum)', 'openagenda-base' ),
+				),
+				'attributes'   => array(
+					'required' => 'required',
 				),
 				'show_in_rest' => true,
 			)
