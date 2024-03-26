@@ -473,6 +473,16 @@ class Cmb2 {
 
 		$cmb->add_field(
 			array(
+				'name'         => __( 'Recurring Event description', 'openagenda-base' ),
+				'id'           => $prefix . 'recurring_description',
+				'type'         => 'textarea',
+				'desc'         => __( 'Enter the description for the recurring events', 'openagenda-base' ),
+				'show_in_rest' => true,
+			)
+		);
+
+		$cmb->add_field(
+			array(
 				'name'         => __( 'Type', 'openagenda-base' ),
 				'id'           => $prefix . 'type',
 				'type'         => 'radio',
