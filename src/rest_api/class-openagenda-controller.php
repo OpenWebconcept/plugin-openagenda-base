@@ -800,7 +800,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 						}
 					}
 				}
-			} elseif ( ! isset( $data[ $required_field ] ) || empty( $data[ $required_field ] ) ) {
+			} elseif ( ! isset( $data[ $required_field ] ) ) {
 				$missing_required_fields[] = $required_field;
 			}
 		}
