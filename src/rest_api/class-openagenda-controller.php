@@ -39,6 +39,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 	private $cmb2_fields_filter = array(
 		'highlighted',
 		'language',
+		'location',
 		'location_city',
 		'organizer',
 		'publicity',
@@ -193,7 +194,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_items_locations' ],
 				'permission_callback' => [ $this, 'get_items_permissions_check' ],
-				'args'                => array(),
+				'args'                => parent::get_collection_params(),
 			]
 		);
 
@@ -486,6 +487,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 	public function get_items_locations( $request ) {
 		$args = array();
 
+		$registered = parent::get_collection_params();
 		$prefix = 'location_';
 
 		/*
