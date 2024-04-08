@@ -491,7 +491,7 @@ class Cmb2 {
 					'specific' => __( 'A specific date or date-range', 'openagenda-base' ),
 					'complex'  => __( 'A configurable repeating pattern', 'openagenda-base' ),
 				),
-				'default'      => 'complex',
+				'default'      => 'specific',
 				'show_in_rest' => true,
 			)
 		);

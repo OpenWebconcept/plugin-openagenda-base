@@ -488,7 +488,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$args = array();
 
 		$registered = parent::get_collection_params();
-		$prefix = 'location_';
+		$prefix     = 'location_';
 
 		/*
 		 * This array defines mappings between public API query parameters whose
@@ -1438,14 +1438,22 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		// Add date type to the item data.
 		$item_data['dates_type'] = get_post_meta( $item->ID, 'event_dates_type', true );
 
-		// Sort event dates by date ASC.
-		$event_dates_class = new Event_Dates();
-		$event_dates       = $event_dates_class->get_date_list( $item->ID );
-		sort( $event_dates );
-		$item_data['dates'] = $event_dates;
+		// Check if fields corresponding to dates_type are set.
+		$event_dates_row = get_post_meta( $item->ID, 'event_dates_group_' . $item_data['dates_type'], true );
+		if ( empty( $event_dates_row ) || empty( $event_dates_row[0][ 'event_dates_' . $item_data['dates_type'] . '_start_date' ] ) ) {
+			// If not, set dates and next_date to null.
+			$item_data['dates']     = null;
+			$item_data['next_date'] = null;
+		} else {
+			// Sort event dates by date ASC.
+			$event_dates_class = new Event_Dates();
+			$event_dates       = $event_dates_class->get_date_list( $item->ID );
+			sort( $event_dates );
+			$item_data['dates'] = $event_dates;
 
-		// Get first date in the near future to sort events by date ASC.
-		$item_data['next_date'] = $event_dates_class->get_next_date( $item->ID );
+			// Get first date in the near future to sort events by date ASC.
+			$item_data['next_date'] = $event_dates_class->get_next_date( $item->ID );
+		}
 
 		// add media files to the item data with some extra information from the attachment.
 		$media_files = get_post_meta( $item->ID, 'event_media_files', true );
