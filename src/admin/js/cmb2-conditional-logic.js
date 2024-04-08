@@ -14,6 +14,26 @@ jQuery( document ).ready( function( $ ) {
   });
 
   /**
+   * Show or hide specific or complex group based on the value of dates types.
+   */
+  var $specific = $('.cmb2-id-event-dates-group-specific');
+  var $complex = $('.cmb2-id-event-dates-group-complex');
+  $specific.hide();
+  $complex.hide();
+
+  $('input[name="event_dates_type"]').on('change', function() {
+    var value = $(this).val();
+
+    if (value === 'specific') {
+      $specific.show();
+      $complex.hide();
+    } else {
+      $specific.hide();
+      $complex.show();
+    }
+  });
+
+  /**
    * Set up the functionality for CMB2 conditionals.
    */
   function CMB2ConditionalsInit( changeContext, conditionContext ) {

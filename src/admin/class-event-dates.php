@@ -116,6 +116,14 @@ class Event_Dates {
 			return;
 		}
 
+		// Check the dates types value and make sure only the fields of the selected group is saved.
+		$dates_type = get_post_meta( $post_id, 'event_dates_type', true );
+		if ( 'complex' === $dates_type ) {
+			delete_post_meta( $post_id, 'event_dates_group_specific' );
+		} elseif ( 'specific' === $dates_type ) {
+			delete_post_meta( $post_id, 'event_dates_group_complex' );
+		}
+
 		$openagenda_event_date_list = $this->create_date_list( $post_id, 'Y-m-d' );
 		delete_post_meta( $post_id, '_openagenda_event_date_list' );
 		foreach ( $openagenda_event_date_list as $openagenda_event_date ) {
@@ -127,8 +135,8 @@ class Event_Dates {
 		foreach ( $openagenda_event_date_time_list as $openagenda_event_date_time ) {
 			add_post_meta( $post_id, '_openagenda_event_date_time_list', $openagenda_event_date_time );
 		}
-		// UPDATE POST_EXPIRATION DATA.
 
+		// UPDATE POST_EXPIRATION DATA.
 		// By nature of a loop, the last element is the very last date.
 		$event_date = $openagenda_event_date_list ? max( $openagenda_event_date_list ) : null;
 		if ( $event_date ) {
