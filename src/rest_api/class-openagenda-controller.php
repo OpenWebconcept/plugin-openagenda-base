@@ -1616,7 +1616,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 				'posts_per_page' => -1,
 				'meta_query'     => array(
 					array(
-						'key'   => '_event_location',
+						'key'   => 'event_location',
 						'value' => $item->ID,
 					),
 				),
