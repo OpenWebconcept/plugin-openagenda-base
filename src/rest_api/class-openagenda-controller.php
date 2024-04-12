@@ -1366,6 +1366,8 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 			$thumb_image                 = get_the_post_thumbnail_url( $item->ID, 'large' );
 			$thumb_id                    = get_post_thumbnail_id( $item->ID );
 			$item_data['post_thumbnail'] = $this->create_image_output( $thumb_id, $thumb_image );
+		} else {
+			$item_data['post_thumbnail'] = null;
 		}
 
 		$default_meta_keys = array(
@@ -1465,6 +1467,8 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 				);
 			}
 			$item_data['media_files'] = $media_files;
+		} else {
+			$item_data['media_files'] = null;
 		}
 
 		// add images to the item data with some extra information from the attachment.
@@ -1474,6 +1478,8 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 				$images[ $id ] = $this->create_image_output( $id, $image );
 			}
 			$item_data['images'] = $images;
+		} else {
+			$item_data['images'] = null;
 		}
 
 		// get all taxonomies with entered value of post type.
@@ -1536,6 +1542,8 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 			$thumb_image                 = get_the_post_thumbnail_url( $item->ID, 'large' );
 			$thumb_id                    = get_post_thumbnail_id( $item->ID );
 			$item_data['post_thumbnail'] = $this->create_image_output( $thumb_id, $thumb_image );
+		} else {
+			$item_data['post_thumbnail'] = null;
 		}
 
 		$default_meta_keys = array(
@@ -1642,6 +1650,10 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 	public function create_image_output( $id, $image ) {
 		$attachment_meta = wp_get_attachment_metadata( $id );
 		$attachment      = get_post( $id );
+
+		if ( ! $attachment_meta || ! $attachment ) {
+			return [];
+		}
 
 		// get focal point information.
 		$focal_point = get_post_meta( $id, 'bg_pos_desktop', true );
