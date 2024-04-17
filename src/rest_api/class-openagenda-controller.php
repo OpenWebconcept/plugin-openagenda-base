@@ -438,6 +438,21 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 			$args['posts_per_page'] = $request['per_page'];
 		}
 
+		// Sort events by next date.
+		if ( ! isset( $request['orderby'] ) || 'next_date' === $request['orderby'] ) {
+			$args['meta_query'] = [
+				[
+					'key'     => '_openagenda_event_date_list',
+					'compare' => '>=',
+					'value'   => gmdate( 'Y-m-d' ),
+					'type'    => 'DATE',
+				],
+			];
+			$args['meta_key']   = '_openagenda_event_date_list';
+			$args['orderby']    = 'meta_value';
+			$args['order']      = 'ASC';
+		}
+
 		$args = $this->prepare_tax_query( $args, $request );
 
 		$args['post_type'] = 'event';
