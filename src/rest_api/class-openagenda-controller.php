@@ -453,7 +453,9 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		}
 
 		// Sort events.
-		$posts = $this->sort_events( $posts );
+		if ( ! isset( $request['orderby'] ) || 'next_date' === $request['orderby'] ) {
+			$posts = $this->sort_events( $posts );
+		}
 
 		$response = array(
 			'results'    => $posts,
@@ -1186,10 +1188,9 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
             // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 			'description' => __( 'Sort collection by post attribute.' ),
 			'type'        => 'string',
-			'default'     => 'date',
+			'default'     => 'next_date',
 			'enum'        => array(
 				'author',
-				'date',
 				'id',
 				'include',
 				'modified',
@@ -1198,6 +1199,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 				'slug',
 				'include_slugs',
 				'title',
+				'next_date',
 			),
 		);
 
