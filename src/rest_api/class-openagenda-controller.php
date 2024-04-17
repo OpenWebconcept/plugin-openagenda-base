@@ -1371,11 +1371,12 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		}
 
 		$item_data = array(
-			'id'          => $item->ID,
-			'title'       => $item->post_title,
-			'slug'        => $item->post_name,
-			'excerpt'     => $item->post_excerpt,
-			'post_status' => $item->post_status,
+			'id'            => $item->ID,
+			'title'         => $item->post_title,
+			'slug'          => $item->post_name,
+			'excerpt'       => $item->post_excerpt,
+			'post_status'   => $item->post_status,
+			'post_modified' => $item->post_modified,
 		);
 
 		// Check if the post has a featured image and add it to the item data.
