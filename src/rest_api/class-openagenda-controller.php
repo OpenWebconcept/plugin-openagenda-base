@@ -1033,7 +1033,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$mime_type = finfo_buffer( $finfo, $decoded, FILEINFO_MIME_TYPE );
 		$extension = explode( '/', finfo_buffer( $finfo, $decoded, FILEINFO_EXTENSION ) )[0];
 
-		$filename        = $title . '.' . $extension;
+		$filename        = sanitize_title( $title ) . '.' . $extension;
 		$hashed_filename = md5( $filename . microtime() ) . '_' . $filename;
 
 		// Save the image in the uploads directory.
