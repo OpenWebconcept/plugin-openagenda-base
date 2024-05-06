@@ -1679,12 +1679,12 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$output = [
 			'id'          => $id,
 			'url'         => $image,
-			'width'       => $attachment_meta['width'],
-			'height'      => $attachment_meta['height'],
-			'filesize'    => $attachment_meta['filesize'],
+			'width'       => ! empty( $attachment_meta['width'] ) ? $attachment_meta['width'] : null,
+			'height'      => ! empty( $attachment_meta['height'] ) ? $attachment_meta['height'] : null,
+			'filesize'    => ! empty( $attachment_meta['filesize'] ) ? $attachment_meta['filesize'] : null,
 			'alt'         => get_post_meta( $id, '_wp_attachment_image_alt', true ),
 			'caption'     => wp_get_attachment_caption( $id ),
-			'description' => $attachment->post_content,
+			'description' => ! empty( $attachment->post_content ) ? $attachment->post_content : '',
 		];
 
 		if ( $focal_point ) {
