@@ -442,13 +442,13 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		if ( ! isset( $request['orderby'] ) || 'next_date' === $request['orderby'] ) {
 			$args['meta_query'] = [
 				[
-					'key'     => '_openagenda_event_date_list',
+					'key'     => '_next_date',
 					'compare' => '>=',
 					'value'   => gmdate( 'Y-m-d' ),
 					'type'    => 'DATE',
 				],
 			];
-			$args['meta_key']   = '_openagenda_event_date_list';
+			$args['meta_key']   = '_next_date';
 			$args['orderby']    = 'meta_value';
 			$args['order']      = 'ASC';
 		}
