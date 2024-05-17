@@ -163,14 +163,14 @@ jQuery( document ).ready( function( $ ) {
 
     // Remove the required property from form elements within rows being hidden.
     conditionContext.on( 'CMB2hide', '.cmb-row', function() {
-      $( this ).children( '[data-conditional-required="required"]' ).each( function( i, e ) {
+      $( this ).find( '[data-conditional-required="required"]' ).each( function( i, e ) {
         $( e ).prop( 'required', false );
       });
     });
 
     // Add the required property to form elements within rows being unhidden.
     conditionContext.on( 'CMB2show', '.cmb-row', function() {
-      $( this ).children( '[data-conditional-required="required"]' ).each( function( i, e ) {
+      $( this ).find( '[data-conditional-required="required"]' ).each( function( i, e ) {
         $( e ).prop( 'required', true );
       });
     });

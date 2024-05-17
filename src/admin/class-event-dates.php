@@ -28,6 +28,12 @@ class Event_Dates {
 		if ( ! wp_next_scheduled( 'openagenda_cron_event_weekly' ) ) {
 			wp_schedule_event( strtotime( 'NEXT SUNDAY' ), 'weekly', 'openagenda_cron_event_weekly' );
 		}
+
+		add_action( 'openagenda_update_next_event_date', array( $this, 'update_next_event_date' ) );
+		if ( ! wp_next_scheduled( 'openagenda_update_next_event_date' ) ) {
+			wp_schedule_event( time(), 'hourly', 'openagenda_update_next_event_date' );
+		}
+
 		// Update event data after save.
 		add_action( 'save_post_event', array( $this, 'save_handler' ), 10, 1 );
 	}
@@ -47,6 +53,27 @@ class Event_Dates {
 		// Clear the wp-rest-cache.
 		if ( class_exists( \Caching::class ) ) {
 			\Caching::get_instance()->delete_cache_by_endpoint( '%/openagenda/v1/items', \Caching::FLUSH_LOOSE, true );
+		}
+	}
+
+	/**
+	 * Update next event date to optimize performance
+	 *
+	 * @return void
+	 */
+	public function update_next_event_date() {
+		$post_ids = get_posts(
+			array(
+				'post_type'      => 'event',
+				'fields'         => 'ids',
+				'posts_per_page' => -1,
+			)
+		);
+		foreach ( $post_ids as $post_id ) {
+			$next_date = $this->get_next_date( $post_id );
+			if ( ! empty( $next_date['date'] ) ) {
+				update_post_meta( $post_id, '_next_date', $next_date['date'] );
+			}
 		}
 	}
 
@@ -134,6 +161,11 @@ class Event_Dates {
 		delete_post_meta( $post_id, '_openagenda_event_date_time_list' );
 		foreach ( $openagenda_event_date_time_list as $openagenda_event_date_time ) {
 			add_post_meta( $post_id, '_openagenda_event_date_time_list', $openagenda_event_date_time );
+		}
+
+		$next_date = $this->get_next_date( $post_id );
+		if ( ! empty( $next_date['date'] ) ) {
+			update_post_meta( $post_id, '_next_date', $next_date['date'] );
 		}
 
 		// UPDATE POST_EXPIRATION DATA.

@@ -531,11 +531,14 @@ class Cmb2 {
 		$cmb->add_group_field(
 			$event_dates_group_specific,
 			array(
-				'name'         => __( 'Start date', 'openagenda-base' ),
+				'name'         => __( 'Start date', 'openagenda-base' ) . self::required(),
 				'id'           => $prefix . 'specific_start_date',
 				'type'         => 'text_date',
 				'date_format'  => 'd-m-Y',
 				'desc'         => __( 'Enter the start date of a singular event or the date from which the event should start repeating for a repeating event', 'openagenda-base' ),
+				'attributes'   => array(
+					'data-conditional-required' => 'required',
+				),
 				'show_in_rest' => true,
 			)
 		);
@@ -596,11 +599,14 @@ class Cmb2 {
 		$cmb->add_group_field(
 			$event_dates_group_complex,
 			array(
-				'name'         => __( 'Pattern start date', 'openagenda-base' ),
+				'name'         => __( 'Pattern start date', 'openagenda-base' ) . self::required(),
 				'id'           => $prefix . 'complex_start_date',
 				'type'         => 'text_date',
 				'date_format'  => 'd-m-Y',
 				'desc'         => __( 'Enter the start date of a singular event or the date from which the event should start repeating for a repeating event', 'openagenda-base' ),
+				'attributes'   => array(
+					'data-conditional-required' => 'required',
+				),
 				'show_in_rest' => true,
 			)
 		);
