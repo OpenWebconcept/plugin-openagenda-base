@@ -29,8 +29,8 @@ class Event_Dates {
 			wp_schedule_event( strtotime( 'NEXT SUNDAY' ), 'weekly', 'openagenda_cron_event_weekly' );
 		}
 
-		add_action( 'openagenda_update_next_event_date', array ( $this, 'update_next_event_date' ));
-		if ( ! wp_next_scheduled( 'openagenda_update_next_event_date')) {
+		add_action( 'openagenda_update_next_event_date', array( $this, 'update_next_event_date' ) );
+		if ( ! wp_next_scheduled( 'openagenda_update_next_event_date' ) ) {
 			wp_schedule_event( time(), 'hourly', 'openagenda_update_next_event_date' );
 		}
 
@@ -58,19 +58,21 @@ class Event_Dates {
 
 	/**
 	 * Update next event date to optimize performance
-	 * 
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	public function update_next_event_date() {
-		$post_ids = get_posts( array(
-			'post_type' => 'event',
-			'fields'    => 'ids',
-			'posts_per_page' => -1
-		) );
+		$post_ids = get_posts(
+			array(
+				'post_type'      => 'event',
+				'fields'         => 'ids',
+				'posts_per_page' => -1,
+			)
+		);
 		foreach ( $post_ids as $post_id ) {
-		 	$next_date = $this->get_next_date( $post_id );
-		 	if ( ! empty( $next_date['date'] ) ) {
-		 		update_post_meta( $post_id, '_next_date', $next_date['date'] );
+			$next_date = $this->get_next_date( $post_id );
+			if ( ! empty( $next_date['date'] ) ) {
+				update_post_meta( $post_id, '_next_date', $next_date['date'] );
 			}
 		}
 	}
@@ -161,9 +163,9 @@ class Event_Dates {
 			add_post_meta( $post_id, '_openagenda_event_date_time_list', $openagenda_event_date_time );
 		}
 
-		$next_date = $this->get_next_date($post_id);
-		if (! empty( $next_date['date'] ) ) {
-			update_post_meta($post_id, '_next_date', $next_date['date'] );
+		$next_date = $this->get_next_date( $post_id );
+		if ( ! empty( $next_date['date'] ) ) {
+			update_post_meta( $post_id, '_next_date', $next_date['date'] );
 		}
 
 		// UPDATE POST_EXPIRATION DATA.
