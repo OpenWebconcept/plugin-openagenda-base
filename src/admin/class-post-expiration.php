@@ -69,12 +69,12 @@ class Post_Expiration {
 	 * @since 1.0.0
 	 */
 	public function openagenda_expire_events() {
-		global $post;
-		// WP_Query arguments.
+
 		$args = array(
 			'post_type'      => 'event',
 			'post_status'    => 'publish',
 			'posts_per_page' => -1,
+			'fields'         => 'ids',
 			'meta_query'     => array(
 				array(
 					'key'     => '_expire_date',
@@ -85,24 +85,14 @@ class Post_Expiration {
 			),
 		);
 
-		// The Query.
-		$query = new \WP_Query( $args );
-		if ( $query->get_posts() ) {
-			while ( $query->get_posts() ) {
-				if ( $post ) {
-					$field_date = get_post_meta( $post->ID, '_expire_date', true );
-					if ( ! empty( $field_date ) ) {
-						$cal_date_time_fn_val = $this->openagenda_calc_datetime( $post->ID );
-						if ( 1 === $cal_date_time_fn_val ) {
-							$update_post = array(
-								'ID'          => $post->ID,
-								'post_status' => 'draft',
-							);
-							wp_update_post( $update_post );
-						}
-					}
-				}
-			}
+		$post_ids = get_posts( $args );
+
+		foreach ( $post_ids as $post_id ) {
+			$update_post = array(
+				'ID'          => $post_id,
+				'post_status' => 'draft',
+			);
+			wp_update_post( $update_post );
 		}
 	}
 
