@@ -165,11 +165,11 @@ class Post_Expiration {
 				$expire_draft_date = $this->openagenda_calc_datetime( $post_id );
 				if ( 1 === $expire_draft_date ) {
 					echo '<span style="color:red">';
-					esc_html( $expired_date );
+					echo esc_html( $expired_date );
 					echo '</span>';
 				} else {
 					echo '<span  style="color:green">';
-					esc_html( $expired_date );
+					echo esc_html( $expired_date );
 					echo '</span>';
 				}
 			}
