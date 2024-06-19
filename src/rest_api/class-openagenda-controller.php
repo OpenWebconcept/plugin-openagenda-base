@@ -1439,6 +1439,13 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 			$item_data[ $meta_key ] = $meta_value;
 		}
 
+		// Create Lat/long based on address data from OSM.
+		$osm_address = $this->get_latlng_from_address( $item_data['location_address'], $item_data['location_zipcode'], $item_data['location_city'] );
+		if ( ! empty( $osm_address ) ) {
+			$item_data['latitude']  = $osm_address['latitude'];
+			$item_data['longitude'] = $osm_address['longitude'];
+		}
+
 		// get the price of the event.
 		$price_type              = get_post_meta( $item->ID, $prefix . 'price_type', true );
 		$item_data['price_type'] = $price_type;
@@ -1602,6 +1609,13 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 			$item_data[ $meta_key ] = $meta_value;
 		}
 
+		// Create Lat/long based on address data from OSM.
+		$osm_address = $this->get_latlng_from_address( $item_data['address'], $item_data['zipcode'], $item_data['city'] );
+		if ( ! empty( $osm_address ) ) {
+			$item_data['latitude']  = $osm_address['latitude'];
+			$item_data['longitude'] = $osm_address['longitude'];
+		}
+
 		// Add all opening hours to the item data.
 		$days_of_week = array(
 			'monday',
@@ -1735,5 +1749,46 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		);
 
 		return $posts;
+	}
+
+	/**
+	 * Get latitude and longitude from address.
+	 *
+	 * @param string $address The address.
+	 * @param string $zipcode The zipcode.
+	 * @param string $city The city.
+	 *
+	 * @return array|bool The latitude and longitude.
+	 */
+	public function get_latlng_from_address( $address, $zipcode, $city ) {
+		if ( empty( $address ) || empty( $zipcode ) || empty( $city ) ) {
+			return false;
+		}
+
+		$address_full = $address . ', ' . $zipcode . ' ' . $city;
+		$address_full = rawurlencode( $address_full );
+
+		// Get the address data from OSM (OpenStreetMap).
+		$osm_url     = 'https://nominatim.openstreetmap.org/search?q=' . $address_full . '&format=json&addressdetails=1';
+		$osm_address = wp_remote_get( $osm_url );
+
+		// Check if the request was successful or an error.
+		if ( ! $osm_address || is_wp_error( $osm_address ) ) {
+			return null;
+		}
+
+		$osm_address = json_decode( $osm_address['body'] );
+
+		if ( ! $osm_address || empty( $osm_address[0] ) || empty( $osm_address[0]->lat ) || empty( $osm_address[0]->lon ) ) {
+			return null;
+		}
+
+		$latitude  = $osm_address[0]->lat;
+		$longitude = $osm_address[0]->lon;
+
+		return [
+			'latitude'  => $latitude,
+			'longitude' => $longitude,
+		];
 	}
 }
