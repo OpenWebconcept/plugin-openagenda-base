@@ -1440,11 +1440,8 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		}
 
 		// Create Lat/long based on address data from OSM.
-		if ( ! empty( $item_data['location_address'] ) && ! empty( $item_data['location_zipcode'] ) && ! empty( $item_data['location_city'] ) ) {
-			$address     = $item_data['location_address'] . ', ' . $item_data['location_zipcode'] . ' ' . $item_data['location_city'];
-			$address     = str_replace( ' ', '+', $address );
-			$osm_address = $this->get_latlng_from_address( $address );
-
+		$osm_address = $this->get_latlng_from_address( $item_data['location_address'], $item_data['location_zipcode'], $item_data['location_city'] );
+		if ( ! empty( $osm_address ) ) {
 			$item_data['latitude']  = $osm_address['latitude'];
 			$item_data['longitude'] = $osm_address['longitude'];
 		}
@@ -1613,11 +1610,8 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		}
 
 		// Create Lat/long based on address data from OSM.
-		if ( ! empty( $item_data['address'] ) && ! empty( $item_data['zipcode'] ) && ! empty( $item_data['city'] ) ) {
-			$address     = $item_data['address'] . ', ' . $item_data['zipcode'] . ' ' . $item_data['city'];
-			$address     = str_replace( ' ', '+', $address );
-			$osm_address = $this->get_latlng_from_address( $address );
-
+		$osm_address = $this->get_latlng_from_address( $item_data['address'], $item_data['zipcode'], $item_data['city'] );
+		if ( ! empty( $osm_address ) ) {
 			$item_data['latitude']  = $osm_address['latitude'];
 			$item_data['longitude'] = $osm_address['longitude'];
 		}
@@ -1761,12 +1755,21 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 	 * Get latitude and longitude from address.
 	 *
 	 * @param string $address The address.
+	 * @param string $zipcode The zipcode.
+	 * @param string $city The city.
 	 *
-	 * @return array The latitude and longitude.
+	 * @return array|bool The latitude and longitude.
 	 */
-	public function get_latlng_from_address( $address ) {
+	public function get_latlng_from_address( $address, $zipcode, $city ) {
+		if ( empty( $address ) || empty( $zipcode ) || empty( $city ) ) {
+			return false;
+		}
+
+		$address_full = $address . ', ' . $zipcode . ' ' . $city;
+		$address_full = rawurlencode( $address_full );
+
 		// Get the address data from OSM (OpenStreetMap).
-		$osm_url     = 'https://nominatim.openstreetmap.org/search?q=' . $address . '&format=json&addressdetails=1';
+		$osm_url     = 'https://nominatim.openstreetmap.org/search?q=' . $address_full . '&format=json&addressdetails=1';
 		$osm_address = wp_remote_get( $osm_url );
 
 		if ( ! $osm_address ) {
