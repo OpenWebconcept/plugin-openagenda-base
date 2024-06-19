@@ -1439,6 +1439,16 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 			$item_data[ $meta_key ] = $meta_value;
 		}
 
+		// Create Lat/long based on address data from OSM.
+		if ( ! empty( $item_data['location_address'] ) && ! empty( $item_data['location_zipcode'] ) && ! empty( $item_data['location_city'] ) ) {
+			$address     = $item_data['location_address'] . ', ' . $item_data['location_zipcode'] . ' ' . $item_data['location_city'];
+			$address     = str_replace( ' ', '+', $address );
+			$osm_address = $this->get_latlng_from_address( $address );
+
+			$item_data['latitude']  = $osm_address['latitude'];
+			$item_data['longitude'] = $osm_address['longitude'];
+		}
+
 		// get the price of the event.
 		$price_type              = get_post_meta( $item->ID, $prefix . 'price_type', true );
 		$item_data['price_type'] = $price_type;
@@ -1602,6 +1612,16 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 			$item_data[ $meta_key ] = $meta_value;
 		}
 
+		// Create Lat/long based on address data from OSM.
+		if ( ! empty( $item_data['address'] ) && ! empty( $item_data['zipcode'] ) && ! empty( $item_data['city'] ) ) {
+			$address     = $item_data['address'] . ', ' . $item_data['zipcode'] . ' ' . $item_data['city'];
+			$address     = str_replace( ' ', '+', $address );
+			$osm_address = $this->get_latlng_from_address( $address );
+
+			$item_data['latitude']  = $osm_address['latitude'];
+			$item_data['longitude'] = $osm_address['longitude'];
+		}
+
 		// Add all opening hours to the item data.
 		$days_of_week = array(
 			'monday',
@@ -1735,5 +1755,36 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		);
 
 		return $posts;
+	}
+
+	/**
+	 * Get latitude and longitude from address.
+	 *
+	 * @param string $address The address.
+	 *
+	 * @return array The latitude and longitude.
+	 */
+	public function get_latlng_from_address( $address ) {
+		// Get the address data from OSM (OpenStreetMap).
+		$osm_url     = 'https://nominatim.openstreetmap.org/search?q=' . $address . '&format=json&addressdetails=1';
+		$osm_address = wp_remote_get( $osm_url );
+
+		if ( ! $osm_address ) {
+			return null;
+		}
+
+		$osm_address = json_decode( $osm_address['body'] );
+
+		if ( ! $osm_address[0]->lat || ! $osm_address[0]->lon ) {
+			return null;
+		}
+
+		$latitude  = $osm_address[0]->lat;
+		$longitude = $osm_address[0]->lon;
+
+		return [
+			'latitude'  => $latitude,
+			'longitude' => $longitude,
+		];
 	}
 }
