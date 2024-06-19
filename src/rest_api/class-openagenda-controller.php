@@ -1779,7 +1779,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 
 		$osm_address = json_decode( $osm_address['body'] );
 
-		if ( ! $osm_address || ! $osm_address[0]->lat || ! $osm_address[0]->lon ) {
+		if ( ! $osm_address || empty( $osm_address[0] ) || empty( $osm_address[0]->lat ) || empty( $osm_address[0]->lon ) ) {
 			return null;
 		}
 
