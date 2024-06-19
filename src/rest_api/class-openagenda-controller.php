@@ -1439,13 +1439,6 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 			$item_data[ $meta_key ] = $meta_value;
 		}
 
-		// Create Lat/long based on address data from OSM.
-		$osm_address = $this->get_latlng_from_address( $item_data['location_address'], $item_data['location_zipcode'], $item_data['location_city'] );
-		if ( ! empty( $osm_address ) ) {
-			$item_data['latitude']  = $osm_address['latitude'];
-			$item_data['longitude'] = $osm_address['longitude'];
-		}
-
 		// get the price of the event.
 		$price_type              = get_post_meta( $item->ID, $prefix . 'price_type', true );
 		$item_data['price_type'] = $price_type;
@@ -1529,6 +1522,13 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 			unset( $item_data['location_description'] );
 			unset( $item_data['location_zipcode'] );
 			unset( $item_data['location_city'] );
+		}
+
+		// Create Lat/long based on address data from OSM.
+		$osm_address = $this->get_latlng_from_address( $item_data['location_address'], $item_data['location_zipcode'], $item_data['location_city'] );
+		if ( ! empty( $osm_address ) ) {
+			$item_data['latitude']  = $osm_address['latitude'];
+			$item_data['longitude'] = $osm_address['longitude'];
 		}
 
 		return $item_data;
