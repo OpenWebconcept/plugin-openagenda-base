@@ -1772,13 +1772,14 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$osm_url     = 'https://nominatim.openstreetmap.org/search?q=' . $address_full . '&format=json&addressdetails=1';
 		$osm_address = wp_remote_get( $osm_url );
 
-		if ( ! $osm_address ) {
+		// Check if the request was successful or an error.
+		if ( ! $osm_address || is_wp_error( $osm_address ) ) {
 			return null;
 		}
 
 		$osm_address = json_decode( $osm_address['body'] );
 
-		if ( ! $osm_address[0]->lat || ! $osm_address[0]->lon ) {
+		if ( ! $osm_address || ! $osm_address[0]->lat || ! $osm_address[0]->lon ) {
 			return null;
 		}
 
