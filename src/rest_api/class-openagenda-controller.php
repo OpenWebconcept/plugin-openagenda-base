@@ -1525,10 +1525,12 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		}
 
 		// Create Lat/long based on address data from OSM.
-		$osm_address = $this->get_latlng_from_address( $item_data['location_address'], $item_data['location_zipcode'], $item_data['location_city'] );
-		if ( ! empty( $osm_address ) ) {
-			$item_data['latitude']  = $osm_address['latitude'];
-			$item_data['longitude'] = $osm_address['longitude'];
+		if ( ! empty( $item_data['location_address'] ) && ! empty( $item_data['location_zipcode'] ) && ! empty( $item_data['location_city'] ) ) {
+			$osm_address = $this->get_latlng_from_address( $item_data['location_address'], $item_data['location_zipcode'], $item_data['location_city'] );
+			if ( ! empty( $osm_address ) ) {
+				$item_data['latitude']  = $osm_address['latitude'];
+				$item_data['longitude'] = $osm_address['longitude'];
+			}
 		}
 
 		return $item_data;
@@ -1610,10 +1612,12 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		}
 
 		// Create Lat/long based on address data from OSM.
-		$osm_address = $this->get_latlng_from_address( $item_data['address'], $item_data['zipcode'], $item_data['city'] );
-		if ( ! empty( $osm_address ) ) {
-			$item_data['latitude']  = $osm_address['latitude'];
-			$item_data['longitude'] = $osm_address['longitude'];
+		if ( ! empty( $item_data['address'] ) && ! empty( $item_data['zipcode'] ) && ! empty( $item_data['city'] ) ) {
+			$osm_address = $this->get_latlng_from_address( $item_data['address'], $item_data['zipcode'], $item_data['city'] );
+			if ( ! empty( $osm_address ) ) {
+				$item_data['latitude']  = $osm_address['latitude'];
+				$item_data['longitude'] = $osm_address['longitude'];
+			}
 		}
 
 		// Add all opening hours to the item data.
