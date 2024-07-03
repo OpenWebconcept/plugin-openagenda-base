@@ -1768,19 +1768,12 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$address_full = $address . ', ' . $zipcode . ' ' . $city;
 		$address_full = rawurlencode( $address_full );
 
-		// Set transient with the full address and check if it's the same as before or if it has been updated.
-		$transient_name_address = 'address_' . md5( $address_full );
-		$transient_get_address  = get_transient( $transient_name_address );
-		$transient_get_lat      = get_transient( 'latitude_' . md5( $address_full ) );
-		$transient_get_lon      = get_transient( 'longitude_' . md5( $address_full ) );
-		set_transient( $transient_name_address, $address_full );
+		// Set option with the lat long and check if it's the same as before or if it has been updated.
+		$option_lat_lon = get_option( 'latlon_' . md5( $address_full ) );
 
 		// If the address is the same as before, return the lat/long from the transient, to prevent unnecessary API calls.
-		if ( $address_full === $transient_get_address && $transient_get_lat && $transient_get_lon ) {
-			return [
-				'latitude'  => $transient_get_lat,
-				'longitude' => $transient_get_lon,
-			];
+		if ( ! empty( $option_lat_lon ) ) {
+			return $option_lat_lon;
 		}
 
 		// Get the address data from OSM (OpenStreetMap).
@@ -1801,13 +1794,14 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$latitude  = $osm_address[0]->lat;
 		$longitude = $osm_address[0]->lon;
 
-		// Set transients for the lat/long and return the values.
-		set_transient( 'latitude_' . md5( $address_full ), $latitude );
-		set_transient( 'longitude_' . md5( $address_full ), $longitude );
-
-		return [
+		$lat_lon = [
 			'latitude'  => $latitude,
 			'longitude' => $longitude,
 		];
+
+		// Update option for the latlon and return the value.
+		update_option( 'latlon_' . md5( $address_full ), $lat_lon );
+
+		return $lat_lon;
 	}
 }
