@@ -1768,8 +1768,8 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$address_full = $address . ', ' . $zipcode . ' ' . $city;
 		$address_full = rawurlencode( $address_full );
 
-		// Set option with the lat long and check if it's the same as before or if it has been updated.
-		$option_lat_lon = get_option( 'latlon_' . md5( $address_full ) );
+		// Get transient with the lat long.
+		$option_lat_lon = get_transient( 'latlon_' . md5( $address_full ) );
 
 		// If the address is the same as before, return the lat/long from the transient, to prevent unnecessary API calls.
 		if ( ! empty( $option_lat_lon ) ) {
@@ -1799,8 +1799,8 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 			'longitude' => $longitude,
 		];
 
-		// Update option for the latlon and return the value.
-		update_option( 'latlon_' . md5( $address_full ), $lat_lon );
+		// Update transient for the latlon and return the value.
+		set_transient( 'latlon_' . md5( $address_full ), $lat_lon, YEAR_IN_SECONDS );
 
 		return $lat_lon;
 	}
