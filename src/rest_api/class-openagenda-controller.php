@@ -1768,6 +1768,14 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$address_full = $address . ', ' . $zipcode . ' ' . $city;
 		$address_full = rawurlencode( $address_full );
 
+		// Get transient with the lat long.
+		$option_lat_lon = get_transient( 'latlon_' . md5( $address_full ) );
+
+		// If the address is the same as before, return the lat/long from the transient, to prevent unnecessary API calls.
+		if ( ! empty( $option_lat_lon ) ) {
+			return $option_lat_lon;
+		}
+
 		// Get the address data from OSM (OpenStreetMap).
 		$osm_url     = 'https://nominatim.openstreetmap.org/search?q=' . $address_full . '&format=json&addressdetails=1';
 		$osm_address = wp_remote_get( $osm_url );
@@ -1786,9 +1794,14 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$latitude  = $osm_address[0]->lat;
 		$longitude = $osm_address[0]->lon;
 
-		return [
+		$lat_lon = [
 			'latitude'  => $latitude,
 			'longitude' => $longitude,
 		];
+
+		// Update transient for the latlon and return the value.
+		set_transient( 'latlon_' . md5( $address_full ), $lat_lon, YEAR_IN_SECONDS );
+
+		return $lat_lon;
 	}
 }
