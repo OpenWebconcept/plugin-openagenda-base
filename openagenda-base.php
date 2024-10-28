@@ -14,7 +14,7 @@
  * Plugin Name:       OpenAgenda Base
  * Plugin URI:        https://www.openwebconcept.nl
  * Description:       The OpenAgenda Base plugin.
- * Version:           1.1.4
+ * Version:           1.1.5
  * Author:            Acato
  * Author URI:        https://www.acato.nl
  * License:           EUPL-1.2
@@ -27,7 +27,7 @@
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
-define( 'OWC_OPENAGENDA_BASE_VERSION', '1.1.4' );
+define( 'OWC_OPENAGENDA_BASE_VERSION', '1.1.5' );
 require_once plugin_dir_path( __FILE__ ) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'class-autoloader.php';
 spl_autoload_register( array( '\Openagenda_Base_Plugin\Autoloader', 'autoload' ) );
 /**
