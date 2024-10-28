@@ -90,7 +90,7 @@ class Post_Expiration {
 		foreach ( $post_ids as $post_id ) {
 			$update_post = array(
 				'ID'          => $post_id,
-				'post_status' => 'draft',
+				'post_status' => 'archive',
 			);
 			wp_update_post( $update_post );
 		}

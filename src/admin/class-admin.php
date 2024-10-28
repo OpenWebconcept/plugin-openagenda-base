@@ -35,6 +35,12 @@ class Admin {
 		add_filter( 'manage_event_posts_columns', array( $this, 'manage_event_posts_columns' ) );
 
 		add_action( 'save_post_location', array( $this, 'remove_zero_opening_hours' ) );
+
+		// Add custom post status Archive.
+		add_filter( 'display_post_states', array( $this, 'display_post_status' ), 10, 2 );
+		add_action( 'post_submitbox_misc_actions', array( $this, 'add_custom_status_to_dropdown' ) );
+		add_action( 'admin_footer-edit.php', array( $this, 'add_custom_status_to_quick_edit' ), 10, 2 );
+		add_action( 'edit_form_after_title', array( $this, 'set_custom_status_in_publish_box' ) );
 	}
 
 	/**
@@ -42,6 +48,7 @@ class Admin {
 	 */
 	public function action_init() {
 		$this->register_post_types();
+		$this->register_post_status();
 	}
 
 	/**
@@ -171,6 +178,26 @@ class Admin {
 	}
 
 	/**
+	 * Register the Archive post status.
+	 *
+	 * @return void
+	 */
+	public function register_post_status() {
+		register_post_status(
+			'archive',
+			array(
+				'label'                     => __( 'Archive', 'openagenda-base' ),
+				'public'                    => true,
+				'exclude_from_search'       => false,
+				'show_in_admin_all_list'    => true,
+				'show_in_admin_status_list' => true,
+				// translators: %s: number of posts.
+				'label_count'               => _n_noop( 'Archive <span class="count">(%s)</span>', 'Archives <span class="count">(%s)</span>', 'openagenda-base' ),
+			)
+		);
+	}
+
+	/**
 	 * Add theme support for post thumbnails
 	 *
 	 * @return void
@@ -266,6 +293,92 @@ class Admin {
 			if ( '00:00' === $close ) {
 				unset( $_POST[ 'location_' . $day . '_opening_hours_close' ] );
 			}
+		}
+	}
+
+	/**
+	 * Display post status in dropdown at post list.
+	 *
+	 * @param array    $states The post states.
+	 * @param \WP_Post $post The post object.
+	 *
+	 * @return array Modified post states.
+	 */
+	public function display_post_status( $states, $post ) {
+		// Receive the post status object by post status name.
+		$post_status_object = get_post_status_object( $post->post_status );
+
+		// Checks if the label exists.
+		if ( in_array( $post_status_object->label, $states, true ) ) {
+			return $states;
+		}
+
+		// Adds the label of the current post status.
+		$states[ $post_status_object->name ] = $post_status_object->label;
+
+		return $states;
+	}
+
+	/**
+	 * Add custom status to dropdown in edit screen of post.
+	 *
+	 * @return void
+	 */
+	public function add_custom_status_to_dropdown() {
+		global $post;
+
+		if ( 'event' === $post->post_type ) {
+			$complete = '';
+			$label    = '';
+
+			if ( 'archive' === $post->post_status ) {
+				$complete = ' selected="selected"';
+				$label    = '<span id="post-status-display">' . __( 'Archive', 'openagenda-base' ) . '</span>';
+			}
+
+			echo '
+        <script>
+        jQuery(document).ready(function($){
+            $("select#post_status").append(\'<option value="archive" ' . esc_html( $complete ) . '>' . esc_html__( 'Archive', 'openagenda-base' ) . '</option>\');
+            $(".misc-pub-section label").append(\'' . esc_attr( $label ) . '\');
+        });
+        </script>';
+		}
+	}
+
+	/**
+	 * Add custom status to quick edit screen.
+	 *
+	 * @return void
+	 */
+	public function add_custom_status_to_quick_edit() {
+		echo "<script>
+	jQuery(document).ready( function() {
+		jQuery( 'select[name=\"_status\"]' ).append( '<option value=\"archive\">' . __( 'Archive', 'openagenda-base' ) . '</option>' );
+	});
+	</script>";
+	}
+
+	/**
+	 * Set the custom status in the publish box.
+	 *
+	 * @param WP_Post $post The post object.
+	 *
+	 * @return void
+	 */
+	public function set_custom_status_in_publish_box( $post ) {
+		if ( 'archive' === $post->post_status ) {
+			?>
+			<script>
+				document.addEventListener("DOMContentLoaded", function() {
+					// Set the custom status in the post-status-display area.
+					var postStatusDisplay = document.getElementById('post-status-display');
+					if (postStatusDisplay) {
+						postStatusDisplay.textContent = '<?php echo esc_js( __( 'Archive', 'openagenda-base' ) ); ?>';
+					}
+				});
+			</script>
+			<?php
 		}
 	}
 }
