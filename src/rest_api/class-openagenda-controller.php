@@ -408,6 +408,14 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 			}
 		}
 
+		if ( isset( $registered['longterm'] ) ) {
+			if ( isset( $request['longterm'] ) && $request['longterm'] ) {
+				$cmb2_where_clauses[] = sprintf( "ID IN ( SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` = '{$prefix}longterm' AND `meta_value` = '%s' )", 'on' );
+			} else {
+				$cmb2_where_clauses[] = sprintf( "ID NOT IN ( SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` = '{$prefix}longterm' AND `meta_value` = '%s' )", 'on' );
+			}
+		}
+
 		// Extend WordPress REST API search query to include custom fields.
 		if ( isset( $registered['search'], $request['search'] ) ) {
 			$taxonomies = get_object_taxonomies( 'event' );
@@ -1255,6 +1263,12 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 			),
 		);
 
+		$query_params['longterm'] = array(
+			'description' => __( 'Limit result set to events that are long-term.', 'openagenda-base' ),
+			'type'        => 'boolean',
+			'default'     => false,
+		);
+
 		// combine cmb2_fields_filter and cmb2_fields_search to one array and filter out duplicates.
 		$cmb2_fields = array_merge( $this->cmb2_fields_filter, $this->cmb2_fields_search );
 		foreach ( $cmb2_fields as $cmb2_field ) {
@@ -1401,6 +1415,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 			'location_description',
 			'location_zipcode',
 			'location_city',
+			'longterm',
 			'organizer',
 			'organizer_website_url',
 			'phone_number',
