@@ -70,6 +70,13 @@ paths:
           schema:
             type: boolean
             example: true
+        - name: longterm
+          in: query
+          required: false
+          description: Whether the event is a long-term event.
+          schema:
+            type: boolean
+            example: true
         - name: language
           in: query
           required: false
@@ -215,6 +222,9 @@ paths:
                 highlighted:
                   type: boolean
                   description: Whether the event is highlighted.
+                longterm:
+                  type: boolean
+                  description: Whether the event is a long-term event.
                 video_url:
                   type: string
                   description: The video URL for the event.
@@ -484,6 +494,10 @@ components:
         highlighted:
           type: boolean
           description: Whether the event is highlighted.
+          example: true
+        longterm:
+          type: boolean
+          description: Whether the event is a long-term event.
           example: true
         language:
           type: string

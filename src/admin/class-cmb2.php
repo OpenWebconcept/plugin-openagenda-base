@@ -454,6 +454,16 @@ class Cmb2 {
 			)
 		);
 
+		$cmb->add_field(
+			array(
+				'name'         => __( 'Long-term event', 'openagenda-base' ),
+				'id'           => $prefix . 'longterm',
+				'type'         => 'checkbox',
+				'desc'         => __( 'Check this box if the event is long-term', 'openagenda-base' ),
+				'show_in_rest' => true,
+			)
+		);
+
 		// DATE INPUT.
 		// Add custom meta boxes using CMB2 for event dates.
 		$prefix = 'event_dates_';
