@@ -408,8 +408,8 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 			}
 		}
 
-		if ( isset( $registered['longterm'] ) ) {
-			if ( isset( $request['longterm'] ) && $request['longterm'] ) {
+		if ( isset( $registered['longterm'] ) && isset( $request['longterm'] ) ) {
+			if ( $request['longterm'] ) {
 				$cmb2_where_clauses[] = sprintf( "ID IN ( SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` = '{$prefix}longterm' AND `meta_value` = '%s' )", 'on' );
 			} else {
 				$cmb2_where_clauses[] = sprintf( "ID NOT IN ( SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` = '{$prefix}longterm' AND `meta_value` = '%s' )", 'on' );
@@ -1266,7 +1266,6 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$query_params['longterm'] = array(
 			'description' => __( 'Limit result set to events that are long-term.', 'openagenda-base' ),
 			'type'        => 'boolean',
-			'default'     => false,
 		);
 
 		// combine cmb2_fields_filter and cmb2_fields_search to one array and filter out duplicates.
