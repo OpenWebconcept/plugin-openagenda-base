@@ -962,6 +962,16 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 
 				add_post_meta( $new_event_id, $prefix . 'type', $dates_type );
 
+				// Add support for recurring event description and event repeats every year.
+				if ( ! empty( $data['dates_recurring_description'] ) ) {
+					add_post_meta( $new_event_id, $prefix . 'recurring_description', $data['dates_recurring_description'] );
+				}
+
+				if ( ! empty( $data['dates_every_year'] ) ) {
+					$data['dates_every_year'] = ( 1 === (int) $data['dates_every_year'] || 'true' === $data['dates_every_year'] ) ? 'on' : $data['dates_every_year'];
+					add_post_meta( $new_event_id, $prefix . 'every_year', $data['dates_every_year'] );
+				}
+
 				$dates      = $data[ $cmb2_key_data ];
 				$post_dates = array();
 
