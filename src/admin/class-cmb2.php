@@ -675,6 +675,16 @@ class Cmb2 {
 			)
 		);
 
+		$days_of_week = [
+			'monday'    => __( 'Monday', 'openagenda-base' ),
+			'tuesday'   => __( 'Tuesday', 'openagenda-base' ),
+			'wednesday' => __( 'Wednesday', 'openagenda-base' ),
+			'thursday'  => __( 'Thursday', 'openagenda-base' ),
+			'friday'    => __( 'Friday', 'openagenda-base' ),
+			'saturday'  => __( 'Saturday', 'openagenda-base' ),
+			'sunday'    => __( 'Sunday', 'openagenda-base' ),
+		];
+
 		$cmb->add_group_field(
 			$event_dates_group_complex,
 			array(
@@ -682,18 +692,40 @@ class Cmb2 {
 				'id'           => $prefix . 'complex_weekdays',
 				'type'         => 'multicheck',
 				'description'  => __( 'None means daily', 'openagenda-base' ),
-				'options'      => array(
-					'monday'    => __( 'Monday', 'openagenda-base' ),
-					'tuesday'   => __( 'Tuesday', 'openagenda-base' ),
-					'wednesday' => __( 'Wednesday', 'openagenda-base' ),
-					'thursday'  => __( 'Thursday', 'openagenda-base' ),
-					'friday'    => __( 'Friday', 'openagenda-base' ),
-					'saturday'  => __( 'Saturday', 'openagenda-base' ),
-					'sunday'    => __( 'Sunday', 'openagenda-base' ),
-				),
+				'options'      => $days_of_week,
 				'show_in_rest' => true,
 			)
 		);
+
+		foreach ( $days_of_week as $day_key => $day_label ) {
+			$cmb->add_group_field(
+				$event_dates_group_complex,
+				array(
+					// translators: %s is the day of the week, e.g. Monday.
+					'name'         => sprintf( __( 'Start time of %s (optional)', 'openagenda-base' ), $day_label ),
+					'id'           => $prefix . 'complex_start_time_' . $day_key,
+					'type'         => 'text_time',
+					// translators: %s is the day of the week, e.g. Monday.
+					'desc'         => sprintf( __( 'Select the start time for %s. If you don\'t select a start time but the event occurs on this day, then the general start time is used for this day.', 'openagenda-base' ), $day_label ),
+					'time_format'  => 'H:i',
+					'show_in_rest' => true,
+				)
+			);
+
+			$cmb->add_group_field(
+				$event_dates_group_complex,
+				array(
+					// translators: %s is the day of the week, e.g. Monday.
+					'name'         => sprintf( __( 'End time of %s (optional)', 'openagenda-base' ), $day_label ),
+					'id'           => $prefix . 'complex_end_time_' . $day_key,
+					'type'         => 'text_time',
+					// translators: %s is the day of the week, e.g. Monday.
+					'desc'         => sprintf( __( 'Select the end time for %s. If you don\'t select an end time but the event occurs on this day, then the general end time is used for this day.', 'openagenda-base' ), $day_label ),
+					'time_format'  => 'H:i',
+					'show_in_rest' => true,
+				)
+			);
+		}
 
 		$cmb->add_group_field(
 			$event_dates_group_complex,

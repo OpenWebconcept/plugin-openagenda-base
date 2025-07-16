@@ -209,7 +209,7 @@ class Event_Dates {
 			if ( 'complex' === $type && $meta['repeat_days'] && count( $meta['repeat_days'] ) > 0 ) {
 
 				// Holds all years this event is on. within the limits of -1 through +1 years relative to "this year".
-				$triggered_years = range( gmdate( 'Y' ) - 1, gmdate( 'Y' ) + 1 );
+				$triggered_years = range( ( (int) gmdate( 'Y' ) ) - 1, ( (int) gmdate( 'Y' ) ) + 1 );
 
 				// Holds all months this event is on.
 				$triggered_months = self::all_months();
@@ -285,11 +285,22 @@ class Event_Dates {
 						continue;
 					}
 					if ( $a_timestamp ) {
+						$start_time = isset( $meta[ $prefix . 'complex_start_time' ] ) ? $meta[ $prefix . 'complex_start_time' ] : null;
+						$end_time   = isset( $meta[ $prefix . 'complex_end_time' ] ) ? $meta[ $prefix . 'complex_end_time' ] : null;
+
+						// Check if current day has its own specific start and end time.
+						if ( isset( $meta[ $prefix . 'complex_start_time_' . $current_day_name ] ) && ! empty( $meta[ $prefix . 'complex_start_time_' . $current_day_name ] ) ) {
+							$start_time = $meta[ $prefix . 'complex_start_time_' . $current_day_name ];
+						}
+						if ( isset( $meta[ $prefix . 'complex_end_time_' . $current_day_name ] ) && ! empty( $meta[ $prefix . 'complex_end_time_' . $current_day_name ] ) ) {
+							$end_time = $meta[ $prefix . 'complex_end_time_' . $current_day_name ];
+						}
+
 						$dates[]       = (int) $a_timestamp;
 						$dates_times[] = array(
 							'date'       => gmdate( 'Y-m-d', $a_timestamp ),
-							'start_time' => isset( $meta[ $prefix . 'complex_start_time' ] ) ? $meta[ $prefix . 'complex_start_time' ] : null,
-							'end_time'   => isset( $meta[ $prefix . 'complex_end_time' ] ) ? $meta[ $prefix . 'complex_end_time' ] : null,
+							'start_time' => $start_time,
+							'end_time'   => $end_time,
 						);
 					}
 				}
