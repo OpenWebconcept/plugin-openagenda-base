@@ -285,8 +285,8 @@ class Event_Dates {
 						continue;
 					}
 					if ( $a_timestamp ) {
-						$start_time = isset( $meta[ $prefix . 'complex_start_time' ] ) ? $meta[ $prefix . 'complex_start_time' ] : null;
-						$end_time   = isset( $meta[ $prefix . 'complex_end_time' ] ) ? $meta[ $prefix . 'complex_end_time' ] : null;
+						$start_time = $meta[ $prefix . 'complex_start_time' ] ?? null;
+						$end_time   = $meta[ $prefix . 'complex_end_time' ] ?? null;
 
 						// Check if current day has its own specific start and end time.
 						if ( isset( $meta[ $prefix . 'complex_start_time_' . $current_day_name ] ) && ! empty( $meta[ $prefix . 'complex_start_time_' . $current_day_name ] ) ) {
