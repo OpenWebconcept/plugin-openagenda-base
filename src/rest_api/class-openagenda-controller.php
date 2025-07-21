@@ -997,7 +997,17 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 								$prefix . 'specific_end_time' => ! empty( $date['end_time'] ) ? $date['end_time'] : '',
 							);
 						} elseif ( 'complex' === $dates_type ) {
-							$post_dates[] = array(
+							$days_of_week = array(
+								'monday',
+								'tuesday',
+								'wednesday',
+								'thursday',
+								'friday',
+								'saturday',
+								'sunday',
+							);
+
+							$post_date_item = array(
 								$prefix . 'complex_start_date' => ! empty( $date['start_date'] ) ? $date['start_date'] : '',
 								$prefix . 'complex_end_date' => ! empty( $date['end_date'] ) ? $date['end_date'] : '',
 								$prefix . 'complex_start_time' => ! empty( $date['start_time'] ) ? $date['start_time'] : '',
@@ -1006,6 +1016,13 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 								$prefix . 'complex_weekdays' => ! empty( $date['weekdays'] ) ? $date['weekdays'] : '',
 								$prefix . 'complex_months' => ! empty( $date['months'] ) ? $date['months'] : '',
 							);
+
+							foreach ( $days_of_week as $day ) {
+								$post_date_item[ $prefix . 'complex_start_time_' . $day ] = ! empty( $date[ 'start_time_' . $day ] ) ? $date[ 'start_time_' . $day ] : '';
+								$post_date_item[ $prefix . 'complex_end_time_' . $day ]   = ! empty( $date[ 'end_time_' . $day ] ) ? $date[ 'end_time_' . $day ] : '';
+							}
+
+							$post_dates[] = $post_date_item;
 						}
 					}
 
