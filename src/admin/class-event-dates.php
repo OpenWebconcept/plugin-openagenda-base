@@ -136,8 +136,8 @@ class Event_Dates {
 					// Do the save-actions.
 					$this->save_handler( $post_id );
 					// And clear the wp-rest-cache.
-					if ( class_exists( \Caching::class ) ) {
-						\Caching::get_instance()->delete_cache_by_endpoint( '%/openagenda/v1/items', \Caching::FLUSH_LOOSE, true );
+					if ( class_exists( Caching::class ) ) {
+						Caching::get_instance()->delete_cache_by_endpoint( '%/openagenda/v1/items', Caching::FLUSH_LOOSE, true );
 					}
 				}
 			);
