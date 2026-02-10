@@ -838,6 +838,11 @@ class Event_Dates {
 		foreach ( $event_dates as $meta ) {
 			++$string_index;
 
+			// Check if meta is an array.
+			if ( empty( $meta ) || ! is_array( $meta ) ) {
+				continue;
+			}
+
 			$type                = $dates_type;
 			$meta['repeat_days'] = isset( $meta[ $prefix . 'complex_weekdays' ] ) ? $meta[ $prefix . 'complex_weekdays' ] : array();
 			if ( empty( $meta['repeat_days'] ) ) {
@@ -852,7 +857,7 @@ class Event_Dates {
 				// If it is every monday of every month, then it's just every monday.
 				$month_suffix = trim( $number_insert ) ? _x( 'of the month', 'of the month as in Every last friday of the month', 'openagenda-base' ) : '';
 
-				if ( ( $meta[ $prefix . 'complex_months' ] ) && count( $meta[ $prefix . 'complex_months' ] ) > 0 ) {
+				if ( isset( $meta[ $prefix . 'complex_months' ] ) && is_array( $meta[ $prefix . 'complex_months' ] ) && count( $meta[ $prefix . 'complex_months' ] ) > 0 ) {
 					$month_suffix = _x( 'of', 'of as in Every last friday of January', 'openagenda-base' ) . ' ' . $this->nice_concat( $this->translate_months( $meta[ $prefix . 'complex_months' ] ) );
 
 					if ( ! $long_format ) { // only list "current month".
