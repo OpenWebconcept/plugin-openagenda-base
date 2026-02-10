@@ -9,6 +9,8 @@
 
 namespace Openagenda_Base_Plugin\Admin;
 
+use WP_Rest_Cache_Plugin\Includes\Caching\Caching;
+
 /**
  * Event_Dates class.
  */
@@ -51,8 +53,8 @@ class Event_Dates {
 		}
 
 		// Clear the wp-rest-cache.
-		if ( class_exists( \Caching::class ) ) {
-			\Caching::get_instance()->delete_cache_by_endpoint( '%/openagenda/v1/items', \Caching::FLUSH_LOOSE, true );
+		if ( class_exists( Caching::class ) ) {
+			Caching::get_instance()->delete_cache_by_endpoint( '%/openagenda/v1/items', Caching::FLUSH_LOOSE, true );
 		}
 	}
 
