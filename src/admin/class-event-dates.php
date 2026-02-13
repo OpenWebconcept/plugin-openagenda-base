@@ -9,8 +9,6 @@
 
 namespace Openagenda_Base_Plugin\Admin;
 
-use WP_Rest_Cache_Plugin\Includes\Caching\Caching;
-
 /**
  * Event_Dates class.
  */
@@ -50,11 +48,6 @@ class Event_Dates {
 		$post_ids = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_status = 'publish' AND post_type = 'event'" );
 		foreach ( $post_ids as $post_id ) {
 			$this->save_handler( $post_id );
-		}
-
-		// Clear the wp-rest-cache.
-		if ( class_exists( Caching::class ) ) {
-			Caching::get_instance()->delete_cache_by_endpoint( '%/openagenda/v1/items', Caching::FLUSH_LOOSE, true );
 		}
 	}
 
@@ -126,22 +119,6 @@ class Event_Dates {
 	 */
 	public function save_handler( $post_id ) {
 		if ( wp_is_post_autosave( $post_id ) ) {
-			return;
-		}
-		if ( doing_action( 'save_post_event' ) ) {
-			// We cannot do this now. The post we are trying to update doesn't exist yet.
-			add_action(
-				'shutdown',
-				function () use ( $post_id ) {
-					// Do the save-actions.
-					$this->save_handler( $post_id );
-					// And clear the wp-rest-cache.
-					if ( class_exists( Caching::class ) ) {
-						Caching::get_instance()->delete_cache_by_endpoint( '%/openagenda/v1/items', Caching::FLUSH_LOOSE, true );
-					}
-				}
-			);
-
 			return;
 		}
 
