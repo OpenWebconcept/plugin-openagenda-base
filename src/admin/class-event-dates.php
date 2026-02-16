@@ -49,11 +49,6 @@ class Event_Dates {
 		foreach ( $post_ids as $post_id ) {
 			$this->save_handler( $post_id );
 		}
-
-		// Clear the wp-rest-cache.
-		if ( class_exists( \Caching::class ) ) {
-			\Caching::get_instance()->delete_cache_by_endpoint( '%/openagenda/v1/items', \Caching::FLUSH_LOOSE, true );
-		}
 	}
 
 	/**
@@ -124,22 +119,6 @@ class Event_Dates {
 	 */
 	public function save_handler( $post_id ) {
 		if ( wp_is_post_autosave( $post_id ) ) {
-			return;
-		}
-		if ( doing_action( 'save_post_event' ) ) {
-			// We cannot do this now. The post we are trying to update doesn't exist yet.
-			add_action(
-				'shutdown',
-				function () use ( $post_id ) {
-					// Do the save-actions.
-					$this->save_handler( $post_id );
-					// And clear the wp-rest-cache.
-					if ( class_exists( \Caching::class ) ) {
-						\Caching::get_instance()->delete_cache_by_endpoint( '%/openagenda/v1/items', \Caching::FLUSH_LOOSE, true );
-					}
-				}
-			);
-
 			return;
 		}
 
@@ -838,6 +817,11 @@ class Event_Dates {
 		foreach ( $event_dates as $meta ) {
 			++$string_index;
 
+			// Check if meta is an array.
+			if ( empty( $meta ) || ! is_array( $meta ) ) {
+				continue;
+			}
+
 			$type                = $dates_type;
 			$meta['repeat_days'] = isset( $meta[ $prefix . 'complex_weekdays' ] ) ? $meta[ $prefix . 'complex_weekdays' ] : array();
 			if ( empty( $meta['repeat_days'] ) ) {
@@ -852,7 +836,7 @@ class Event_Dates {
 				// If it is every monday of every month, then it's just every monday.
 				$month_suffix = trim( $number_insert ) ? _x( 'of the month', 'of the month as in Every last friday of the month', 'openagenda-base' ) : '';
 
-				if ( ( $meta[ $prefix . 'complex_months' ] ) && count( $meta[ $prefix . 'complex_months' ] ) > 0 ) {
+				if ( isset( $meta[ $prefix . 'complex_months' ] ) && is_array( $meta[ $prefix . 'complex_months' ] ) && count( $meta[ $prefix . 'complex_months' ] ) > 0 ) {
 					$month_suffix = _x( 'of', 'of as in Every last friday of January', 'openagenda-base' ) . ' ' . $this->nice_concat( $this->translate_months( $meta[ $prefix . 'complex_months' ] ) );
 
 					if ( ! $long_format ) { // only list "current month".
