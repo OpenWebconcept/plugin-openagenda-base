@@ -288,7 +288,7 @@ class Event_Dates {
 			if ( 'specific' === $type ) {
 				$the_timestamp       = strtotime( $meta[ $prefix . 'specific_start_date' ] );
 				$start_year_as_setup = gmdate( 'Y', $the_timestamp );
-				if ( $meta[ $prefix . 'every_year' ] ) {
+				if ( 'on' === get_post_meta( $post_id, $prefix . 'every_year', true ) ) {
 					$the_years = range( gmdate( 'Y' ) - 1, gmdate( 'Y' ) + 1 );
 				} else {
 					$the_years = array( $start_year_as_setup );
@@ -371,6 +371,10 @@ class Event_Dates {
 	 */
 	public function get_date_list( $post_id, $limits = array() ) {
 		$date_list = get_post_meta( $post_id, '_openagenda_event_date_time_list' );
+		if ( empty( $date_list ) ) {
+			// Cache not populated yet (e.g. post saved outside the save_post_event hook), compute it live.
+			$date_list = $this->create_date_list( $post_id, 'Y-m-d', null, 'times' );
+		}
 		if ( array_filter( $limits ) ) {
 			if ( ! empty( $limits['start'] ) ) {
 				$start     = strtotime( $limits['start'] );
@@ -403,6 +407,10 @@ class Event_Dates {
 	 */
 	public function get_next_date( $post_id ) {
 		$date_list = get_post_meta( $post_id, '_openagenda_event_date_time_list' );
+		if ( empty( $date_list ) ) {
+			// Cache not populated yet (e.g. post saved outside the save_post_event hook), compute it live.
+			$date_list = $this->create_date_list( $post_id, 'Y-m-d', null, 'times' );
+		}
 		// Get item from array where date is the earliest but not in the past.
 		$next_date = null;
 		foreach ( $date_list as $date ) {
