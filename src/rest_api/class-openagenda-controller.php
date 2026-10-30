@@ -978,14 +978,14 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 				if ( is_array( $dates ) ) {
 					foreach ( $dates as $date ) {
 						// str replace / with - for date format.
-						$date['start_date'] = str_replace( '/', '-', $date['start_date'] );
-						$date['end_date']   = str_replace( '/', '-', $date['end_date'] );
+						$date['start_date'] = str_replace( '/', '-', $date['start_date'] ?? '' );
+						$date['end_date']   = str_replace( '/', '-', $date['end_date'] ?? '' );
 
 						// check if start_time and end_time are arrays and convert them to string.
-						if ( is_array( $date['start_time'] ) ) {
+						if ( isset( $date['start_time'] ) && is_array( $date['start_time'] ) ) {
 							$date['start_time'] = implode( ':', $date['start_time'] );
 						}
-						if ( is_array( $date['end_time'] ) ) {
+						if ( isset( $date['end_time'] ) && is_array( $date['end_time'] ) ) {
 							$date['end_time'] = implode( ':', $date['end_time'] );
 						}
 
