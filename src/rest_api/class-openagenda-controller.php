@@ -469,10 +469,8 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 
 		$args['post_type'] = 'event';
 
-		// Password protected posts are not public.
-		if ( ! current_user_can( 'edit_posts' ) ) {
-			$args['has_password'] = false;
-		}
+		// Password protected posts are not public; this endpoint can't check the password per post.
+		$args['has_password'] = false;
 
 		$query_args = $this->prepare_items_query( $args, $request );
 
@@ -566,10 +564,8 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 
 		$args['post_type'] = 'location';
 
-		// Password protected posts are not public.
-		if ( ! current_user_can( 'edit_posts' ) ) {
-			$args['has_password'] = false;
-		}
+		// Password protected posts are not public; this endpoint can't check the password per post.
+		$args['has_password'] = false;
 
 		$query_args = $this->prepare_items_query( $args, $request );
 
@@ -1720,7 +1716,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 			$event_args = array(
 				'post_type'      => 'event',
 				'posts_per_page' => -1,
-				'has_password'   => current_user_can( 'edit_posts' ) ? null : false,
+				'has_password'   => false,
 				'meta_query'     => array(
 					array(
 						'key'   => 'event_location',
