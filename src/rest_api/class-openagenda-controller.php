@@ -1414,6 +1414,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 			'id'            => $item->ID,
 			'title'         => $item->post_title,
 			'slug'          => $item->post_name,
+			'link'          => get_permalink( $item ),
 			'excerpt'       => $item->post_excerpt,
 			'post_status'   => $item->post_status,
 			'post_modified' => $item->post_modified,
