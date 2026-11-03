@@ -334,7 +334,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 				}
 
 				foreach ( $request['date'] as $date ) {
-					$date_where_clauses[] = sprintf( "ID IN ( SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` = '{$date_meta_key}' AND `meta_value` = '%s' )", $date );
+					$date_where_clauses[] = $wpdb->prepare( "ID IN ( SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` = %s AND `meta_value` = %s )", $date_meta_key, $date ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name.
 				}
 				if ( count( $date_where_clauses ) ) {
 					$args['extend_where'][] = '( ' . implode( ' OR ', $date_where_clauses ) . ' )';
@@ -379,7 +379,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		if ( isset( $registered['year'], $request['year'] ) ) {
 			$year_where_clauses = array();
 			foreach ( $request['year'] as $year ) {
-				$year_where_clauses[] = sprintf( "ID IN ( SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` = '{$date_meta_key}' AND YEAR( `meta_value` ) = %d )", $year );
+				$year_where_clauses[] = $wpdb->prepare( "ID IN ( SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` = %s AND YEAR( `meta_value` ) = %d )", $date_meta_key, $year ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name.
 			}
 			if ( count( $year_where_clauses ) ) {
 				$args['extend_where'][] = '( ' . implode( ' OR ', $year_where_clauses ) . ' )';
@@ -387,10 +387,10 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		}
 
 		if ( isset( $registered['after'], $request['after'] ) ) {
-			$args['extend_where'][] = sprintf( "ID IN ( SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` = '{$date_meta_key}' AND meta_value >= '%s' )", $request['after'] );
+			$args['extend_where'][] = $wpdb->prepare( "ID IN ( SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` = %s AND meta_value >= %s )", $date_meta_key, $request['after'] ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name.
 		}
 		if ( isset( $registered['before'], $request['before'] ) ) {
-			$args['extend_where'][] = sprintf( "ID IN ( SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` = '{$date_meta_key}' AND meta_value <= '%s' )", $request['before'] );
+			$args['extend_where'][] = $wpdb->prepare( "ID IN ( SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` = %s AND meta_value <= %s )", $date_meta_key, $request['before'] ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name.
 		}
 
 		// Filter by custom CMB2 fields.
@@ -403,16 +403,16 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 						$request_item = 'on';
 					}
 
-					$cmb2_where_clauses[] = sprintf( "ID IN ( SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` = '{$prefix}{$cmb2_field}' AND `meta_value` LIKE '%%%s%%' )", $request_item );
+					$cmb2_where_clauses[] = $wpdb->prepare( "ID IN ( SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` = %s AND `meta_value` LIKE %s )", $prefix . $cmb2_field, '%' . $wpdb->esc_like( $request_item ) . '%' ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name.
 				}
 			}
 		}
 
 		if ( isset( $registered['longterm'] ) && isset( $request['longterm'] ) ) {
 			if ( $request['longterm'] ) {
-				$cmb2_where_clauses[] = sprintf( "ID IN ( SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` = '{$prefix}longterm' AND `meta_value` = '%s' )", 'on' );
+				$cmb2_where_clauses[] = $wpdb->prepare( "ID IN ( SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` = %s AND `meta_value` = %s )", $prefix . 'longterm', 'on' ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name.
 			} else {
-				$cmb2_where_clauses[] = sprintf( "ID NOT IN ( SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` = '{$prefix}longterm' AND `meta_value` = '%s' )", 'on' );
+				$cmb2_where_clauses[] = $wpdb->prepare( "ID NOT IN ( SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` = %s AND `meta_value` = %s )", $prefix . 'longterm', 'on' ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name.
 			}
 		}
 
@@ -420,7 +420,8 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		if ( isset( $registered['search'], $request['search'] ) ) {
 			$taxonomies = get_object_taxonomies( 'event' );
 
-			$request['search'] = reset( $request['search'] );
+			$search            = (array) $request['search'];
+			$request['search'] = (string) reset( $search );
 			// Search on every CMB2 custom field.
 			if ( $this->cmb2_fields_search ) {
 				// Add event_ as prefix to all values in the array.
@@ -431,8 +432,11 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 					$this->cmb2_fields_search
 				);
 
-				$meta_keys_string     = implode( "','", $this->cmb2_fields_search );
-				$cmb2_where_clauses[] = sprintf( "ID IN ( SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` IN ('{$meta_keys_string}') AND `meta_value` LIKE '%%%s%%' )", $request['search'] );
+				$placeholders         = implode( ', ', array_fill( 0, count( $this->cmb2_fields_search ), '%s' ) );
+				$cmb2_where_clauses[] = $wpdb->prepare(
+					"ID IN ( SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` IN ( {$placeholders} ) AND `meta_value` LIKE %s )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table name and placeholders.
+					array_merge( $this->cmb2_fields_search, array( '%' . $wpdb->esc_like( $request['search'] ) . '%' ) )
+				);
 
 			}
 		}
@@ -464,6 +468,11 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$args = $this->prepare_tax_query( $args, $request );
 
 		$args['post_type'] = 'event';
+
+		// Password protected posts are not public.
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			$args['has_password'] = false;
+		}
 
 		$query_args = $this->prepare_items_query( $args, $request );
 
@@ -557,6 +566,11 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 
 		$args['post_type'] = 'location';
 
+		// Password protected posts are not public.
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			$args['has_password'] = false;
+		}
+
 		$query_args = $this->prepare_items_query( $args, $request );
 
 		$posts_query  = new \WP_Query();
@@ -600,7 +614,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$id = $request['id'];
 
 		$post = get_post( $id );
-		if ( ! $post ) {
+		if ( ! $post || 'event' !== $post->post_type || ! $this->is_public_post( $post ) ) {
 			return new \WP_Error( 'rest_post_invalid_id', __( 'Invalid post ID.', 'openagenda-base' ), array( 'status' => 404 ) );
 		}
 
@@ -619,12 +633,27 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 		$id = $request['id'];
 
 		$post = get_post( $id );
-		if ( ! $post ) {
+		if ( ! $post || 'location' !== $post->post_type || ! $this->is_public_post( $post ) ) {
 			return new \WP_Error( 'rest_post_invalid_id', __( 'Invalid post ID.', 'openagenda-base' ), array( 'status' => 404 ) );
 		}
 
 		$response = $this->prepare_location_for_response( $post, $request );
 		return rest_ensure_response( $response );
+	}
+
+	/**
+	 * Whether the current user may see the post: published without a password, or editable by the user.
+	 *
+	 * @param \WP_Post $post The post.
+	 *
+	 * @return bool
+	 */
+	private function is_public_post( $post ) {
+		if ( 'publish' === $post->post_status && '' === $post->post_password ) {
+			return true;
+		}
+
+		return current_user_can( 'edit_post', $post->ID );
 	}
 
 	/**
@@ -1554,8 +1583,8 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 
 		// Check if this event has a location linked and add it to the item data.
 		$location_id = get_post_meta( $item->ID, 'event_location', true );
-		if ( $location_id ) {
-			$location              = get_post( $location_id );
+		$location    = $location_id ? get_post( $location_id ) : null;
+		if ( $location && 'location' === $location->post_type && $this->is_public_post( $location ) ) {
 			$item_data['location'] = $this->prepare_location_for_response( $location, $request, false );
 
 			// Remove the location fields which are used if not connected to a post type.
@@ -1691,6 +1720,7 @@ class Openagenda_Controller extends \WP_REST_Posts_Controller {
 			$event_args = array(
 				'post_type'      => 'event',
 				'posts_per_page' => -1,
+				'has_password'   => current_user_can( 'edit_posts' ) ? null : false,
 				'meta_query'     => array(
 					array(
 						'key'   => 'event_location',
