@@ -411,10 +411,11 @@ class Event_Dates {
 			// Cache not populated yet (e.g. post saved outside the save_post_event hook), compute it live.
 			$date_list = $this->create_date_list( $post_id, 'Y-m-d', null, 'times' );
 		}
-		// Get item from array where date is the earliest but not in the past.
+		// Get item from array where date is the earliest but not in the past. Today is the site's today, not UTC's.
 		$next_date = null;
+		$today     = strtotime( current_time( 'Y-m-d' ) );
 		foreach ( $date_list as $date ) {
-			if ( strtotime( $date['date'] ) >= strtotime( 'today' ) ) {
+			if ( strtotime( $date['date'] ) >= $today ) {
 				if ( ! $next_date || strtotime( $date['date'] ) < strtotime( $next_date['date'] ) ) {
 					$next_date = $date;
 				}

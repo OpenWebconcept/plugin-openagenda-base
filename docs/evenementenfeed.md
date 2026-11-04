@@ -213,14 +213,14 @@ Elk evenement is een `<item>` in de feed met de volgende velden:
 |-------------------------------|------------------------------------------------------------------------------------------------|-----------------------------------------------------------|
 | `title`                       | Titel                                                                                          | Koffie met… Breathfulness                                 |
 | `link`                        | Adres van de evenementpagina                                                                   | https://agenda.example.nl/event/koffie-met-breathfulness/ |
-| `guid`                        | Vaste unieke code van het evenement                                                            | event-48                                                  |
+| `guid`                        | Vaste unieke code van het evenement, ook uniek over websites heen                              | https://agenda.example.nl/?post_type=event&p=48           |
 | `pubDate`                     | Itemdatum (zie instellingen)                                                                   | Tue, 03 Nov 2026 10:30:00 +0100                           |
 | `description`                 | Korte tekst (teaser), zonder opmaak                                                            | 'De bibliotheek van het lichaam' - …                      |
 | `content:encoded`             | Volledige omschrijving, met opmaak (HTML)                                                      |                                                           |
 | `category`                    | Eén per term; de taxonomie staat in het attribuut `domain`                                     | `<category domain="thema">Gratis</category>`              |
 | `enclosure` / `media:content` | Afbeelding van het evenement (de eerste evenementafbeelding, anders de uitgelichte afbeelding) |                                                           |
 | `ev:startdate`                | Begin van de eerstvolgende keer, machineleesbaar (ISO 8601)                                    | 2026-11-03T10:30:00+01:00                                 |
-| `ev:enddate`                  | Einde, machineleesbaar (ISO 8601)                                                              | 2026-11-03T11:30:00+01:00                                 |
+| `ev:enddate`                  | Einde van die keer (bij een meerdaags evenement de laatste dag), machineleesbaar (ISO 8601)    | 2026-11-03T11:30:00+01:00                                 |
 | `ev:location`                 | Locatienaam en adres                                                                           | Bibliotheek Centrum, Koningsplein 1, 2981 EA Ridderkerk   |
 | `ev:organizer`                | Organisator (als ingevuld)                                                                     |                                                           |
 | `openagenda:date_text`        | Leesbare omschrijving van de datum of data                                                     | 3 november                                                |

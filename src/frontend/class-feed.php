@@ -392,7 +392,7 @@ class Feed {
 	<item>
 		<title><?php echo $this->xml_text( $item['title'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by xml_text(). ?></title>
 		<link><?php echo esc_url( $item['link'] ); ?></link>
-		<guid isPermaLink="false"><?php echo esc_html( $item['guid'] ); ?></guid>
+		<guid isPermaLink="false"><?php echo $this->xml_text( $item['guid'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by xml_text(). ?></guid>
 		<pubDate><?php echo esc_html( $item['pub_date'] ); ?></pubDate>
 		<description><?php echo $this->xml_text( $item['description'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by xml_text(). ?></description>
 			<?php if ( $item['content'] ) : ?>
@@ -613,9 +613,19 @@ class Feed {
 		$next        = $event_dates->get_next_date( $event->ID );
 		$next        = is_array( $next ) && ! empty( $next['date'] ) ? $next : null;
 		$last        = $next;
-		foreach ( $next ? get_post_meta( $event->ID, '_openagenda_event_date_time_list' ) : array() as $date ) {
-			if ( ! empty( $date['date'] ) && $date['date'] > $last['date'] ) {
-				$last = $date;
+		// A specific date range is one event over several days, so it ends on the last day of the range that holds the
+		// next date. Complex dates are separate occurrences, each ending on its own day.
+		if ( $next && 'specific' === get_post_meta( $event->ID, 'event_dates_type', true ) ) {
+			$dates = array();
+			foreach ( get_post_meta( $event->ID, '_openagenda_event_date_time_list' ) as $date ) {
+				if ( ! empty( $date['date'] ) ) {
+					$dates[ $date['date'] ] = $date;
+				}
+			}
+			$day = gmdate( 'Y-m-d', strtotime( $next['date'] . ' +1 day' ) );
+			while ( isset( $dates[ $day ] ) ) {
+				$last = $dates[ $day ];
+				$day  = gmdate( 'Y-m-d', strtotime( $day . ' +1 day' ) );
 			}
 		}
 
@@ -659,7 +669,8 @@ class Feed {
 		$item = array(
 			'title'         => html_entity_decode( get_the_title( $event ), ENT_QUOTES, 'UTF-8' ),
 			'link'          => get_permalink( $event ),
-			'guid'          => get_post_type( $event ) . '-' . $event->ID,
+			// The WordPress guid includes the site, so it is unique across sites and stays when the permalink changes.
+			'guid'          => html_entity_decode( get_the_guid( $event ), ENT_QUOTES, 'UTF-8' ),
 			'pub_date'      => $item_date ? $item_date->format( DATE_RSS ) : get_post_time( DATE_RSS, true, $event ),
 			'description'   => $teaser ? $teaser : wp_trim_words( html_entity_decode( wp_strip_all_tags( $description ), ENT_QUOTES, 'UTF-8' ), 55 ),
 			// Newsletter tools put this html straight into their mails, so only allow the html of post content.
@@ -830,8 +841,8 @@ class Feed {
 		$location_id = (int) get_post_meta( $post_id, 'event_location', true );
 		$location    = $location_id ? get_post( $location_id ) : null;
 
-		// Only a published location: drafts and private locations are not public.
-		if ( $location && 'publish' === $location->post_status ) {
+		// Only a published location without a password: drafts, private and protected locations are not public.
+		if ( $location && 'publish' === $location->post_status && '' === $location->post_password ) {
 			$prefix = 'location_';
 			$name   = html_entity_decode( get_the_title( $location ), ENT_QUOTES, 'UTF-8' );
 			$id     = $location->ID;
