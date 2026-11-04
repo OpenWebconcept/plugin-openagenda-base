@@ -304,8 +304,7 @@ Tips:
   Tools die met `If-None-Match` vragen of er iets nieuws is, krijgen dan `304 Not Modified` of de nieuwe feed.
 - Nieuwsbrieftools en feedreaders slaan feeds vaak een tijd op. Een wijziging in de agenda is daar dus niet altijd direct zichtbaar.
 - Werkt het feedadres niet (pagina niet gevonden)? Sla dan **Instellingen › Permalinks** één keer opnieuw op.
-- Evenementen op dezelfde dag staan binnen een pagina op begintijd. Over pagina's heen is de volgorde op datum en daarna op titel: valt een dag
-  op de grens van twee pagina's, dan kan een evenement van 10:00 op pagina 2 staan en een van 14:00 op pagina 1. Met een hogere `limit` is die kans kleiner.
+- Evenementen op dezelfde dag staan op begintijd, ook over pagina's heen.
 
 ## Voor ontwikkelaars
 

@@ -14,11 +14,24 @@ namespace Openagenda_Base_Plugin\Admin;
  */
 class Event_Dates {
 	/**
+	 * Whether the hooks are registered. The class is also instantiated for its date helpers (the REST API, the feed),
+	 * which must not register the hooks again.
+	 *
+	 * @var bool
+	 */
+	private static $hooked = false;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
 	 */
 	public function __construct() {
+		if ( self::$hooked ) {
+			return;
+		}
+		self::$hooked = true;
+
 		add_action( 'manage_event_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
 		add_filter( 'manage_event_posts_columns', array( $this, 'manage_event_posts_columns' ) );
 
@@ -36,6 +49,41 @@ class Event_Dates {
 
 		// Update event data after save.
 		add_action( 'save_post_event', array( $this, 'save_handler' ), 10, 1 );
+
+		add_action( 'init', array( $this, 'maybe_fill_next_date_time' ) );
+	}
+
+	/**
+	 * Fill _next_date_time for the events saved before it existed, once, instead of waiting for the hourly cron.
+	 *
+	 * @return void
+	 */
+	public function maybe_fill_next_date_time() {
+		if ( get_option( 'openagenda_next_date_time_filled' ) ) {
+			return;
+		}
+
+		$this->update_next_event_date();
+		update_option( 'openagenda_next_date_time_filled', 1 );
+	}
+
+	/**
+	 * Store the next date of the event, as _next_date (Y-m-d) and _next_date_time (Y-m-d H:i, to order events on the
+	 * same day by their start time).
+	 *
+	 * @param int $post_id The event ID.
+	 *
+	 * @return void
+	 */
+	private function update_next_date( $post_id ) {
+		$next_date = $this->get_next_date( $post_id );
+		if ( empty( $next_date['date'] ) ) {
+			return;
+		}
+
+		$start_time = empty( $next_date['start_time'] ) ? '00:00' : gmdate( 'H:i', strtotime( $next_date['start_time'] ) );
+		update_post_meta( $post_id, '_next_date', $next_date['date'] );
+		update_post_meta( $post_id, '_next_date_time', $next_date['date'] . ' ' . $start_time );
 	}
 
 	/**
@@ -65,10 +113,7 @@ class Event_Dates {
 			)
 		);
 		foreach ( $post_ids as $post_id ) {
-			$next_date = $this->get_next_date( $post_id );
-			if ( ! empty( $next_date['date'] ) ) {
-				update_post_meta( $post_id, '_next_date', $next_date['date'] );
-			}
+			$this->update_next_date( $post_id );
 		}
 	}
 
@@ -142,10 +187,7 @@ class Event_Dates {
 			add_post_meta( $post_id, '_openagenda_event_date_time_list', $openagenda_event_date_time );
 		}
 
-		$next_date = $this->get_next_date( $post_id );
-		if ( ! empty( $next_date['date'] ) ) {
-			update_post_meta( $post_id, '_next_date', $next_date['date'] );
-		}
+		$this->update_next_date( $post_id );
 
 		// UPDATE POST_EXPIRATION DATA.
 		// By nature of a loop, the last element is the very last date.

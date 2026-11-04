@@ -93,7 +93,7 @@ class Feed {
 	private static $client_etag = '';
 
 	/**
-	 * The Event_Dates instance; its constructor registers hooks, so only one is created per feed.
+	 * The Event_Dates instance, for its date helpers.
 	 *
 	 * @var Event_Dates|null
 	 */
@@ -525,9 +525,14 @@ class Feed {
 		if ( 'publish_date' === $args['orderby'] ) {
 			$query_args['orderby'] = array( 'date' => strtoupper( $args['order'] ) );
 		} else {
-			$query_args['orderby'] = array(
-				'next_date' => strtoupper( $args['order'] ),
-				'title'     => 'ASC',
+			// _next_date holds the date only; _next_date_time adds the start time, to order events on the same day.
+			$query_args['meta_query']['next_date_time'] = array(
+				'key'     => '_next_date_time',
+				'compare' => 'EXISTS',
+			);
+			$query_args['orderby']                      = array(
+				'next_date_time' => strtoupper( $args['order'] ),
+				'title'          => 'ASC',
 			);
 		}
 
@@ -576,23 +581,6 @@ class Feed {
 			$related_ids[] = is_array( $images ) && $images ? (int) array_key_first( $images ) : (int) get_post_thumbnail_id( $event );
 		}
 		_prime_post_caches( array_filter( $related_ids ), false, true );
-
-		// _next_date holds the date only, so order events on the same day by their start time.
-		if ( 'event_date' === $args['orderby'] ) {
-			$sort_keys = array();
-			foreach ( $events as $event ) {
-				$next_date               = $this->get_event_dates()->get_next_date( $event->ID );
-				$sort_keys[ $event->ID ] = ( $next_date['date'] ?? '' ) . ' ' . ( $next_date['start_time'] ?? '' );
-			}
-			usort(
-				$events,
-				function ( $a, $b ) use ( $sort_keys, $args ) {
-					$compare = strcmp( $sort_keys[ $a->ID ], $sort_keys[ $b->ID ] );
-
-					return 'desc' === $args['order'] ? -$compare : $compare;
-				}
-			);
-		}
 
 		return $events;
 	}
@@ -704,8 +692,9 @@ class Feed {
 	 * @return array
 	 */
 	private function get_page_links() {
-		$pages = (int) ceil( $this->total / $this->args['limit'] );
-		$page  = $this->args['page'];
+		$limit = (int) ( $this->args['limit'] ?? 0 );
+		$page  = max( 1, (int) ( $this->args['page'] ?? 1 ) );
+		$pages = $limit > 0 ? (int) ceil( $this->total / $limit ) : 0;
 		if ( $pages < 2 ) {
 			return array();
 		}
@@ -960,6 +949,6 @@ class Feed {
 	private static function sanitize_limit( $value, $fallback ) {
 		$value = (int) $value;
 
-		return min( $value > 0 ? $value : (int) $fallback, self::MAX_ITEMS );
+		return max( 1, min( $value > 0 ? $value : (int) $fallback, self::MAX_ITEMS ) );
 	}
 }
