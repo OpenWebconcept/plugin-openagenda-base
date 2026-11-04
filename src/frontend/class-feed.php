@@ -605,7 +605,8 @@ class Feed {
 		// next date. Complex dates are separate occurrences, each ending on its own day.
 		if ( $next && 'specific' === get_post_meta( $event->ID, 'event_dates_type', true ) ) {
 			$dates = array();
-			foreach ( get_post_meta( $event->ID, '_openagenda_event_date_time_list' ) as $date ) {
+			// get_date_list() also works for events imported without save_post_event, which have no cached list.
+			foreach ( $event_dates->get_date_list( $event->ID ) as $date ) {
 				if ( ! empty( $date['date'] ) ) {
 					$dates[ $date['date'] ] = $date;
 				}
