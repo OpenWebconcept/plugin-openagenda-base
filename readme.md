@@ -58,13 +58,28 @@ Please remember, we use the WordPress PHP Coding Standards for this plugin! (htt
 N.B. the `composer install` command will also install a git hook, preventing you from committing code that isn't compatible with the coding standards.
 
 ### Translations
+
+Update the POT file after adding/changing source texts.
+
 ```
 wp i18n make-pot . languages/openagenda-base.pot --exclude="node_modules/,vendor/" --domain="openagenda-base"
 ```
 
+Update the PO file(s) after adding/changing source texts.
+
 ```
-cd languages && wp i18n make-json openagenda-base-nl_NL.po --no-purge
+wp i18n update-po languages/openagenda-base.pot languages/
 ```
+
+Compile the PO file(s) to MO, PHP and JSON after adding/changing source texts.
+
+```
+wp i18n make-php languages/
+wp i18n make-mo languages/
+wp i18n make-json languages/ --no-purge
+```
+
+(Currently, only PHP and MO files are in use.)
 
 ### Event and Location Custom Post Types
 This plugin adds two custom post types to WordPress:
@@ -83,7 +98,7 @@ This plugin adds the following REST API GET-endpoints:
 This plugin adds the following REST API POST-endpoint:
 - `/wp-json/owc/openagenda/v1/items`
 
-The POST-endpoint is used to create new items in the OpenAgenda. The endpoint is protected by Basic Authentication with Application Passwords. The user needs to have the capability `edit_posts` to be able to use this endpoint. 
+The POST-endpoint is used to create new items in the OpenAgenda. The endpoint is protected by Basic Authentication with Application Passwords. The user needs to have the capability `edit_posts` to be able to use this endpoint.
 
 In the plugin settings located at `Settings > OpenAgenda Settings` you can set the user that is allocated to items created with this POST-endpoint.
 
@@ -101,8 +116,43 @@ This plugin uses two cron jobs:
 - `openagenda_cron_event_weekly`: a cron job to generate the recurring dates for the events. The cron job runs once a week on Sunday.
 - `openagenda_add_cron_schedule`: a cron job to set the expiration date of an event, based on generated dates of the first cron job. On the expiration date the event will be set to draft. This cron job runs every 15 minutes.
 
-Make sure that the WordPress cron is running on your server. If you have disabled the cron via `define('DISABLE_WP_CRON', true);` in the wp-config.php then make sure you trigger the cron jobs with a server cron job. 
+Make sure that the WordPress cron is running on your server. If you have disabled the cron via `define('DISABLE_WP_CRON', true);` in the wp-config.php then make sure you trigger the cron jobs with a server cron job.
 If you are not sure, you can use the plugin [WP Crontrol](https://wordpress.org/plugins/wp-crontrol/) to check if the cron jobs are running.
+
+### Event feed (RSS)
+This plugin adds an RSS 2.0 feed of upcoming events at `/feed/openagenda/` (or `?feed=openagenda` without pretty permalinks). The feed uses standard RSS 2.0 elements and established modules, so it can be used in newsletter tools (e.g. LaPosta, Mailchimp), feed readers and other websites.
+
+Per item the feed contains:
+- `title`, `link`, `guid`, `pubDate`, `description` (the teaser) and `content:encoded` (the full description)
+- `category` for every term, with the taxonomy name as `domain`
+- `enclosure` and `media:content` for the first event image (or the featured image)
+- `ev:startdate`, `ev:enddate`, `ev:location` and `ev:organizer` ([RSS 1.0 event module](http://web.resource.org/rss/1.0/modules/event/)), the start being the current or next occurrence of the event
+- `openagenda:date_text`, `openagenda:time_text`, `openagenda:price_text`, `openagenda:location_name` and `openagenda:address`: ready to display texts in the site language
+
+Only upcoming events are included. The defaults are set at `Settings > OpenAgenda Settings`:
+- Sort by: event date (next occurrence, default) or publication date
+- Sort order: ascending (default) or descending
+- Number of items: defaults to `Settings > Reading > Syndication feeds show the most recent`, maximum 100
+- Item date (`pubDate`): event date (default) or publication date
+
+These defaults can be overridden per feed url with query parameters:
+- `orderby`: `event_date` or `publish_date`
+- `order`: `asc` or `desc`
+- `limit`: number of items per page
+- `page`: the page, when there are more events than `limit`. The other pages are linked in the channel with `atom:link` `rel="first|previous|next|last"` ([RFC 5005](https://www.rfc-editor.org/rfc/rfc5005#section-3)), the total is in `opensearch:totalResults`
+- `{taxonomy}`: comma separated term slugs, e.g. `?thema=muziek,gratis` (items in any of the terms)
+- `tax_relation`: `AND` (default) or `OR`, how multiple taxonomies are combined
+
+The feed is advertised with a `<link rel="alternate">` in the html head (filtered like the current event archive), and, for headless sites, with a `Link: <…>; rel="alternate"` header on every `GET` response of the OpenAgenda REST API and in the namespace index (`/wp-json/owc/openagenda/v1`).
+
+A user guide in Dutch, with example urls and a LaPosta template, is available in [docs/evenementenfeed.md](docs/evenementenfeed.md).
+
+### Event permalinks (headless)
+When the events are shown on another website, set the url structure of the event pages on that website at `Settings > OpenAgenda Settings > Event permalinks`, e.g. `https://www.example.com/agenda/%postname%/`. All WordPress permalink tags are available (`%year%`, `%monthnum%`, `%day%`, `%hour%`, `%minute%`, `%second%`, `%post_id%`, `%postname%`, `%category%`, `%author%`), plus one per event taxonomy (e.g. `%thema%`); `%category%` is the first term of the first event taxonomy. The structure must contain `%postname%` or `%post_id%`.
+
+Published events then get this url wherever WordPress builds their permalink: the feed, the `link` field in the REST API, the admin. Previews keep the WordPress url, the slug stays editable, and events are left out of the WordPress sitemap (a sitemap may only list urls of its own site). The feed's channel link becomes the part of the structure before the first tag (e.g. `https://www.example.com/agenda/`). Leave it empty to use the WordPress permalink. Filters: `openagenda_base_event_permalink` and `openagenda_base_event_overview_url`.
+
+Developers can change the feed with the filters `openagenda_base_feed_args`, `openagenda_base_feed_query_args`, `openagenda_base_feed_item`, `openagenda_base_feed_title` and `openagenda_base_feed_image_size`.
 
 ### Event Taxonomies
 For the event post type you can create your own taxonomies, located at `Events > Create Taxonomies`. These taxonomies are included in the REST API response.
