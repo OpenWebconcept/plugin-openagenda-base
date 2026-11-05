@@ -46,30 +46,21 @@ class Event_Dates {
 		if ( ! wp_next_scheduled( 'openagenda_update_next_event_date' ) ) {
 			wp_schedule_event( time(), 'hourly', 'openagenda_update_next_event_date' );
 		}
+		// The next date changes when the date changes, so also update at the site's midnight. A single event, scheduled
+		// again after each run, because a daily interval shifts an hour at the daylight saving time changes.
+		add_action( 'openagenda_update_next_event_date_midnight', array( $this, 'update_next_event_date' ) );
+		if ( ! wp_next_scheduled( 'openagenda_update_next_event_date_midnight' ) ) {
+			wp_schedule_single_event( ( new \DateTimeImmutable( 'tomorrow', wp_timezone() ) )->getTimestamp(), 'openagenda_update_next_event_date_midnight' );
+		}
 
 		// Update event data after save.
 		add_action( 'save_post_event', array( $this, 'save_handler' ), 10, 1 );
-
-		add_action( 'init', array( $this, 'maybe_fill_next_date_time' ) );
-	}
-
-	/**
-	 * Fill _next_date_time for the events saved before it existed, once, instead of waiting for the hourly cron.
-	 *
-	 * @return void
-	 */
-	public function maybe_fill_next_date_time() {
-		if ( get_option( 'openagenda_next_date_time_filled' ) ) {
-			return;
-		}
-
-		$this->update_next_event_date();
-		update_option( 'openagenda_next_date_time_filled', 1 );
 	}
 
 	/**
 	 * Store the next date of the event, as _next_date (Y-m-d) and _next_date_time (Y-m-d H:i, to order events on the
-	 * same day by their start time).
+	 * same day by their start time). Without a future date, that is the last date, so a past event no longer counts as
+	 * upcoming; without any date, both are removed.
 	 *
 	 * @param int $post_id The event ID.
 	 *
@@ -78,6 +69,19 @@ class Event_Dates {
 	private function update_next_date( $post_id ) {
 		$next_date = $this->get_next_date( $post_id );
 		if ( empty( $next_date['date'] ) ) {
+			$dates     = array_filter(
+				$this->get_date_list( $post_id ),
+				function ( $date ) {
+					return ! empty( $date['date'] );
+				}
+			);
+			$dates     = array_column( $dates, null, 'date' );
+			$next_date = $dates ? $dates[ max( array_keys( $dates ) ) ] : null;
+		}
+		if ( empty( $next_date['date'] ) ) {
+			delete_post_meta( $post_id, '_next_date' );
+			delete_post_meta( $post_id, '_next_date_time' );
+
 			return;
 		}
 
@@ -112,8 +116,12 @@ class Event_Dates {
 				'posts_per_page' => -1,
 			)
 		);
-		foreach ( $post_ids as $post_id ) {
-			$this->update_next_date( $post_id );
+		// Load the meta per 100 events in one query, instead of one query per event (or all meta at once).
+		foreach ( array_chunk( $post_ids, 100 ) as $chunk ) {
+			update_meta_cache( 'post', $chunk );
+			foreach ( $chunk as $post_id ) {
+				$this->update_next_date( $post_id );
+			}
 		}
 	}
 
@@ -439,6 +447,53 @@ class Event_Dates {
 		}
 
 		return $date_list;
+	}
+
+	/**
+	 * The occurrence of the event that holds a date. A specific date range is one event over several days: the
+	 * consecutive days of the date range entry that holds the date (adjacent entries are separate occurrences, as are
+	 * the parts of a range split by an excluded date). Complex dates are separate occurrences of one day each.
+	 *
+	 * @param int   $post_id The event ID.
+	 * @param array $date    A date of the event, with keys date, start_time and end_time; e.g. from get_next_date().
+	 *
+	 * @return array With keys first and last: the first and last day of the occurrence, like $date.
+	 */
+	public function get_occurrence( $post_id, $date ) {
+		$occurrence = array(
+			'first' => $date,
+			'last'  => $date,
+		);
+		if ( 'specific' !== get_post_meta( $post_id, 'event_dates_type', true ) ) {
+			return $occurrence;
+		}
+
+		foreach ( (array) get_post_meta( $post_id, 'event_dates_group_specific', true ) as $range ) {
+			if ( ! is_array( $range ) ) {
+				continue;
+			}
+			$days = array_column( $this->create_date_list( $post_id, 'Y-m-d', $range, 'times' ), null, 'date' );
+			if ( ! isset( $days[ $date['date'] ] ) ) {
+				continue;
+			}
+
+			// Step through the days in UTC explicitly, so the step never depends on PHP's default timezone.
+			$utc = new \DateTimeZone( 'UTC' );
+			foreach ( array(
+				'first' => '-1 day',
+				'last'  => '+1 day',
+			) as $key => $step ) {
+				$day = $date['date'];
+				for ( $other = ( new \DateTimeImmutable( $day, $utc ) )->modify( $step )->format( 'Y-m-d' ); isset( $days[ $other ] ); $other = ( new \DateTimeImmutable( $day, $utc ) )->modify( $step )->format( 'Y-m-d' ) ) {
+					$day = $other;
+				}
+				$occurrence[ $key ] = $days[ $day ];
+			}
+
+			return $occurrence;
+		}
+
+		return $occurrence;
 	}
 
 	/**

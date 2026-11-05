@@ -174,7 +174,7 @@ Met de knoppen onder het veld voeg je tags toe, net als bij **Instellingen › P
 | `%minute%`     | Minuut van publicatie, bijvoorbeeld `43`                                                                         |
 | `%second%`     | Seconde van publicatie, bijvoorbeeld `33`                                                                        |
 | `%post_id%`    | ID van het evenement, bijvoorbeeld `423`                                                                         |
-| `%postname%`   | Slug van het evenement, bijvoorbeeld `winterfestijn`                                                             |
+| `%postname%`   | Slug van het evenement, bijvoorbeeld `winterfestijn`; bij een subevenement met die van het hoofdevenement ervoor |
 | `%category%`   | Eerste term van de eerste evenemententaxonomie, bijvoorbeeld `muziek`; onderliggende termen als `cultuur/muziek` |
 | `%author%`     | Gebruikersnaam (nicename) van de auteur                                                                          |
 | `%{taxonomie}%` | Eerste term van die taxonomie, bijvoorbeeld `%thema%`                                                           |
@@ -219,7 +219,7 @@ Elk evenement is een `<item>` in de feed met de volgende velden:
 | `content:encoded`             | Volledige omschrijving, met opmaak (HTML)                                                      |                                                           |
 | `category`                    | Eén per term; de taxonomie staat in het attribuut `domain`                                     | `<category domain="thema">Gratis</category>`              |
 | `enclosure` / `media:content` | Afbeelding van het evenement (de eerste evenementafbeelding, anders de uitgelichte afbeelding) |                                                           |
-| `ev:startdate`                | Begin van de eerstvolgende keer, machineleesbaar (ISO 8601)                                    | 2026-11-03T10:30:00+01:00                                 |
+| `ev:startdate`                | Begin van de lopende of eerstvolgende keer, machineleesbaar (ISO 8601)                         | 2026-11-03T10:30:00+01:00                                 |
 | `ev:enddate`                  | Einde van die keer (bij een meerdaags evenement de laatste dag), machineleesbaar (ISO 8601)    | 2026-11-03T11:30:00+01:00                                 |
 | `ev:location`                 | Locatienaam en adres                                                                           | Bibliotheek Centrum, Koningsplein 1, 2981 EA Ridderkerk   |
 | `ev:organizer`                | Organisator (als ingevuld)                                                                     |                                                           |

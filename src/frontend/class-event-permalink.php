@@ -256,6 +256,35 @@ class Event_Permalink {
 	}
 
 	/**
+	 * The slug of the event for %postname%, after the slugs of its parents: events are hierarchical, so two child
+	 * events can have the same slug. WordPress builds the paths of hierarchical post types the same way.
+	 *
+	 * @param \WP_Post $post      The event.
+	 * @param bool     $leavename Whether to keep the %postname% tag for the event's own slug.
+	 *
+	 * @return string
+	 */
+	private function get_postname( $post, $leavename ) {
+		// All parents, whatever their status, as WordPress does: slugs are only unique among siblings.
+		$parent_path = '';
+		foreach ( get_post_ancestors( $post ) as $ancestor ) {
+			$ancestor = get_post( $ancestor );
+			if ( ! $ancestor ) {
+				continue;
+			}
+			// A trashed parent gets its original slug back on restore; a draft may have no slug yet.
+			$slug        = 'trash' === $ancestor->post_status ? get_post_meta( $ancestor->ID, '_wp_desired_post_slug', true ) : $ancestor->post_name;
+			$slug        = $slug ? $slug : sanitize_title( $ancestor->post_title, $ancestor->ID );
+			$parent_path = $slug . '/' . $parent_path;
+		}
+		if ( $leavename ) {
+			return $parent_path . '%postname%';
+		}
+
+		return $parent_path . ( $post->post_name ? $post->post_name : sanitize_title( $post->post_title, $post->ID ) );
+	}
+
+	/**
 	 * Replace the tags in the permalink structure.
 	 *
 	 * @param string   $structure The permalink structure.
@@ -276,7 +305,7 @@ class Event_Permalink {
 			'%minute%'   => $date[4],
 			'%second%'   => $date[5],
 			'%post_id%'  => $post->ID,
-			'%postname%' => $leavename ? '%postname%' : ( $post->post_name ? $post->post_name : sanitize_title( $post->post_title, $post->ID ) ),
+			'%postname%' => $this->get_postname( $post, $leavename ),
 			'%author%'   => $author ? $author->user_nicename : '',
 			'%category%' => '',
 		);

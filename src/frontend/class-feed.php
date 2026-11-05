@@ -525,12 +525,21 @@ class Feed {
 		if ( 'publish_date' === $args['orderby'] ) {
 			$query_args['orderby'] = array( 'date' => strtoupper( $args['order'] ) );
 		} else {
-			// _next_date holds the date only; _next_date_time adds the start time, to order events on the same day.
+			// _next_date holds the date only; _next_date_time adds the start time, to order events on the same day. The
+			// cron fills _next_date_time for events saved before it existed; until then, don't leave those events out.
 			$query_args['meta_query']['next_date_time'] = array(
-				'key'     => '_next_date_time',
-				'compare' => 'EXISTS',
+				'relation'       => 'OR',
+				'next_date_time' => array(
+					'key'     => '_next_date_time',
+					'compare' => 'EXISTS',
+				),
+				array(
+					'key'     => '_next_date_time',
+					'compare' => 'NOT EXISTS',
+				),
 			);
 			$query_args['orderby']                      = array(
+				'next_date'      => strtoupper( $args['order'] ),
 				'next_date_time' => strtoupper( $args['order'] ),
 				'title'          => 'ASC',
 			);
@@ -573,8 +582,8 @@ class Feed {
 			$this->total = (int) $count->found_posts;
 		}
 
-		// Load the linked locations and images (with their meta) in one go, instead of one query per event.
-		$related_ids = array();
+		// Load the linked locations, images and parent events (for the permalinks) in one go, instead of one query per event.
+		$related_ids = wp_list_pluck( $events, 'post_parent' );
 		foreach ( $events as $event ) {
 			$images        = get_post_meta( $event->ID, 'event_images', true );
 			$related_ids[] = (int) get_post_meta( $event->ID, 'event_location', true );
@@ -600,34 +609,22 @@ class Feed {
 		$event_dates = $this->get_event_dates();
 		$next        = $event_dates->get_next_date( $event->ID );
 		$next        = is_array( $next ) && ! empty( $next['date'] ) ? $next : null;
-		$last        = $next;
-		// A specific date range is one event over several days, so it ends on the last day of the range that holds the
-		// next date. Complex dates are separate occurrences, each ending on its own day.
-		if ( $next && 'specific' === get_post_meta( $event->ID, 'event_dates_type', true ) ) {
-			$dates = array();
-			// get_date_list() also works for events imported without save_post_event, which have no cached list.
-			foreach ( $event_dates->get_date_list( $event->ID ) as $date ) {
-				if ( ! empty( $date['date'] ) ) {
-					$dates[ $date['date'] ] = $date;
-				}
-			}
-			$day = gmdate( 'Y-m-d', strtotime( $next['date'] . ' +1 day' ) );
-			while ( isset( $dates[ $day ] ) ) {
-				$last = $dates[ $day ];
-				$day  = gmdate( 'Y-m-d', strtotime( $day . ' +1 day' ) );
-			}
-		}
+		// The start of the occurrence, also when it is in progress: a date range that started yesterday starts yesterday.
+		$occurrence = $next ? $event_dates->get_occurrence( $event->ID, $next ) : null;
+		$first      = $occurrence ? $occurrence['first'] : null;
+		$last       = $occurrence ? $occurrence['last'] : null;
 
-		$start = $next ? $this->create_date( $next['date'], $next['start_time'] ?? '', $timezone ) : null;
+		$start = $first ? $this->create_date( $first['date'], $first['start_time'] ?? '', $timezone ) : null;
 		$end   = null;
 		if ( $start ) {
 			if ( ! empty( $last['end_time'] ) ) {
 				$end = $this->create_date( $last['date'], $last['end_time'], $timezone );
-				// An end time before the start time on a single day means the event ends after midnight.
-				if ( $end && $end <= $start ) {
+				// An end time before the start time means the (last) day ends after midnight.
+				$last_start = $this->create_date( $last['date'], $last['start_time'] ?? '', $timezone );
+				if ( $end && $last_start && $end <= $last_start ) {
 					$end = $end->modify( '+1 day' );
 				}
-			} elseif ( $last['date'] !== $next['date'] ) {
+			} elseif ( $last['date'] !== $first['date'] ) {
 				$end = $this->create_date( $last['date'], '', $timezone );
 			}
 		}
@@ -666,7 +663,7 @@ class Feed {
 			'content'       => $description ? wp_kses_post( wpautop( $description ) ) : '',
 			'categories'    => $categories,
 			'image'         => $this->get_image( $event->ID ),
-			'start'         => $start ? $start->format( ! empty( $next['start_time'] ) ? DATE_W3C : 'Y-m-d' ) : '',
+			'start'         => $start ? $start->format( ! empty( $first['start_time'] ) ? DATE_W3C : 'Y-m-d' ) : '',
 			'end'           => $end ? $end->format( ! empty( $last['end_time'] ) ? DATE_W3C : 'Y-m-d' ) : '',
 			'location'      => $location_text,
 			'organizer'     => (string) get_post_meta( $event->ID, $prefix . 'organizer', true ),

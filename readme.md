@@ -68,7 +68,7 @@ wp i18n make-pot . languages/openagenda-base.pot --exclude="node_modules/,vendor
 Update the PO file(s) after adding/changing source texts.
 
 ```
-wp i18n update-po languages/openagenda-base-nl_NL.po languages/
+wp i18n update-po languages/openagenda-base.pot languages/
 ```
 
 Compile the PO file(s) to MO, PHP and JSON after adding/changing source texts.
@@ -126,7 +126,7 @@ Per item the feed contains:
 - `title`, `link`, `guid`, `pubDate`, `description` (the teaser) and `content:encoded` (the full description)
 - `category` for every term, with the taxonomy name as `domain`
 - `enclosure` and `media:content` for the first event image (or the featured image)
-- `ev:startdate`, `ev:enddate`, `ev:location` and `ev:organizer` ([RSS 1.0 event module](http://web.resource.org/rss/1.0/modules/event/)), the start being the next occurrence of the event
+- `ev:startdate`, `ev:enddate`, `ev:location` and `ev:organizer` ([RSS 1.0 event module](http://web.resource.org/rss/1.0/modules/event/)), the start being the current or next occurrence of the event
 - `openagenda:date_text`, `openagenda:time_text`, `openagenda:price_text`, `openagenda:location_name` and `openagenda:address`: ready to display texts in the site language
 
 Only upcoming events are included. The defaults are set at `Settings > OpenAgenda Settings`:
