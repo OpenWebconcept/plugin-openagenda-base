@@ -1,17 +1,17 @@
-# Copyright (C) 2025 Acato
+# Copyright (C) 2026 Acato
 # This file is distributed under the EUPL-1.2.
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenAgenda Base 1.1.5\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/plugin-openagenda-base\n"
+"Project-Id-Version: OpenAgenda Base 1.2.5\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openagenda-base\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-04-09T09:08:16+00:00\n"
+"POT-Creation-Date: 2026-11-03T13:47:24+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: openagenda-base\n"
 
 #. Plugin Name of the plugin
@@ -150,6 +150,7 @@ msgstr ""
 
 #. translators: %s: number of posts.
 #: src/admin/class-admin.php:195
+#, php-format
 msgid "Archive <span class=\"count\">(%s)</span>"
 msgid_plural "Archives <span class=\"count\">(%s)</span>"
 msgstr[0] ""
@@ -173,12 +174,12 @@ msgid "Event Details"
 msgstr ""
 
 #: src/admin/class-cmb2.php:69
-#: src/admin/class-cmb2.php:760
+#: src/admin/class-cmb2.php:792
 msgid "Language"
 msgstr ""
 
 #: src/admin/class-cmb2.php:72
-#: src/admin/class-cmb2.php:763
+#: src/admin/class-cmb2.php:795
 msgid "Select the language of the event"
 msgstr ""
 
@@ -191,7 +192,7 @@ msgid "Enter a teaser text for the event"
 msgstr ""
 
 #: src/admin/class-cmb2.php:98
-#: src/admin/class-cmb2.php:815
+#: src/admin/class-cmb2.php:847
 msgid "Description"
 msgstr ""
 
@@ -216,42 +217,42 @@ msgid "Enter the name of the contact person"
 msgstr ""
 
 #: src/admin/class-cmb2.php:137
-#: src/admin/class-cmb2.php:828
+#: src/admin/class-cmb2.php:860
 msgid "Phone Number"
 msgstr ""
 
 #: src/admin/class-cmb2.php:140
-#: src/admin/class-cmb2.php:831
+#: src/admin/class-cmb2.php:863
 msgid "Enter the phone number of the organizer or contact person"
 msgstr ""
 
 #: src/admin/class-cmb2.php:147
-#: src/admin/class-cmb2.php:838
+#: src/admin/class-cmb2.php:870
 msgid "Phone number public"
 msgstr ""
 
 #: src/admin/class-cmb2.php:150
-#: src/admin/class-cmb2.php:842
+#: src/admin/class-cmb2.php:874
 msgid "Should the phone number be public?"
 msgstr ""
 
 #: src/admin/class-cmb2.php:157
-#: src/admin/class-cmb2.php:849
+#: src/admin/class-cmb2.php:881
 msgid "Email Address"
 msgstr ""
 
 #: src/admin/class-cmb2.php:160
-#: src/admin/class-cmb2.php:852
+#: src/admin/class-cmb2.php:884
 msgid "Enter the email address of the organizer or contact person"
 msgstr ""
 
 #: src/admin/class-cmb2.php:167
-#: src/admin/class-cmb2.php:859
+#: src/admin/class-cmb2.php:891
 msgid "Email address public"
 msgstr ""
 
 #: src/admin/class-cmb2.php:170
-#: src/admin/class-cmb2.php:863
+#: src/admin/class-cmb2.php:895
 msgid "Should the email address be public?"
 msgstr ""
 
@@ -264,7 +265,7 @@ msgid "Select a location"
 msgstr ""
 
 #: src/admin/class-cmb2.php:190
-#: src/admin/class-cmb2.php:776
+#: src/admin/class-cmb2.php:808
 msgid "Location Address"
 msgstr ""
 
@@ -273,7 +274,7 @@ msgid "Enter the address of the event location"
 msgstr ""
 
 #: src/admin/class-cmb2.php:204
-#: src/admin/class-cmb2.php:789
+#: src/admin/class-cmb2.php:821
 msgid "Location Zipcode"
 msgstr ""
 
@@ -607,399 +608,429 @@ msgstr ""
 msgid "Every last"
 msgstr ""
 
-#: src/admin/class-cmb2.php:681
-msgid "Day(s) of the week"
-msgstr ""
-
-#: src/admin/class-cmb2.php:684
-msgid "None means daily"
-msgstr ""
-
-#: src/admin/class-cmb2.php:686
+#: src/admin/class-cmb2.php:679
 msgid "Monday"
 msgstr ""
 
-#: src/admin/class-cmb2.php:687
+#: src/admin/class-cmb2.php:680
 msgid "Tuesday"
 msgstr ""
 
-#: src/admin/class-cmb2.php:688
+#: src/admin/class-cmb2.php:681
 msgid "Wednesday"
 msgstr ""
 
-#: src/admin/class-cmb2.php:689
+#: src/admin/class-cmb2.php:682
 msgid "Thursday"
 msgstr ""
 
-#: src/admin/class-cmb2.php:690
+#: src/admin/class-cmb2.php:683
 msgid "Friday"
 msgstr ""
 
-#: src/admin/class-cmb2.php:691
+#: src/admin/class-cmb2.php:684
 msgid "Saturday"
 msgstr ""
 
-#: src/admin/class-cmb2.php:692
+#: src/admin/class-cmb2.php:685
 msgid "Sunday"
 msgstr ""
 
-#: src/admin/class-cmb2.php:701
+#: src/admin/class-cmb2.php:691
+msgid "Day(s) of the week"
+msgstr ""
+
+#: src/admin/class-cmb2.php:694
+msgid "None means daily"
+msgstr ""
+
+#. translators: %s is the day of the week, e.g. Monday.
+#: src/admin/class-cmb2.php:705
+#, php-format
+msgid "Start time of %s (optional)"
+msgstr ""
+
+#. translators: %s is the day of the week, e.g. Monday.
+#: src/admin/class-cmb2.php:709
+#, php-format
+msgid "Select the start time for %s. If you don't select a start time but the event occurs on this day, then the general start time is used for this day."
+msgstr ""
+
+#. translators: %s is the day of the week, e.g. Monday.
+#: src/admin/class-cmb2.php:719
+#, php-format
+msgid "End time of %s (optional)"
+msgstr ""
+
+#. translators: %s is the day of the week, e.g. Monday.
+#: src/admin/class-cmb2.php:723
+#, php-format
+msgid "Select the end time for %s. If you don't select an end time but the event occurs on this day, then the general end time is used for this day."
+msgstr ""
+
+#: src/admin/class-cmb2.php:733
 msgid "Month(s) of the year"
 msgstr ""
 
-#: src/admin/class-cmb2.php:704
+#: src/admin/class-cmb2.php:736
 msgid "None means monthly"
 msgstr ""
 
-#: src/admin/class-cmb2.php:706
+#: src/admin/class-cmb2.php:738
 msgid "January"
 msgstr ""
 
-#: src/admin/class-cmb2.php:707
+#: src/admin/class-cmb2.php:739
 msgid "February"
 msgstr ""
 
-#: src/admin/class-cmb2.php:708
+#: src/admin/class-cmb2.php:740
 msgid "March"
 msgstr ""
 
-#: src/admin/class-cmb2.php:709
+#: src/admin/class-cmb2.php:741
 msgid "April"
 msgstr ""
 
-#: src/admin/class-cmb2.php:710
+#: src/admin/class-cmb2.php:742
 msgid "May"
 msgstr ""
 
-#: src/admin/class-cmb2.php:711
+#: src/admin/class-cmb2.php:743
 msgid "June"
 msgstr ""
 
-#: src/admin/class-cmb2.php:712
+#: src/admin/class-cmb2.php:744
 msgid "July"
 msgstr ""
 
-#: src/admin/class-cmb2.php:713
+#: src/admin/class-cmb2.php:745
 msgid "August"
 msgstr ""
 
-#: src/admin/class-cmb2.php:714
+#: src/admin/class-cmb2.php:746
 msgid "September"
 msgstr ""
 
-#: src/admin/class-cmb2.php:715
+#: src/admin/class-cmb2.php:747
 msgid "October"
 msgstr ""
 
-#: src/admin/class-cmb2.php:716
+#: src/admin/class-cmb2.php:748
 msgid "November"
 msgstr ""
 
-#: src/admin/class-cmb2.php:717
+#: src/admin/class-cmb2.php:749
 msgid "December"
 msgstr ""
 
-#: src/admin/class-cmb2.php:725
+#: src/admin/class-cmb2.php:757
 msgid "Exclude dates from repeating pattern"
 msgstr ""
 
-#: src/admin/class-cmb2.php:729
+#: src/admin/class-cmb2.php:761
 msgid "Enter the dates to exclude from the repeating pattern"
 msgstr ""
 
-#: src/admin/class-cmb2.php:732
+#: src/admin/class-cmb2.php:764
 msgid "Enter dates to exclude from the repeating pattern, f.e. holidays"
 msgstr ""
 
-#: src/admin/class-cmb2.php:748
+#: src/admin/class-cmb2.php:780
 msgid "Location Details"
 msgstr ""
 
-#: src/admin/class-cmb2.php:779
+#: src/admin/class-cmb2.php:811
 msgid "Enter the street and street number of the location"
 msgstr ""
 
-#: src/admin/class-cmb2.php:792
+#: src/admin/class-cmb2.php:824
 msgid "Enter the zipcode of the location"
 msgstr ""
 
-#: src/admin/class-cmb2.php:802
+#: src/admin/class-cmb2.php:834
 msgid "Location City"
 msgstr ""
 
-#: src/admin/class-cmb2.php:805
+#: src/admin/class-cmb2.php:837
 msgid "Enter the city of the location"
 msgstr ""
 
-#: src/admin/class-cmb2.php:818
+#: src/admin/class-cmb2.php:850
 msgid "Description of the location"
 msgstr ""
 
-#: src/admin/class-cmb2.php:870
+#: src/admin/class-cmb2.php:902
 msgid "Website URL"
 msgstr ""
 
-#: src/admin/class-cmb2.php:873
+#: src/admin/class-cmb2.php:905
 msgid "Enter the website URL of the location"
 msgstr ""
 
-#: src/admin/class-cmb2.php:882
+#: src/admin/class-cmb2.php:914
 msgid "Social media"
 msgstr ""
 
-#: src/admin/class-cmb2.php:897
+#: src/admin/class-cmb2.php:929
 msgid "Social media channel {#}"
 msgstr ""
 
-#: src/admin/class-cmb2.php:898
+#: src/admin/class-cmb2.php:930
 msgid "Add Another channel"
 msgstr ""
 
-#: src/admin/class-cmb2.php:899
+#: src/admin/class-cmb2.php:931
 msgid "Remove channel"
 msgstr ""
 
-#: src/admin/class-cmb2.php:909
+#: src/admin/class-cmb2.php:941
 msgid "Channel"
 msgstr ""
 
-#: src/admin/class-cmb2.php:912
+#: src/admin/class-cmb2.php:944
 msgid "Select the social media channel"
 msgstr ""
 
-#: src/admin/class-cmb2.php:914
+#: src/admin/class-cmb2.php:946
 msgid "Facebook"
 msgstr ""
 
-#: src/admin/class-cmb2.php:915
+#: src/admin/class-cmb2.php:947
 msgid "Twitter"
 msgstr ""
 
-#: src/admin/class-cmb2.php:916
+#: src/admin/class-cmb2.php:948
 msgid "Instagram"
 msgstr ""
 
-#: src/admin/class-cmb2.php:917
+#: src/admin/class-cmb2.php:949
 msgid "LinkedIn"
 msgstr ""
 
-#: src/admin/class-cmb2.php:918
+#: src/admin/class-cmb2.php:950
 msgid "YouTube"
 msgstr ""
 
-#: src/admin/class-cmb2.php:919
+#: src/admin/class-cmb2.php:951
 msgid "Pinterest"
 msgstr ""
 
-#: src/admin/class-cmb2.php:920
+#: src/admin/class-cmb2.php:952
 msgid "TikTok"
 msgstr ""
 
-#: src/admin/class-cmb2.php:921
+#: src/admin/class-cmb2.php:953
 msgid "Snapchat"
 msgstr ""
 
-#: src/admin/class-cmb2.php:922
+#: src/admin/class-cmb2.php:954
 msgid "WhatsApp"
 msgstr ""
 
-#: src/admin/class-cmb2.php:923
+#: src/admin/class-cmb2.php:955
 msgid "Telegram"
 msgstr ""
 
-#: src/admin/class-cmb2.php:924
+#: src/admin/class-cmb2.php:956
 msgid "Signal"
 msgstr ""
 
-#: src/admin/class-cmb2.php:925
+#: src/admin/class-cmb2.php:957
 msgid "Discord"
 msgstr ""
 
-#: src/admin/class-cmb2.php:926
+#: src/admin/class-cmb2.php:958
 msgid "Twitch"
 msgstr ""
 
-#: src/admin/class-cmb2.php:927
+#: src/admin/class-cmb2.php:959
 msgid "Other"
 msgstr ""
 
-#: src/admin/class-cmb2.php:937
+#: src/admin/class-cmb2.php:969
 msgid "Channel URL"
 msgstr ""
 
-#: src/admin/class-cmb2.php:940
+#: src/admin/class-cmb2.php:972
 msgid "Enter the social media channel URL"
 msgstr ""
 
-#: src/admin/class-cmb2.php:949
+#: src/admin/class-cmb2.php:981
 msgid "Opening hours"
 msgstr ""
 
-#: src/admin/class-cmb2.php:973
+#: src/admin/class-cmb2.php:1005
 msgid "Opening time"
 msgstr ""
 
-#: src/admin/class-cmb2.php:976
+#: src/admin/class-cmb2.php:1008
 msgid "Select the opening time. Set to 00:00 to remove after input."
 msgstr ""
 
-#: src/admin/class-cmb2.php:985
+#: src/admin/class-cmb2.php:1017
 msgid "Closing time"
 msgstr ""
 
-#: src/admin/class-cmb2.php:988
+#: src/admin/class-cmb2.php:1020
 msgid "Select the closing time. Set to 00:00 to remove after input."
 msgstr ""
 
-#: src/admin/class-cmb2.php:998
+#: src/admin/class-cmb2.php:1030
 msgid "Extra information opening hours"
 msgstr ""
 
-#: src/admin/class-cmb2.php:1001
+#: src/admin/class-cmb2.php:1033
 msgid "Enter extra information about the opening hours"
 msgstr ""
 
-#: src/admin/class-cmb2.php:1002
+#: src/admin/class-cmb2.php:1034
 msgid "Extra information"
 msgstr ""
 
-#: src/admin/class-cmb2.php:1020
+#: src/admin/class-cmb2.php:1052
 msgid "English (United States)"
 msgstr ""
 
-#: src/admin/class-cmb2.php:1021
+#: src/admin/class-cmb2.php:1053
 msgid "Dutch (Netherlands)"
 msgstr ""
 
-#: src/admin/class-cmb2.php:1022
+#: src/admin/class-cmb2.php:1054
 msgid "French (France)"
 msgstr ""
 
-#: src/admin/class-cmb2.php:1023
+#: src/admin/class-cmb2.php:1055
 msgid "German (Germany)"
 msgstr ""
 
-#: src/admin/class-cmb2.php:1024
+#: src/admin/class-cmb2.php:1056
 msgid "Italian (Italy)"
 msgstr ""
 
-#: src/admin/class-cmb2.php:1029
+#: src/admin/class-cmb2.php:1061
 msgid "Select a language"
 msgstr ""
 
-#: src/admin/class-event-dates.php:90
+#: src/admin/class-event-dates.php:85
 msgid "Event Date"
 msgstr ""
 
-#: src/admin/class-event-dates.php:91
+#: src/admin/class-event-dates.php:86
 msgid "Excluded Dates"
 msgstr ""
 
-#: src/admin/class-event-dates.php:452
+#: src/admin/class-event-dates.php:450
 msgctxt "Readable date without year"
 msgid "F jS"
 msgstr ""
 
-#: src/admin/class-event-dates.php:454
+#: src/admin/class-event-dates.php:452
 msgctxt "Readable date with year"
 msgid "F jS, Y"
 msgstr ""
 
-#: src/admin/class-event-dates.php:527
+#: src/admin/class-event-dates.php:525
 msgctxt "first as in every first monday of the month"
 msgid "first"
 msgstr ""
 
-#: src/admin/class-event-dates.php:528
+#: src/admin/class-event-dates.php:526
 msgctxt "second as in every second monday of the month"
 msgid "second"
 msgstr ""
 
-#: src/admin/class-event-dates.php:529
+#: src/admin/class-event-dates.php:527
 msgctxt "third as in every third monday of the month"
 msgid "third"
 msgstr ""
 
-#: src/admin/class-event-dates.php:530
+#: src/admin/class-event-dates.php:528
 msgctxt "fourth as in every fourth monday of the month"
 msgid "fourth"
 msgstr ""
 
-#: src/admin/class-event-dates.php:531
+#: src/admin/class-event-dates.php:529
 msgctxt "last as in every last monday of the month"
 msgid "last"
 msgstr ""
 
-#: src/admin/class-event-dates.php:532
+#: src/admin/class-event-dates.php:530
 msgctxt "every as in every monday of the month"
 msgid "every"
 msgstr ""
 
 #. translators: %1$s and %2$s are the start and end of a run of consecutive items, for example monday and friday to become "monday through friday".
-#: src/admin/class-event-dates.php:551
-#: src/admin/class-event-dates.php:882
+#: src/admin/class-event-dates.php:549
+#: src/admin/class-event-dates.php:885
+#, php-format
 msgctxt "As monday through friday"
 msgid "%1$s through %2$s"
 msgstr ""
 
-#: src/admin/class-event-dates.php:577
+#: src/admin/class-event-dates.php:575
 msgctxt "ITEMx are special tokens, keep those as-is, translate the rest."
 msgid "ITEM1, ITEM2 and ITEM3"
 msgstr ""
 
-#: src/admin/class-event-dates.php:842
+#: src/admin/class-event-dates.php:845
 msgctxt "of the month as in Every last friday of the month"
 msgid "of the month"
 msgstr ""
 
-#: src/admin/class-event-dates.php:845
-#: src/admin/class-event-dates.php:851
+#: src/admin/class-event-dates.php:848
+#: src/admin/class-event-dates.php:854
 msgctxt "of as in Every last friday of January"
 msgid "of"
 msgstr ""
 
-#: src/admin/class-event-dates.php:858
 #: src/admin/class-event-dates.php:861
+#: src/admin/class-event-dates.php:864
 msgctxt "Every as in Every tuesday."
 msgid "Every"
 msgstr ""
 
-#: src/admin/class-event-dates.php:862
+#: src/admin/class-event-dates.php:865
 msgctxt "The expression for Every day of the week"
 msgid "Daily"
 msgstr ""
 
-#: src/admin/class-event-dates.php:873
+#: src/admin/class-event-dates.php:876
 msgctxt "Every year on as in Every year on 1st of January"
 msgid "Every year on"
 msgstr ""
 
 #. translators: %s is a time.
-#: src/admin/class-event-dates.php:908
+#: src/admin/class-event-dates.php:911
+#, php-format
 msgctxt "Example: Starts at 17:00"
 msgid "Starts at %s"
 msgstr ""
 
 #. translators: %s is a time.
-#: src/admin/class-event-dates.php:911
+#: src/admin/class-event-dates.php:914
+#, php-format
 msgctxt "Example: Ends at 23:00"
 msgid "Ends at %s"
 msgstr ""
 
 #. translators: %s are a time.
-#: src/admin/class-event-dates.php:914
+#: src/admin/class-event-dates.php:917
+#, php-format
 msgctxt "Example: From 17:00 til 23:00"
 msgid "From %1$s til %2$s"
 msgstr ""
 
 #. translators: %s is a time.
-#: src/admin/class-event-dates.php:919
+#: src/admin/class-event-dates.php:922
+#, php-format
 msgctxt "Example: Til 23:00"
 msgid "Til %s"
 msgstr ""
 
 #. translators: %s are a time.
-#: src/admin/class-event-dates.php:922
+#: src/admin/class-event-dates.php:925
+#, php-format
 msgctxt "Example: 17:00 - 23:00"
 msgid "%1$s - %2$s"
 msgstr ""
@@ -1025,92 +1056,263 @@ msgstr ""
 msgid "Unpublish date"
 msgstr ""
 
-#: src/admin/class-settings.php:33
-#: src/admin/class-settings.php:34
-#: src/admin/class-settings.php:60
+#: src/admin/class-settings.php:36
+#: src/admin/class-settings.php:37
+#: src/admin/class-settings.php:81
 msgid "OpenAgenda Settings"
 msgstr ""
 
-#: src/admin/class-settings.php:66
+#: src/admin/class-settings.php:87
 msgid "API submit user"
 msgstr ""
 
-#: src/admin/class-settings.php:69
+#: src/admin/class-settings.php:90
 msgid "Select a user"
+msgstr ""
+
+#. translators: %s: permalink structure tag
+#: src/admin/class-settings.php:117
+#, php-format
+msgid "%s (The year the event was published, four digits, for example 2026.)"
+msgstr ""
+
+#. translators: %s: permalink structure tag
+#: src/admin/class-settings.php:119
+#, php-format
+msgid "%s (Month of the year, for example 05.)"
+msgstr ""
+
+#. translators: %s: permalink structure tag
+#: src/admin/class-settings.php:121
+#, php-format
+msgid "%s (Day of the month, for example 28.)"
+msgstr ""
+
+#. translators: %s: permalink structure tag
+#: src/admin/class-settings.php:123
+#, php-format
+msgid "%s (Hour of the day, for example 15.)"
+msgstr ""
+
+#. translators: %s: permalink structure tag
+#: src/admin/class-settings.php:125
+#, php-format
+msgid "%s (Minute of the hour, for example 43.)"
+msgstr ""
+
+#. translators: %s: permalink structure tag
+#: src/admin/class-settings.php:127
+#, php-format
+msgid "%s (Second of the minute, for example 33.)"
+msgstr ""
+
+#. translators: %s: permalink structure tag
+#: src/admin/class-settings.php:129
+#, php-format
+msgid "%s (The unique ID of the event, for example 423.)"
+msgstr ""
+
+#. translators: %s: permalink structure tag
+#: src/admin/class-settings.php:131
+#, php-format
+msgid "%s (The slug of the event.)"
+msgstr ""
+
+#. translators: %s: permalink structure tag
+#: src/admin/class-settings.php:133
+#, php-format
+msgid "%s (The first term of the first event taxonomy. Nested terms appear as nested directories in the URL.)"
+msgstr ""
+
+#. translators: %s: permalink structure tag
+#: src/admin/class-settings.php:135
+#, php-format
+msgid "%s (A sanitized version of the author name.)"
+msgstr ""
+
+#. translators: %s: taxonomy name; %%s: the permalink structure tag
+#: src/admin/class-settings.php:138
+#, php-format
+msgid "%%s (The first term of the taxonomy %s.)"
+msgstr ""
+
+#: src/admin/class-settings.php:140
+msgid "Event permalinks"
+msgstr ""
+
+#: src/admin/class-settings.php:142
+msgid "Leave empty to use the WordPress url of the event. When the events are shown on another website (e.g. a headless front end), enter the url structure of the event pages on that website. It is used for the event links in the feed, the REST API and the admin."
+msgstr ""
+
+#: src/admin/class-settings.php:146
+msgid "Event url structure"
+msgstr ""
+
+#. translators: 1: example url structure, 2: tag, 3: tag
+#: src/admin/class-settings.php:153
+#, php-format
+msgid "For example %1$s. Must contain %2$s or %3$s."
+msgstr ""
+
+#: src/admin/class-settings.php:163
+msgid "Available tags:"
+msgstr ""
+
+#. translators: %s: permalink structure tag
+#: src/admin/class-settings.php:170
+#, php-format
+msgid "%s added to permalink structure"
+msgstr ""
+
+#. translators: %s: permalink structure tag
+#: src/admin/class-settings.php:172
+#, php-format
+msgid "%s removed from permalink structure"
+msgstr ""
+
+#: src/admin/class-settings.php:253
+msgid "Event date (next occurrence)"
+msgstr ""
+
+#: src/admin/class-settings.php:254
+msgid "Publication date"
+msgstr ""
+
+#: src/admin/class-settings.php:257
+msgid "Event feed"
+msgstr ""
+
+#: src/admin/class-settings.php:259
+msgid "An RSS 2.0 feed of upcoming events, for use in newsletters, feed readers and other websites:"
+msgstr ""
+
+#. translators: 1: example query string, 2: example query string
+#: src/admin/class-settings.php:266
+#, php-format
+msgid "Filter on categories with the taxonomy name and term slugs, e.g. %1$s. The settings below are defaults and can be overridden per feed url, e.g. %2$s."
+msgstr ""
+
+#: src/admin/class-settings.php:274
+msgid "Sort by"
+msgstr ""
+
+#: src/admin/class-settings.php:284
+msgid "Sort order"
+msgstr ""
+
+#: src/admin/class-settings.php:287
+msgid "Ascending (soonest / oldest first)"
+msgstr ""
+
+#: src/admin/class-settings.php:288
+msgid "Descending (latest / newest first)"
+msgstr ""
+
+#: src/admin/class-settings.php:293
+msgid "Number of items"
+msgstr ""
+
+#. translators: %d: maximum number of items
+#: src/admin/class-settings.php:299
+#, php-format
+msgid "Only upcoming events are included. Maximum %d."
+msgstr ""
+
+#: src/admin/class-settings.php:305
+msgid "Item date (pubDate)"
+msgstr ""
+
+#: src/admin/class-settings.php:312
+msgid "Many newsletter tools and feed readers show this date with each item. The event start and end are always available as ev:startdate and ev:enddate."
 msgstr ""
 
 #. translators: %s: taxonomy
 #: src/admin/class-taxonomies.php:45
+#, php-format
 msgid "All %s"
 msgstr ""
 
 #. translators: %s: taxonomy
 #: src/admin/class-taxonomies.php:47
+#, php-format
 msgid "Edit %s"
 msgstr ""
 
 #. translators: %s: taxonomy
 #: src/admin/class-taxonomies.php:49
+#, php-format
 msgid "View %s"
 msgstr ""
 
 #. translators: %s: taxonomy
 #: src/admin/class-taxonomies.php:51
+#, php-format
 msgid "Update %s"
 msgstr ""
 
 #. translators: %s: taxonomy
 #: src/admin/class-taxonomies.php:53
+#, php-format
 msgid "Add New %s"
 msgstr ""
 
 #. translators: %s: taxonomy
 #: src/admin/class-taxonomies.php:55
+#, php-format
 msgid "New %s"
 msgstr ""
 
 #. translators: %s: taxonomy
 #: src/admin/class-taxonomies.php:57
+#, php-format
 msgid "Search %s"
 msgstr ""
 
 #. translators: %s: taxonomy
 #: src/admin/class-taxonomies.php:59
+#, php-format
 msgid "Popular %s"
 msgstr ""
 
 #. translators: %s: taxonomy
 #: src/admin/class-taxonomies.php:61
+#, php-format
 msgid "Separate %s with commas"
 msgstr ""
 
 #. translators: %s: taxonomy
 #: src/admin/class-taxonomies.php:63
+#, php-format
 msgid "Add or remove %s"
 msgstr ""
 
 #. translators: %s: taxonomy
 #: src/admin/class-taxonomies.php:65
+#, php-format
 msgid "Choose from the most used %s"
 msgstr ""
 
 #. translators: %s: taxonomy
 #: src/admin/class-taxonomies.php:67
+#, php-format
 msgid "No %s found"
 msgstr ""
 
 #. translators: %s: taxonomy
 #: src/admin/class-taxonomies.php:69
+#, php-format
 msgid "Parent %s"
 msgstr ""
 
 #. translators: %s: taxonomy
 #: src/admin/class-taxonomies.php:71
+#, php-format
 msgid "Parent %s:"
 msgstr ""
 
 #. translators: %s: taxonomy
 #: src/admin/class-taxonomies.php:73
+#, php-format
 msgid "&larr;  Back to %s"
 msgstr ""
 
@@ -1121,21 +1323,25 @@ msgstr ""
 
 #. translators: %s: taxonomy name
 #: src/admin/class-taxonomies.php:123
+#, php-format
 msgid "%s taxonomy already exists"
 msgstr ""
 
 #. translators: %s: taxonomy name
 #: src/admin/class-taxonomies.php:131
+#, php-format
 msgid "%s taxonomy created"
 msgstr ""
 
 #. translators: %s: taxonomy name
 #: src/admin/class-taxonomies.php:150
+#, php-format
 msgid "%s taxonomy deleted"
 msgstr ""
 
 #. translators: %s: taxonomies names
 #: src/admin/class-taxonomies.php:153
+#, php-format
 msgid "%s taxonomies deleted"
 msgstr ""
 
@@ -1163,6 +1369,36 @@ msgstr ""
 msgid "Delete selected taxonomies"
 msgstr ""
 
+#: src/frontend/class-event-permalink.php:102
+msgid "The event permalink structure must be a full url, starting with https://."
+msgstr ""
+
+#. translators: %s: the unknown tags
+#: src/frontend/class-event-permalink.php:110
+#, php-format
+msgid "Unknown tag(s) in the event permalink structure: %s."
+msgstr ""
+
+#: src/frontend/class-event-permalink.php:115
+msgid "The event permalink structure must contain %postname% or %post_id%, so every event gets its own url."
+msgstr ""
+
+#. translators: %s: site name
+#: src/frontend/class-feed.php:756
+#, php-format
+msgid "%s - Events"
+msgstr ""
+
+#. translators: %s: price
+#: src/frontend/class-feed.php:810
+#, php-format
+msgid "From %s"
+msgstr ""
+
+#: src/frontend/class-feed.php:816
+msgid "Free"
+msgstr ""
+
 #: src/rest_api/class-openagenda-controller.php:604
 #: src/rest_api/class-openagenda-controller.php:623
 msgid "Invalid post ID."
@@ -1184,6 +1420,7 @@ msgstr ""
 
 #. translators: %s: comma-seperated list of required fields that are missing in the submit data
 #: src/rest_api/class-openagenda-controller.php:842
+#, php-format
 msgid "Can't submit event, because required fields are missing: %s"
 msgstr ""
 
@@ -1192,31 +1429,33 @@ msgid "Cannot create item."
 msgstr ""
 
 #. translators: %s: comma-seperated list of required fields that are missing in the submit data
-#: src/rest_api/class-openagenda-controller.php:1057
+#: src/rest_api/class-openagenda-controller.php:1084
+#, php-format
 msgid "Can't create file on filesystem: %s"
 msgstr ""
 
-#: src/rest_api/class-openagenda-controller.php:1095
+#: src/rest_api/class-openagenda-controller.php:1122
 msgid "Limit response to posts within (a) specific post type(s)."
 msgstr ""
 
-#: src/rest_api/class-openagenda-controller.php:1104
+#: src/rest_api/class-openagenda-controller.php:1131
 msgid "Limit response to posts within (a) specific year(s)."
 msgstr ""
 
-#: src/rest_api/class-openagenda-controller.php:1113
+#: src/rest_api/class-openagenda-controller.php:1140
 msgid "Limit response to posts for (a) specific date."
 msgstr ""
 
-#: src/rest_api/class-openagenda-controller.php:1118
+#: src/rest_api/class-openagenda-controller.php:1145
 msgid "Limit response to posts within (a) specific time period."
 msgstr ""
 
-#: src/rest_api/class-openagenda-controller.php:1267
+#: src/rest_api/class-openagenda-controller.php:1294
 msgid "Limit result set to events that are long-term."
 msgstr ""
 
 #. translators: %s: cmb2 field name
-#: src/rest_api/class-openagenda-controller.php:1277
+#: src/rest_api/class-openagenda-controller.php:1303
+#, php-format
 msgid "Limit result set to posts on specific %s."
 msgstr ""
