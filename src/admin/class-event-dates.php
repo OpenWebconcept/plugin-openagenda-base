@@ -14,11 +14,24 @@ namespace Openagenda_Base_Plugin\Admin;
  */
 class Event_Dates {
 	/**
+	 * Whether the hooks are registered. The class is also instantiated for its date helpers (the REST API, the feed),
+	 * which must not register the hooks again.
+	 *
+	 * @var bool
+	 */
+	private static $hooked = false;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
 	 */
 	public function __construct() {
+		if ( self::$hooked ) {
+			return;
+		}
+		self::$hooked = true;
+
 		add_action( 'manage_event_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
 		add_filter( 'manage_event_posts_columns', array( $this, 'manage_event_posts_columns' ) );
 
@@ -33,9 +46,48 @@ class Event_Dates {
 		if ( ! wp_next_scheduled( 'openagenda_update_next_event_date' ) ) {
 			wp_schedule_event( time(), 'hourly', 'openagenda_update_next_event_date' );
 		}
+		// The next date changes when the date changes, so also update at the site's midnight. A single event, scheduled
+		// again after each run, because a daily interval shifts an hour at the daylight saving time changes.
+		add_action( 'openagenda_update_next_event_date_midnight', array( $this, 'update_next_event_date' ) );
+		if ( ! wp_next_scheduled( 'openagenda_update_next_event_date_midnight' ) ) {
+			wp_schedule_single_event( ( new \DateTimeImmutable( 'tomorrow', wp_timezone() ) )->getTimestamp(), 'openagenda_update_next_event_date_midnight' );
+		}
 
 		// Update event data after save.
 		add_action( 'save_post_event', array( $this, 'save_handler' ), 10, 1 );
+	}
+
+	/**
+	 * Store the next date of the event, as _next_date (Y-m-d) and _next_date_time (Y-m-d H:i, to order events on the
+	 * same day by their start time). Without a future date, that is the last date, so a past event no longer counts as
+	 * upcoming; without any date, both are removed.
+	 *
+	 * @param int $post_id The event ID.
+	 *
+	 * @return void
+	 */
+	private function update_next_date( $post_id ) {
+		$next_date = $this->get_next_date( $post_id );
+		if ( empty( $next_date['date'] ) ) {
+			$dates     = array_filter(
+				$this->get_date_list( $post_id ),
+				function ( $date ) {
+					return ! empty( $date['date'] );
+				}
+			);
+			$dates     = array_column( $dates, null, 'date' );
+			$next_date = $dates ? $dates[ max( array_keys( $dates ) ) ] : null;
+		}
+		if ( empty( $next_date['date'] ) ) {
+			delete_post_meta( $post_id, '_next_date' );
+			delete_post_meta( $post_id, '_next_date_time' );
+
+			return;
+		}
+
+		$start_time = empty( $next_date['start_time'] ) ? '00:00' : gmdate( 'H:i', strtotime( $next_date['start_time'] ) );
+		update_post_meta( $post_id, '_next_date', $next_date['date'] );
+		update_post_meta( $post_id, '_next_date_time', $next_date['date'] . ' ' . $start_time );
 	}
 
 	/**
@@ -64,10 +116,11 @@ class Event_Dates {
 				'posts_per_page' => -1,
 			)
 		);
-		foreach ( $post_ids as $post_id ) {
-			$next_date = $this->get_next_date( $post_id );
-			if ( ! empty( $next_date['date'] ) ) {
-				update_post_meta( $post_id, '_next_date', $next_date['date'] );
+		// Load the meta per 100 events in one query, instead of one query per event (or all meta at once).
+		foreach ( array_chunk( $post_ids, 100 ) as $chunk ) {
+			update_meta_cache( 'post', $chunk );
+			foreach ( $chunk as $post_id ) {
+				$this->update_next_date( $post_id );
 			}
 		}
 	}
@@ -142,10 +195,7 @@ class Event_Dates {
 			add_post_meta( $post_id, '_openagenda_event_date_time_list', $openagenda_event_date_time );
 		}
 
-		$next_date = $this->get_next_date( $post_id );
-		if ( ! empty( $next_date['date'] ) ) {
-			update_post_meta( $post_id, '_next_date', $next_date['date'] );
-		}
+		$this->update_next_date( $post_id );
 
 		// UPDATE POST_EXPIRATION DATA.
 		// By nature of a loop, the last element is the very last date.
@@ -400,6 +450,53 @@ class Event_Dates {
 	}
 
 	/**
+	 * The occurrence of the event that holds a date. A specific date range is one event over several days: the
+	 * consecutive days of the date range entry that holds the date (adjacent entries are separate occurrences, as are
+	 * the parts of a range split by an excluded date). Complex dates are separate occurrences of one day each.
+	 *
+	 * @param int   $post_id The event ID.
+	 * @param array $date    A date of the event, with keys date, start_time and end_time; e.g. from get_next_date().
+	 *
+	 * @return array With keys first and last: the first and last day of the occurrence, like $date.
+	 */
+	public function get_occurrence( $post_id, $date ) {
+		$occurrence = array(
+			'first' => $date,
+			'last'  => $date,
+		);
+		if ( 'specific' !== get_post_meta( $post_id, 'event_dates_type', true ) ) {
+			return $occurrence;
+		}
+
+		foreach ( (array) get_post_meta( $post_id, 'event_dates_group_specific', true ) as $range ) {
+			if ( ! is_array( $range ) ) {
+				continue;
+			}
+			$days = array_column( $this->create_date_list( $post_id, 'Y-m-d', $range, 'times' ), null, 'date' );
+			if ( ! isset( $days[ $date['date'] ] ) ) {
+				continue;
+			}
+
+			// Step through the days in UTC explicitly, so the step never depends on PHP's default timezone.
+			$utc = new \DateTimeZone( 'UTC' );
+			foreach ( array(
+				'first' => '-1 day',
+				'last'  => '+1 day',
+			) as $key => $step ) {
+				$day = $date['date'];
+				for ( $other = ( new \DateTimeImmutable( $day, $utc ) )->modify( $step )->format( 'Y-m-d' ); isset( $days[ $other ] ); $other = ( new \DateTimeImmutable( $day, $utc ) )->modify( $step )->format( 'Y-m-d' ) ) {
+					$day = $other;
+				}
+				$occurrence[ $key ] = $days[ $day ];
+			}
+
+			return $occurrence;
+		}
+
+		return $occurrence;
+	}
+
+	/**
 	 * Gives you the first date for this event in the future. This will be the first date that matches this event.
 	 *
 	 * @param int $post_id The WP_Post->ID for the event.
@@ -411,10 +508,11 @@ class Event_Dates {
 			// Cache not populated yet (e.g. post saved outside the save_post_event hook), compute it live.
 			$date_list = $this->create_date_list( $post_id, 'Y-m-d', null, 'times' );
 		}
-		// Get item from array where date is the earliest but not in the past.
+		// Get item from array where date is the earliest but not in the past. Today is the site's today, not UTC's.
 		$next_date = null;
+		$today     = strtotime( current_time( 'Y-m-d' ) );
 		foreach ( $date_list as $date ) {
-			if ( strtotime( $date['date'] ) >= strtotime( 'today' ) ) {
+			if ( strtotime( $date['date'] ) >= $today ) {
 				if ( ! $next_date || strtotime( $date['date'] ) < strtotime( $next_date['date'] ) ) {
 					$next_date = $date;
 				}

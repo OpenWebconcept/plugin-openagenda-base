@@ -19,6 +19,8 @@ use Openagenda_Base_Plugin\Admin\Event_Dates;
 use Openagenda_Base_Plugin\Admin\Post_Expiration;
 use Openagenda_Base_Plugin\Admin\Settings;
 use Openagenda_Base_Plugin\Admin\Taxonomies;
+use Openagenda_Base_Plugin\Frontend\Event_Permalink;
+use Openagenda_Base_Plugin\Frontend\Feed;
 use Openagenda_Base_Plugin\Frontend\Frontend;
 
 /**
@@ -56,6 +58,8 @@ class Plugin {
 		 * Register frontend specific functionality.
 		 */
 		new Frontend();
+		new Event_Permalink();
+		new Feed();
 
 		new Rest_Api\Openagenda_Controller();
 	}
